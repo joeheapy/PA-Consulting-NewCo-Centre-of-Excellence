@@ -1,0 +1,6 @@
+/* SUBSTITUTED WEBFONTS — the real brand faces are commercial (CoType Foundry) and were not provided:
+   Aeonik Pro  → Hanken Grotesk (primary / headlines, UI)
+   Orbikular   → Source Serif 4 (companion / body, pull quotes)
+   Aeonik Fono → Fragment Mono (ancillary / tags, crossheads, annotations)
+   Replace these imports with @font-face rules pointing at licensed binaries when available. */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400..700&family=Source+Serif+4:opsz,wght@8..60,400..600&family=Fragment+Mono&display=swap');

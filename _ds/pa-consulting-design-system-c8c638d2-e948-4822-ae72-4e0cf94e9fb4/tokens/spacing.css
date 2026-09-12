@@ -1,0 +1,8 @@
+:root{
+/* Spacing scale — DERIVED (not specified in the brand guideline); 4px base */
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px;--space-8:64px;--space-9:96px;
+/* Radii + shadows — DERIVED; guideline is flat/editorial, keep minimal */
+--radius-sm:2px;--radius-md:4px;
+--shadow-card:0 1px 3px rgba(0,23,45,.08),0 4px 14px rgba(0,23,45,.06);
+--shadow-overlay:0 8px 40px rgba(0,23,45,.18);
+}

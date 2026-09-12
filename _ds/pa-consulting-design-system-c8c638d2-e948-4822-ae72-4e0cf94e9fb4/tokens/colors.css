@@ -1,0 +1,49 @@
+:root{
+/* Core palette (PA Brand Guidelines 2.4) */
+--pa-dark-blue:#00172D;
+--pa-white:#FFFFFF;
+--pa-ingenuity-red:#F62B44; /* logo + brand accents only */
+--pa-red-accessible:#EA0027; /* REQUIRED for links and buttons (accessibility) */
+--pa-logo-grey:#7C8B9A;
+--pa-grey-01:#E8ECF2;
+--pa-grey-02:#A2B3C9;
+--pa-grey-03:#64778A;
+--pa-grey-04:#36465A;
+--pa-aqua-01:#CDECF2;
+--pa-aqua-02:#B7E5EE;
+--pa-aqua-03:#4AB9D3;
+--pa-aqua-04:#0580A7;
+--pa-aqua-05:#024D78;
+/* Supporting palette (photo backgrounds, infographics) */
+--pa-lime-01:#D5ECC8;
+--pa-lime-02:#C0EFA5;
+--pa-lime-03:#6CBD3A;
+--pa-lime-04:#2C8027;
+--pa-rose-01:#F3D3DC;
+--pa-rose-02:#FFBECF;
+--pa-rose-03:#F3809E;
+--pa-rose-04:#EE2F66;
+--pa-apricot-01:#FAECBD;
+--pa-apricot-02:#FFE18E;
+--pa-apricot-03:#FFC000;
+--pa-apricot-04:#EBAE00;
+/* Semantic palette (progress indicators, alerts) */
+--pa-success:#008471;
+--pa-warning:#FF6C3B;
+--pa-error:#CC1D63;
+/* Semantic aliases */
+--text-heading:var(--pa-dark-blue);
+--text-body:var(--pa-dark-blue);
+--text-secondary:var(--pa-grey-03);
+--text-inverse:var(--pa-white);
+--text-secondary-inverse:var(--pa-grey-02);
+--text-on-highlight:var(--pa-aqua-05);
+--link:var(--pa-red-accessible);
+--surface-page:var(--pa-white);
+--surface-subtle:var(--pa-grey-01);
+--surface-dark:var(--pa-grey-04);
+--surface-brand-dark:var(--pa-dark-blue);
+--surface-highlight:var(--pa-aqua-01);
+--border-subtle:var(--pa-grey-01);
+--border-strong:var(--pa-grey-02);
+}

@@ -1,0 +1,22 @@
+:root{
+/* Families — substitutes; see tokens/fonts.css */
+--font-primary:'Hanken Grotesk',system-ui,sans-serif; /* Aeonik Pro: headlines, subheads, captions, buttons, section titles */
+--font-companion:'Source Serif 4',Georgia,serif; /* Orbikular: body copy, pull quotes, bullets, links, card titles */
+--font-ancillary:'Fragment Mono',ui-monospace,monospace; /* Aeonik Fono: crossheads, tags, numerals, annotations, page furniture */
+/* Weights (Aeonik's 450/550 mapped onto variable axes) */
+--weight-regular:400;
+--weight-medium:450;
+--weight-semibold:550;
+/* Bringhurst type scale (px) */
+--scale-06:6px;--scale-07:7px;--scale-08:8px;--scale-09:9px;--scale-10:10px;--scale-12:12px;--scale-14:14px;--scale-16:16px;--scale-18:18px;--scale-21:21px;--scale-24:24px;--scale-28:28px;--scale-32:32px;--scale-36:36px;--scale-42:42px;--scale-48:48px;--scale-55:55px;--scale-63:63px;--scale-73:73px;--scale-84:84px;--scale-96:96px;--scale-110:110px;--scale-127:127px;--scale-146:146px;
+/* Role shorthands */
+--type-headline:var(--weight-regular) var(--scale-48)/1.1 var(--font-primary);
+--type-subheading:var(--weight-medium) var(--scale-24)/1.3 var(--font-primary);
+--type-body:var(--weight-regular) var(--scale-16)/1.6 var(--font-companion);
+--type-pullquote:var(--weight-semibold) var(--scale-32)/1.3 var(--font-companion);
+--type-caption:var(--weight-semibold) var(--scale-14)/1.4 var(--font-primary);
+--type-button:var(--weight-medium) var(--scale-16)/1 var(--font-primary);
+--type-tag:var(--weight-regular) var(--scale-12)/1 var(--font-ancillary);
+--type-crosshead:var(--weight-regular) var(--scale-14)/1 var(--font-ancillary);
+--crosshead-tracking:0.08em; /* crossheads render uppercase, letterspaced */
+}
