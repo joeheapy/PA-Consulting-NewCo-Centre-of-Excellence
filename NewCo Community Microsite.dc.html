@@ -6,6 +6,21 @@
 <script src="./support.js"></script>
 </head>
 <body>
+<form name="event-registration" data-netlify="true" hidden>
+  <input type="text" name="name">
+  <input type="email" name="email">
+  <input type="text" name="organisation">
+  <input type="text" name="role">
+  <input type="text" name="attendance">
+</form>
+<form name="express-interest" data-netlify="true" hidden>
+  <input type="text" name="name">
+  <input type="email" name="email">
+  <input type="text" name="organisation">
+  <input type="text" name="role">
+  <textarea name="why"></textarea>
+  <input type="checkbox" name="newsletter">
+</form>
 <x-dc>
 <helmet>
   <link rel="stylesheet" href="_ds/pa-consulting-design-system-c8c638d2-e948-4822-ae72-4e0cf94e9fb4/tokens/fonts.css">
@@ -501,7 +516,7 @@
     <section style="background:var(--pa-grey-01);padding:clamp(44px,6.5vw,72px) 0 clamp(36px,5vw,56px);">
       <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
         <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:20px;">Join the community</div>
-        <h1 style="font:400 clamp(30px,5.2vw,48px)/1.1 var(--font-primary);color:var(--pa-dark-blue);margin:0;max-width:720px;text-wrap:pretty;">Request to join.</h1>
+        <h1 style="font:400 clamp(30px,5.2vw,48px)/1.1 var(--font-primary);color:var(--pa-dark-blue);margin:0;max-width:720px;text-wrap:pretty;">Express interest.</h1>
         <p style="font:400 17px/1.6 var(--font-companion);color:var(--pa-grey-04);max-width:620px;margin:20px 0 0;">We review every request to keep the community practitioner-led, candid and useful. Expect a response within five working days.</p>
       </div>
     </section>
@@ -538,7 +553,7 @@
               <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Checkbox" label="Keep me on the community newsletter — event invitations and new insights, monthly" checked="{{joinNews}}" on-change="{{joinOnNews}}" hint-size="100%,28px"></x-import>
             </div>
             <div style="display:flex;align-items:center;gap:20px;margin-top:28px;">
-              <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Button" size="lg" on-click="{{joinSubmit}}" hint-size="180px,46px">Submit request</x-import>
+              <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Button" size="lg" on-click="{{joinSubmit}}" hint-size="180px,46px">Express interest</x-import>
               <span style="font:400 12px/1.5 var(--font-primary);color:var(--pa-grey-04);">Government email addresses only.</span>
             </div>
           </sc-if>
@@ -585,6 +600,17 @@
 </footer>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;defaultPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;home&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;events&quot;,&quot;hub&quot;,&quot;frameworks&quot;,&quot;insights&quot;,&quot;voices&quot;,&quot;about&quot;,&quot;join&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Navigation&quot;},&quot;showEventBanner&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Homepage&quot;}}">
+function encodeForm(data) {
+  return Object.keys(data).map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])).join('&');
+}
+function submitNetlifyForm(formName, fields) {
+  return fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: encodeForm({ 'form-name': formName, ...fields })
+  });
+}
+
 class Component extends DCLogic {
   state = {
     page: 'home', eventId: null, hubTab: 0, filter: 'All',
@@ -836,7 +862,12 @@ class Component extends DCLogic {
       regName: S.regName, regEmail: S.regEmail, regOrg: S.regOrg, regRole: S.regRole, regAttend: S.regAttend,
       regOnName: set('regName'), regOnEmail: set('regEmail'), regOnOrg: set('regOrg'), regOnRole: set('regRole'),
       regOnAttend: (e) => this.setState({ regAttend: e.target ? e.target.value : e }),
-      regSubmit: () => this.setState({ regDone: true }),
+      regSubmit: () => {
+        submitNetlifyForm('event-registration', {
+          name: S.regName, email: S.regEmail, organisation: S.regOrg, role: S.regRole, attendance: S.regAttend
+        }).catch(() => {});
+        this.setState({ regDone: true });
+      },
       roleOptions: ['Chief Digital Officer', 'Chief Operating Officer', 'Transformation Director', 'Programme Director', 'Portfolio Director', 'Digital Office leader', 'Senior Responsible Owner', 'Other'],
       attendOptions: ['In person', 'Online'],
       fullWidthBtn: { width: '100%', justifyContent: 'center' },
@@ -881,13 +912,16 @@ class Component extends DCLogic {
       joinName: S.joinName, joinEmail: S.joinEmail, joinOrg: S.joinOrg, joinRole: S.joinRole, joinWhy: S.joinWhy, joinNews: S.joinNews,
       joinOnName: set('joinName'), joinOnEmail: set('joinEmail'), joinOnOrg: set('joinOrg'), joinOnRole: set('joinRole'), joinOnWhy: set('joinWhy'),
       joinOnNews: (e) => this.setState({ joinNews: e.target ? e.target.checked : !S.joinNews }),
-      joinSubmit: () => { this.setState({ joinDone: true }); window.scrollTo(0, 0); }
+      joinSubmit: () => {
+        submitNetlifyForm('express-interest', {
+          name: S.joinName, email: S.joinEmail, organisation: S.joinOrg, role: S.joinRole, why: S.joinWhy, newsletter: S.joinNews
+        }).catch(() => {});
+        this.setState({ joinDone: true });
+        window.scrollTo(0, 0);
+      }
     };
   }
 }
 </script>
-<!-- impeccable-live-start -->
-<script src="http://localhost:8400/live.js?token=b702c2b7-0af1-4133-87b7-43b8bdd87ec8"></script>
-<!-- impeccable-live-end -->
 </body>
 </html>

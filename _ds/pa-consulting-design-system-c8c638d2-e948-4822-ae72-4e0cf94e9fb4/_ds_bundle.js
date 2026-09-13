@@ -155,15 +155,12 @@ Object.assign(__ds_scope, { Tag });
 
 // components/display/Tooltip.jsx
 try { (() => {
-const {
-  useState
-} = React;
 function Tooltip({
   label,
   children,
   style
 }) {
-  const [v, setV] = useState(false);
+  const [v, setV] = React.useState(false);
   return /*#__PURE__*/React.createElement("span", {
     onMouseEnter: () => setV(true),
     onMouseLeave: () => setV(false),
@@ -456,9 +453,6 @@ Object.assign(__ds_scope, { Toast });
 
 // components/forms/Button.jsx
 try { (() => {
-const {
-  useState
-} = React;
 function Button({
   variant = 'primary',
   size = 'md',
@@ -467,7 +461,7 @@ function Button({
   onClick,
   style
 }) {
-  const [h, setH] = useState(false);
+  const [h, setH] = React.useState(false);
   const pad = {
     sm: '8px 14px',
     md: '11px 20px',
@@ -578,9 +572,6 @@ Object.assign(__ds_scope, { Checkbox });
 
 // components/forms/IconButton.jsx
 try { (() => {
-const {
-  useState
-} = React;
 function IconButton({
   label,
   children,
@@ -589,7 +580,7 @@ function IconButton({
   disabled,
   style
 }) {
-  const [h, setH] = useState(false);
+  const [h, setH] = React.useState(false);
   const v = {
     ghost: {
       background: h ? 'var(--pa-grey-01,#E8ECF2)' : 'transparent',
@@ -840,9 +831,6 @@ Object.assign(__ds_scope, { Switch });
 
 // components/navigation/Tabs.jsx
 try { (() => {
-const {
-  useState
-} = React;
 function Tabs({
   tabs = [],
   active,
@@ -850,7 +838,7 @@ function Tabs({
   dark,
   style
 }) {
-  const [i, setI] = useState(0);
+  const [i, setI] = React.useState(0);
   const cur = active !== undefined ? active : i;
   const set = n => {
     setI(n);
