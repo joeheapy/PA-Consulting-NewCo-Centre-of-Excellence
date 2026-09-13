@@ -1,0 +1,6 @@
+{
+  "files": ["NewCo Community Microsite.dc.html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}
