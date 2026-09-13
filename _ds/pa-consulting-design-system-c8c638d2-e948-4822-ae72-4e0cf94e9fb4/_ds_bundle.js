@@ -30,7 +30,7 @@ function Badge({
     },
     warning: {
       background: 'var(--pa-warning,#FF6C3B)',
-      color: '#fff'
+      color: 'var(--pa-dark-blue,#00172D)'
     },
     error: {
       background: 'var(--pa-error,#CC1D63)',
@@ -131,9 +131,20 @@ function Tag({
       background: 'transparent',
       ...style
     }
-  }, children, onRemove && /*#__PURE__*/React.createElement("span", {
+  }, children, onRemove && /*#__PURE__*/React.createElement("button", {
+    type: 'button',
     onClick: onRemove,
+    "aria-label": "Remove",
     style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minWidth: 24,
+      minHeight: 24,
+      margin: '-6px -8px -6px -2px',
+      background: 'none',
+      border: 'none',
+      font: 'inherit',
       cursor: 'pointer',
       color: 'var(--pa-grey-03,#64778A)'
     }
@@ -654,7 +665,7 @@ function Input({
       color: 'var(--pa-dark-blue,#00172D)',
       padding: '10px 12px',
       background: disabled ? 'var(--pa-grey-01,#E8ECF2)' : '#fff',
-      border: `1px solid ${error ? 'var(--pa-error,#CC1D63)' : 'var(--pa-grey-02,#A2B3C9)'}`,
+      border: `1px solid ${error ? 'var(--pa-error,#CC1D63)' : 'var(--pa-grey-03,#64778A)'}`,
       borderRadius: 'var(--radius-sm,2px)',
       outlineColor: 'var(--pa-aqua-04,#0580A7)'
     }

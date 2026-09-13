@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-13T16:29:02Z",
+  "title": "Design System: NewCo Community",
+  "extensions": {
+    "colorMeta": {
+      "dark-blue": { "role": "primary", "displayName": "Dark Blue", "canonical": "#00172D", "tonalRamp": ["#001F3D", "#003E7A", "#005DB6", "#007CF3", "#309AFF", "#6DB7FF", "#A9D5FF", "#E5F3FF"] },
+      "red-accessible": { "role": "primary", "displayName": "Red Accessible", "canonical": "#EA0027", "tonalRamp": ["#3D000A", "#7A0014", "#B6001E", "#F30028", "#FF3053", "#FF6D85", "#FFA9B7", "#FFE5EA"] },
+      "red-accessible-hover": { "role": "primary", "displayName": "Red Accessible (hover)", "canonical": "#C40021" },
+      "ingenuity-red": { "role": "secondary", "displayName": "Ingenuity Red", "canonical": "#F62B44" },
+      "aqua-01": { "role": "secondary", "displayName": "Aqua 01", "canonical": "#CDECF2" },
+      "aqua-02": { "role": "secondary", "displayName": "Aqua 02", "canonical": "#B7E5EE" },
+      "aqua-03": { "role": "secondary", "displayName": "Aqua 03", "canonical": "#4AB9D3" },
+      "aqua-04": { "role": "secondary", "displayName": "Aqua 04", "canonical": "#0580A7" },
+      "aqua-05": { "role": "secondary", "displayName": "Aqua 05", "canonical": "#024D78" },
+      "lime-01": { "role": "tertiary", "displayName": "Lime 01", "canonical": "#D5ECC8" },
+      "lime-02": { "role": "tertiary", "displayName": "Lime 02", "canonical": "#C0EFA5" },
+      "lime-03": { "role": "tertiary", "displayName": "Lime 03", "canonical": "#6CBD3A" },
+      "lime-04": { "role": "tertiary", "displayName": "Lime 04", "canonical": "#2C8027" },
+      "rose-01": { "role": "tertiary", "displayName": "Rose 01", "canonical": "#F3D3DC" },
+      "rose-02": { "role": "tertiary", "displayName": "Rose 02", "canonical": "#FFBECF" },
+      "rose-03": { "role": "tertiary", "displayName": "Rose 03", "canonical": "#F3809E" },
+      "rose-04": { "role": "tertiary", "displayName": "Rose 04", "canonical": "#EE2F66" },
+      "apricot-01": { "role": "tertiary", "displayName": "Apricot 01", "canonical": "#FAECBD" },
+      "apricot-02": { "role": "tertiary", "displayName": "Apricot 02", "canonical": "#FFE18E" },
+      "apricot-03": { "role": "tertiary", "displayName": "Apricot 03", "canonical": "#FFC000" },
+      "apricot-04": { "role": "tertiary", "displayName": "Apricot 04", "canonical": "#EBAE00" },
+      "white": { "role": "neutral", "displayName": "White", "canonical": "#FFFFFF" },
+      "grey-01": { "role": "neutral", "displayName": "Grey 01", "canonical": "#E8ECF2" },
+      "grey-02": { "role": "neutral", "displayName": "Grey 02", "canonical": "#A2B3C9" },
+      "grey-03": { "role": "neutral", "displayName": "Grey 03", "canonical": "#64778A" },
+      "grey-04": { "role": "neutral", "displayName": "Grey 04", "canonical": "#36465A" },
+      "logo-grey": { "role": "neutral", "displayName": "Logo Grey", "canonical": "#7C8B9A" },
+      "success": { "role": "semantic", "displayName": "Success", "canonical": "#008471" },
+      "warning": { "role": "semantic", "displayName": "Warning", "canonical": "#FF6C3B" },
+      "error": { "role": "semantic", "displayName": "Error", "canonical": "#CC1D63" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines only, white on Dark Blue." },
+      "headline": { "displayName": "Headline", "purpose": "Section and page-level headings." },
+      "subheading": { "displayName": "Subheading", "purpose": "Second-level headings." },
+      "body": { "displayName": "Body", "purpose": "Running serif copy." },
+      "pullquote": { "displayName": "Pull Quote", "purpose": "Testimonial and quote emphasis." },
+      "caption": { "displayName": "Caption", "purpose": "Card titles, small emphasis labels." },
+      "button": { "displayName": "Button", "purpose": "All button labels." },
+      "crosshead": { "displayName": "Crosshead", "purpose": "Uppercase mono section markers." },
+      "tag": { "displayName": "Tag", "purpose": "Tags, numerals, page furniture." }
+    },
+    "shadows": [
+      { "name": "card", "value": "0 1px 3px rgba(0,23,45,.08), 0 4px 14px rgba(0,23,45,.06)", "purpose": "Optional lift for cards on busy or colored backgrounds, instead of a border." },
+      { "name": "overlay", "value": "0 8px 40px rgba(0,23,45,.18)", "purpose": "Dialogs and other floating surfaces." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "150ms ease", "purpose": "Default transition for background/color/border-color state changes (buttons, links, nav)." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Button — Primary",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single interactive accent: links and primary calls-to-action.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Submit request</button>",
+      "css": ".ds-btn{font:450 16px/1 'Hanken Grotesk',system-ui,sans-serif;padding:11px 20px;border-radius:2px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s,color .15s,border-color .15s;}.ds-btn-primary{background:#EA0027;color:#fff;}.ds-btn-primary:hover{background:#C40021;}.ds-btn-primary:focus-visible{outline:3px solid #EA0027;outline-offset:2px;}"
+    },
+    {
+      "name": "Button — Secondary",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined lower-emphasis action.",
+      "html": "<button class=\"ds-btn ds-btn-secondary\">Learn more</button>",
+      "css": ".ds-btn-secondary{background:transparent;color:#EA0027;border-color:#EA0027;}.ds-btn-secondary:hover{background:rgba(234,0,39,.06);}"
+    },
+    {
+      "name": "Button — Ghost",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Lowest-emphasis inline action, e.g. a download link styled as a button.",
+      "html": "<button class=\"ds-btn ds-btn-ghost\">Download ↓</button>",
+      "css": ".ds-btn-ghost{background:transparent;color:#EA0027;}.ds-btn-ghost:hover{color:#C40021;}"
+    },
+    {
+      "name": "Card — Bordered",
+      "kind": "card",
+      "refersTo": "card-border",
+      "description": "Default card: hairline border, no shadow.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-eyebrow\">Guidance</div><div class=\"ds-card-title\">Establishing the mandate</div><div class=\"ds-card-body\">Practical guidance for the first stage of the NewCo lifecycle.</div></div>",
+      "css": ".ds-card{background:#fff;padding:20px 22px;border:1px solid #E8ECF2;border-radius:2px;}.ds-card-eyebrow{font:400 11px/1 'Fragment Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#64778A;margin-bottom:10px;}.ds-card-title{font:550 20px/1.3 'Source Serif 4',serif;color:#024D78;margin-bottom:8px;}.ds-card-body{font:400 15px/1.6 'Source Serif 4',serif;color:#00172D;}"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Text field with label, hint, and error states.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Work email</span><input class=\"ds-input\" type=\"email\" placeholder=\"name@department.gov.uk\"></label>",
+      "css": ".ds-field{display:block;font:450 14px/1.3 'Hanken Grotesk',sans-serif;color:#00172D;}.ds-field-label{display:block;margin-bottom:6px;}.ds-input{display:block;width:100%;box-sizing:border-box;font:400 16px/1.4 'Source Serif 4',serif;color:#00172D;padding:10px 12px;background:#fff;border:1px solid #A2B3C9;border-radius:2px;}.ds-input:focus-visible{outline:3px solid #0580A7;outline-offset:2px;}"
+    },
+    {
+      "name": "Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Square-cornered label — deliberately not rounded, unlike buttons/badges.",
+      "html": "<span class=\"ds-tag\">Digital delivery</span>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;gap:8px;font:400 12px/1 'Fragment Mono',monospace;padding:7px 11px;border:1px solid #A2B3C9;color:#00172D;background:transparent;}"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge-neutral",
+      "description": "Rounded status/tone indicator (neutral shown; info/success/warning/error swap the two colors).",
+      "html": "<span class=\"ds-badge\">Chatham House Rule</span>",
+      "css": ".ds-badge{display:inline-block;font:400 11px/1 'Fragment Mono',monospace;letter-spacing:.04em;padding:5px 9px;border-radius:2px;background:#E8ECF2;color:#36465A;}"
+    },
+    {
+      "name": "Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Primary header navigation link with underline active-state.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-nav-item\">Guidance</button><button class=\"ds-nav-item ds-nav-item-active\">Community</button></nav>",
+      "css": ".ds-nav{display:flex;gap:22px;}.ds-nav-item{font:450 15px/1 'Hanken Grotesk',sans-serif;color:#A2B3C9;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;padding:8px 1px 10px;transition:color .15s;}.ds-nav-item-active{color:#fff;border-bottom-color:#EA0027;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Briefing Room",
+    "overview": "This is the visual language of a room where senior people compare notes candidly — not a marketing stage. Every surface stays flat and restrained: white, near-black \"Dark Blue,\" and a handful of governed greys and aquas, with a single accessible red spent sparingly on links, primary actions, and nothing else. Headlines are large but regular-weight, never bold — confidence that doesn't need to shout. Type does the labelling work icons would elsewhere: a monospace \"crosshead\" (uppercase, letterspaced) marks sections and tags, a serif carries body copy and pull quotes with an editorial, unhurried cadence, and a grotesque sans handles headlines, subheads, and UI chrome.\n\nThis is a governed corporate brand system (PA Consulting's own guidelines), not an invented aesthetic — the palette, roles, and voice are fixed brand fact, not stylistic license. Spacing, radii, and shadows are the one genuinely derived layer (the guideline doesn't specify them): a 4px-based scale and a near-flat, editorial default of 2-4px radii and two soft, cool-toned shadow steps.",
+    "keyCharacteristics": [
+      "Flat, editorial fields only — no gradients, no textures, no patterns.",
+      "One accent color (accessible red) used rarely and specifically: links and primary buttons only.",
+      "Regular-weight (400) display and headline type at large sizes; weight goes up only for emphasis roles (subheads 450, pull quotes and captions 550), never for headlines.",
+      "Monospace crossheads/tags/numerals do the structural labelling other systems give to icons.",
+      "Left-aligned, generously spaced layout; a single 1240px content container throughout."
+    ],
+    "rules": [
+      { "name": "The One Red Rule — with a measured exception", "body": "Red Accessible (#EA0027) is the interactive-accent color on light surfaces (4.64:1 on white). On Dark Blue it measures 3.90:1 and fails WCAG 4.5:1 — use Ingenuity Red (#F62B44, 4.61:1) for link text on Dark Blue instead, per the source brand guideline's own background-conditional rule. Ingenuity Red still never becomes a background fill.", "section": "colors" },
+      { "name": "The Verified-Pair Rule (WCAG 2.2 AA)", "body": "Grey 03 secondary text on Grey 01 fails at 3.89:1 — switch to Grey 04 (8.12:1) on Grey 01 surfaces. Badge/Progress \"warning\" white-on-#FF6C3B fails at 2.81:1. Input's Grey 02 border on white fails the 3:1 non-text minimum at 2.14:1. All other core pairs (Dark Blue/White, Grey 02 on Dark Blue, Grey 01/02 on Grey 04, Aqua 05 on Aqua 01, white on Red Accessible/hover/Dark Blue) were measured and pass AA.", "section": "colors" },
+      { "name": "The Four Surfaces Rule", "body": "Every screen is built from exactly four background options: White, Grey 01, Grey 04, or Dark Blue. A fifth background is not a variation, it's a violation. Aqua 01 is the sole exception, and only as a highlight field with Aqua 05 text.", "section": "colors" },
+      { "name": "The Regular-Weight Headline Rule", "body": "Headlines and display type are always weight 400. Bold is never used for size-based emphasis — emphasis comes from scale and color, not weight. Weight only climbs for smaller supporting roles (subheading 450, pullquote/caption 550).", "section": "typography" },
+      { "name": "The Border-Before-Shadow Rule", "body": "Reach for a 1px Grey 01 border first. A shadow is a deliberate lift for something that floats above the page (a dialog) or sits on a busy field — not a default card treatment.", "section": "elevation" },
+      { "name": "The Sharp Tag Rule", "body": "Tags never take a radius, even though every other small surface (badges, buttons, inputs) uses radius-sm. The squared corner is what reads as \"label\" rather than \"control.\"", "section": "typography" }
+    ],
+    "dos": [
+      "Do keep Red Accessible (#EA0027) as the only interactive color — links, primary buttons, focus rings, nothing else.",
+      "Do default every card to a 1px Grey 01 border; reach for the shadow variant only when a card needs to separate from a busy or non-white field.",
+      "Do keep headlines and display type at weight 400; use scale and color for emphasis, not bold.",
+      "Do build every layout from the same four sanctioned backgrounds (White, Grey 01, Grey 04, Dark Blue), with Aqua 01 reserved as the one highlight-surface exception (always paired with Aqua 05 text).",
+      "Do use the mono crosshead/tag voice (uppercase, 0.08em tracking) for section markers and labels instead of introducing icons."
+    ],
+    "donts": [
+      "Don't use Red Accessible for link/button text on a Dark Blue background — it measures 3.90:1 there and fails AA; use Ingenuity Red for that one context, still never as a background fill.",
+      "Don't use the supporting palette (Lime/Rose/Apricot) for interface chrome — it exists for photography backgrounds and infographics only.",
+      "Don't round a Tag's corners to match Buttons/Badges — the square corner is the deliberate signal that distinguishes a label from a control.",
+      "Don't add gradients, textures, or decorative patterns to any surface — the brand guideline is explicitly flat/editorial.",
+      "Don't set a literal font-size after a type-role shorthand on the same element — treat any such stray override as a bug to fix on sight; it also breaks reflow/zoom (WCAG 1.4.10).",
+      "Don't leave Grey 03 as secondary text on a Grey 01 surface (3.89:1, fails) — switch to Grey 04 (8.12:1) on Grey 01.",
+      "Don't rely on Input's current Grey 02 border on white (2.14:1) as the sole boundary cue — it fails the 3:1 non-text-contrast minimum (WCAG 1.4.11).",
+      "Don't ship the Badge warning tone as white-on-#FF6C3B (2.81:1, fails) — use Dark Blue text on Warning instead.",
+      "Don't leave an interactive control like Tag's onRemove \"×\" without at least a 24×24px hit-area (WCAG 2.2 SC 2.5.8)."
+    ]
+  }
+}
