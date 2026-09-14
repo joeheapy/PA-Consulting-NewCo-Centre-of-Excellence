@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operating model evolution — NewCo Community</title>
+<style>
+/* SUBSTITUTED WEBFONTS — the real brand faces are commercial (CoType Foundry) and were not provided:
+   Aeonik Pro  → Hanken Grotesk (primary / headlines, UI)
+   Orbikular   → Source Serif 4 (companion / body, pull quotes)
+   Aeonik Fono → Fragment Mono (ancillary / tags, crossheads, annotations)
+   Replace these imports with @font-face rules pointing at licensed binaries when available. */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400..700&family=Source+Serif+4:opsz,wght@8..60,400..600&family=Fragment+Mono&display=swap');
+
+</style>
+<style>
+:root{
+/* Core palette (PA Brand Guidelines 2.4) */
+--pa-dark-blue:#00172D;
+--pa-white:#FFFFFF;
+--pa-ingenuity-red:#F62B44; /* logo + brand accents only */
+--pa-red-accessible:#EA0027; /* REQUIRED for links and buttons (accessibility) */
+--pa-logo-grey:#7C8B9A;
+--pa-grey-01:#E8ECF2;
+--pa-grey-02:#A2B3C9;
+--pa-grey-03:#64778A;
+--pa-grey-04:#36465A;
+--pa-aqua-01:#CDECF2;
+--pa-aqua-02:#B7E5EE;
+--pa-aqua-03:#4AB9D3;
+--pa-aqua-04:#0580A7;
+--pa-aqua-05:#024D78;
+/* Supporting palette (photo backgrounds, infographics) */
+--pa-lime-01:#D5ECC8;
+--pa-lime-02:#C0EFA5;
+--pa-lime-03:#6CBD3A;
+--pa-lime-04:#2C8027;
+--pa-rose-01:#F3D3DC;
+--pa-rose-02:#FFBECF;
+--pa-rose-03:#F3809E;
+--pa-rose-04:#EE2F66;
+--pa-apricot-01:#FAECBD;
+--pa-apricot-02:#FFE18E;
+--pa-apricot-03:#FFC000;
+--pa-apricot-04:#EBAE00;
+/* Semantic palette (progress indicators, alerts) */
+--pa-success:#008471;
+--pa-warning:#FF6C3B;
+--pa-error:#CC1D63;
+/* Semantic aliases */
+--text-heading:var(--pa-dark-blue);
+--text-body:var(--pa-dark-blue);
+--text-secondary:var(--pa-grey-03);
+--text-inverse:var(--pa-white);
+--text-secondary-inverse:var(--pa-grey-02);
+--text-on-highlight:var(--pa-aqua-05);
+--link:var(--pa-red-accessible);
+--surface-page:var(--pa-white);
+--surface-subtle:var(--pa-grey-01);
+--surface-dark:var(--pa-grey-04);
+--surface-brand-dark:var(--pa-dark-blue);
+--surface-highlight:var(--pa-aqua-01);
+--border-subtle:var(--pa-grey-01);
+--border-strong:var(--pa-grey-02);
+}
+
+</style>
+<style>
+:root{
+/* Families — substitutes; see tokens/fonts.css */
+--font-primary:'Hanken Grotesk',system-ui,sans-serif; /* Aeonik Pro: headlines, subheads, captions, buttons, section titles */
+--font-companion:'Source Serif 4',Georgia,serif; /* Orbikular: body copy, pull quotes, bullets, links, card titles */
+--font-ancillary:'Fragment Mono',ui-monospace,monospace; /* Aeonik Fono: crossheads, tags, numerals, annotations, page furniture */
+/* Weights (Aeonik's 450/550 mapped onto variable axes) */
+--weight-regular:400;
+--weight-medium:450;
+--weight-semibold:550;
+/* Bringhurst type scale (px) */
+--scale-06:6px;--scale-07:7px;--scale-08:8px;--scale-09:9px;--scale-10:10px;--scale-12:12px;--scale-14:14px;--scale-16:16px;--scale-18:18px;--scale-21:21px;--scale-24:24px;--scale-28:28px;--scale-32:32px;--scale-36:36px;--scale-42:42px;--scale-48:48px;--scale-55:55px;--scale-63:63px;--scale-73:73px;--scale-84:84px;--scale-96:96px;--scale-110:110px;--scale-127:127px;--scale-146:146px;
+/* Role shorthands */
+--type-headline:var(--weight-regular) var(--scale-48)/1.1 var(--font-primary);
+--type-subheading:var(--weight-medium) var(--scale-24)/1.3 var(--font-primary);
+--type-body:var(--weight-regular) var(--scale-16)/1.6 var(--font-companion);
+--type-pullquote:var(--weight-semibold) var(--scale-32)/1.3 var(--font-companion);
+--type-caption:var(--weight-semibold) var(--scale-14)/1.4 var(--font-primary);
+--type-button:var(--weight-medium) var(--scale-16)/1 var(--font-primary);
+--type-tag:var(--weight-regular) var(--scale-12)/1 var(--font-ancillary);
+--type-crosshead:var(--weight-regular) var(--scale-14)/1 var(--font-ancillary);
+--crosshead-tracking:0.08em; /* crossheads render uppercase, letterspaced */
+}
+
+</style>
+<style>
+:root{
+/* Spacing scale — DERIVED (not specified in the brand guideline); 4px base */
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px;--space-8:64px;--space-9:96px;
+/* Radii + shadows — DERIVED; guideline is flat/editorial, keep minimal */
+--radius-sm:2px;--radius-md:4px;
+--shadow-card:0 1px 3px rgba(0,23,45,.08),0 4px 14px rgba(0,23,45,.06);
+--shadow-overlay:0 8px 40px rgba(0,23,45,.18);
+}
+
+</style>
+<style>
+  body{margin:0;background:#FFFFFF;font:400 16px/1.6 var(--font-companion);color:var(--pa-dark-blue);-webkit-font-smoothing:antialiased;}
+  a{color:#EA0027;}
+  a:hover{color:#C40021;}
+  :focus-visible{outline:3px solid #EA0027;outline-offset:2px;}
+  img{max-width:100%;}
+  @media (prefers-reduced-motion:reduce){*{transition-duration:0.01ms !important;animation-duration:0.01ms !important;}}
+</style>
+</head>
+<body>
+<header role="banner" style="position:sticky;top:0;z-index:50;background:var(--pa-dark-blue);border-bottom:1px solid rgba(255,255,255,0.08);">
+  <div style="max-width:1240px;margin:0 auto;padding:8px clamp(20px,5vw,48px);min-height:52px;display:flex;align-items:center;gap:20px 28px;flex-wrap:wrap;">
+    <a href="../index.html" style="display:flex;align-items:baseline;gap:14px;text-decoration:none;padding:0;">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTgzIiBoZWlnaHQ9IjUxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgb3ZlcmZsb3c9ImhpZGRlbiI+PGRlZnM+PGNsaXBQYXRoIGlkPSJjbGlwMCI+PHJlY3QgeD0iNjcwIiB5PSIzMSIgd2lkdGg9IjU4MSIgaGVpZ2h0PSI1MTMiPjwvcmVjdD48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcDEiPjxyZWN0IHg9IjY3MCIgeT0iMzEiIHdpZHRoPSI1ODEiIGhlaWdodD0iNTEzIj48L3JlY3Q+PC9jbGlwUGF0aD48Y2xpcFBhdGggaWQ9ImNsaXAyIj48cmVjdCB4PSI2NzAiIHk9IjMxIiB3aWR0aD0iNTgxIiBoZWlnaHQ9IjUxMyI+PC9yZWN0PjwvY2xpcFBhdGg+PC9kZWZzPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC02NjkgLTMwKSI+PGc+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwKSI+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAxKSI+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAyKSI+PHBhdGggZD0iTTQ1NC4zMzggMTM1LjYwNEM0MTMuMjIgMTM1LjYwNCAzNzkuNzkgMTAyLjE3NCAzNzkuNzkgNjEuMDU1OCAzNzkuNzkgNTEuNzA5IDM4MS41NjEgNDIuNzc2OCAzODQuNzI3IDM0LjUyMjkgMzQ2Ljk2MyAxMi41ODggMzAzLjEzMSAwIDI1Ni4zNTkgMCAxMTQuNzYyIDAgMCAxMTQuNzYyIDAgMjU2LjM1OSAwIDM5Ny45NTYgMTE0Ljc2MiA1MTIuNzE4IDI1Ni4zNTkgNTEyLjcxOCAzOTcuOTU2IDUxMi43MTggNTEyLjcxOCAzOTcuOTU2IDUxMi43MTggMjU2LjM1OSA1MTIuNzE4IDIxMC43OTMgNTAwLjc3MSAxNjguMDU0IDQ3OS45MjkgMTMwLjk2OCA0NzEuOTM5IDEzMy45MDggNDYzLjM0NiAxMzUuNjA0IDQ1NC4zMzggMTM1LjYwNFoiIGZpbGw9IiNGNjJCNDQiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbC1vcGFjaXR5PSIxIiB0cmFuc2Zvcm09Im1hdHJpeCgxLjAwMDE4IDAgMCAxIDY3MCAzMS4xNDEpIj48L3BhdGg+PHBhdGggZD0iTTE4My4zMTggMTU0LjQ4NiA5OS4xOTY4IDE1NC40ODYgOTkuMTk2OCAzNDQuMTc0IDEzNy42NzcgMzQ0LjE3NCAxMzcuNjc3IDI4Ni43MzYgMTgzLjMxOCAyODYuNzM2QzIyNy41NjUgMjg2LjczNiAyNTYuNjk4IDI2MC4zNTQgMjU2LjY5OCAyMjAuNzQzIDI1Ni42OTggMTgxLjEzMiAyMjcuNTY1IDE1NC40ODYgMTgzLjMxOCAxNTQuNDg2Wk0xODMuNTgyIDI1MC45NyAxMzcuNjc3IDI1MC45NyAxMzcuNjc3IDE5MC4yMTUgMTgzLjU4MiAxOTAuMjE1QzIwNi4xMiAxOTAuMjE1IDIxNy42OSAyMDIuMzEzIDIxNy42OSAyMjAuNzA1IDIxNy42OSAyMzkuMDk4IDIwNi4xNTggMjUwLjkzMiAxODMuNTgyIDI1MC45MzJaIiBmaWxsPSIjRkZGRkZGIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGwtb3BhY2l0eT0iMSIgdHJhbnNmb3JtPSJtYXRyaXgoMS4wMDAxOCAwIDAgMSA2NzAgMzEuMTQxKSI+PC9wYXRoPjxwYXRoIGQ9Ik0zNjUuNTgxIDE1NC40ODYgMzE4LjU4MyAxNTQuNDg2IDIzOC4zMDYgMzQ0LjE3NCAyNzkuMjc0IDM0NC4xNzQgMjk0LjEyMyAzMDcuMzUyIDM4OS41MTMgMzA3LjM1MiA0MDQuMzYzIDM0NC4xNzQgNDQ1LjMzMSAzNDQuMTc0IDM2NS42MTkgMTU0LjQ4NlpNMzA3Ljg4IDI3MS41ODUgMzQxLjk1IDE4OC4wMjkgMzc1Ljc1NyAyNzEuNTg1IDMwNy44OCAyNzEuNTg1WiIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsLW9wYWNpdHk9IjEiIHRyYW5zZm9ybT0ibWF0cml4KDEuMDAwMTggMCAwIDEgNjcwIDMxLjE0MSkiPjwvcGF0aD48cGF0aCBkPSJNNTQ2Ljk3NyAxNzEuOTc0QzUyOC43NzMgMTcxLjk3NCA1MTQgMTU3LjE2MiA1MTQgMTM4Ljk5NiA1MTQgMTIwLjgzIDUyOC44MTEgMTA2LjAxOSA1NDYuOTc3IDEwNi4wMTkgNTY1LjE0MyAxMDYuMDE5IDU3OS45NTUgMTIwLjgzIDU3OS45NTUgMTM4Ljk5NiA1NzkuOTU1IDE1Ny4xNjIgNTY1LjE0MyAxNzEuOTc0IDU0Ni45NzcgMTcxLjk3NCIgZmlsbD0iIzdDOEI5QSIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsLW9wYWNpdHk9IjEiIHRyYW5zZm9ybT0ibWF0cml4KDEuMDAwMTggMCAwIDEgNjcwIDMxLjE0MSkiPjwvcGF0aD48cGF0aCBkPSJNNTgwLjg5NyA2MS4wMTgxQzU4MC44OTcgNzEuNjQ2NCA1NzIuMjY2IDgwLjIzOTQgNTYxLjY3NiA4MC4yMzk0IDU1MS4wODUgODAuMjM5NCA1NDIuNDE3IDcxLjYwODcgNTQyLjQxNyA2MS4wMTgxIDU0Mi40MTcgNTAuNDI3NiA1NTEuMDQ4IDQxLjc5NjggNTYxLjY3NiA0MS43OTY4IDU3Mi4zMDQgNDEuNzk2OCA1ODAuODk3IDUwLjQyNzYgNTgwLjg5NyA2MS4wMTgxIiBmaWxsPSIjN0M4QjlBIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGwtb3BhY2l0eT0iMSIgdHJhbnNmb3JtPSJtYXRyaXgoMS4wMDAxOCAwIDAgMSA2NzAgMzEuMTQxKSI+PC9wYXRoPjxwYXRoIGQ9Ik00NTQuMzM4IDBDNDIwLjY4MiAwIDM5My4zMiAyNy4zNjIgMzkzLjMyIDYxLjAxODEgMzkzLjMyIDk0LjY3NDIgNDIwLjY4MiAxMjIuMDc0IDQ1NC4zMzggMTIyLjA3NCA0ODcuOTk0IDEyMi4wNzQgNTE1LjM1NiA5NC43MTE5IDUxNS4zNTYgNjEuMDE4MSA1MTUuMzU2IDI3LjMyNDQgNDg3Ljk5NCAwIDQ1NC4zMzggMCIgZmlsbD0iIzdDOEI5QSIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsLW9wYWNpdHk9IjEiIHRyYW5zZm9ybT0ibWF0cml4KDEuMDAwMTggMCAwIDEgNjcwIDMxLjE0MSkiPjwvcGF0aD48L2c+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==" alt="PA Consulting" style="height:34px;width:auto;display:block;align-self:center;">
+    </a>
+    <nav aria-label="Primary" style="display:flex;gap:12px 22px;margin-left:auto;flex-wrap:wrap;">
+      <a href="../index.html" style="font:400 15px/1 var(--font-primary);color:var(--pa-grey-02);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">Home</a>
+      <a href="../events.html" style="font:400 15px/1 var(--font-primary);color:var(--pa-grey-02);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">Events</a>
+      <a href="../emerging-practices.html" style="font:450 15px/1 var(--font-primary);color:#FFFFFF;text-decoration:none;border-bottom:2px solid #EA0027;cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">Emerging practices</a>
+      <a href="../case-studies.html" style="font:400 15px/1 var(--font-primary);color:var(--pa-grey-02);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">Case studies</a>
+      <a href="../community-voices.html" style="font:400 15px/1 var(--font-primary);color:var(--pa-grey-02);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">Community voices</a>
+      <a href="../about.html" style="font:400 15px/1 var(--font-primary);color:var(--pa-grey-02);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">About</a>
+    </nav>
+  </div>
+</header>
+<main id="main-content" role="main">
+
+  <section style="background:var(--pa-grey-01);padding:clamp(44px,6.5vw,72px) 0 clamp(36px,5vw,56px);">
+    <div style="max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
+      <a href="../emerging-practices.html" style="display:inline-block;font:400 13px/1 var(--font-primary);letter-spacing:0.04em;color:var(--pa-grey-02);text-decoration:none;margin-bottom:32px;">← All emerging practices</a>
+      <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:20px;">Emerging practices</div>
+      <h1 style="font:400 clamp(28px,4.6vw,42px)/1.15 var(--font-primary);color:var(--pa-dark-blue);margin:0;text-wrap:pretty;">Operating model evolution</h1>
+      <div style="font:400 13px/1.6 var(--font-primary);color:var(--pa-grey-04);margin-top:22px;">Scaling a NewCo · 10 min read</div>
+    </div>
+  </section>
+  <section style="background:#FFFFFF;padding:clamp(40px,6vw,64px) 0 clamp(48px,7.5vw,88px);">
+    <div style="max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
+      <p style="font:400 17px/1.7 var(--font-companion);color:var(--pa-dark-blue);margin:0 0 18px;max-width:700px;">The operating model that gets a NewCo through incubation is, almost by design, not the one that should run it at scale — and several organisations in this community lost a year or more by not recognising the moment the two diverged.</p>
+<p style="font:400 17px/1.7 var(--font-companion);color:var(--pa-dark-blue);margin:0 0 18px;max-width:700px;">Incubation-stage operating models are necessarily improvised: a small number of people carrying broad responsibilities, informal coordination substituting for formal process, decisions made quickly because the group making them is small enough to fit in a room. That's a feature during incubation. At scale, the same pattern becomes a bottleneck — the same small group is now a queue, and informal coordination becomes invisible dependency that new joiners can't see or navigate.</p>
+<p style="font:400 17px/1.7 var(--font-companion);color:var(--pa-dark-blue);margin:0 0 18px;max-width:700px;">The restructuring that worked best in this community's experience wasn't a single reorganisation but a staged one: formalising decision rights and team boundaries function by function, as each function actually hit its scaling limit, rather than redesigning the whole organisation pre-emptively based on a headcount forecast. Pre-emptive restructures tended to guess wrong about where the real bottlenecks would appear.</p>
+<p style="font:400 17px/1.7 var(--font-companion);color:var(--pa-dark-blue);margin:0 0 18px;max-width:700px;">The momentum risk is real and worth naming directly: any restructuring signals uncertainty to a delivery organisation mid-flow. The NewCos that managed this best paired each structural change with a concrete, visible delivery commitment in the same announcement, so the change read as “we're organising to deliver more” rather than “things aren't working.”</p>
+      <div style="border-top:1px solid var(--pa-grey-01);margin-top:36px;padding-top:24px;">
+        <a href="../emerging-practices.html" style="display:inline-block;font:400 13px/1 var(--font-primary);letter-spacing:0.04em;color:var(--pa-grey-02);text-decoration:none;margin-bottom:32px;">← Back to Emerging practices</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+<footer role="contentinfo" style="background:var(--pa-dark-blue);border-top:1px solid rgba(255,255,255,0.08);">
+  <div style="max-width:1240px;margin:0 auto;padding:40px clamp(20px,5vw,48px) 24px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:32px;">
+      <div>
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;">
+          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTgzIiBoZWlnaHQ9IjUxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgb3ZlcmZsb3c9ImhpZGRlbiI+PGRlZnM+PGNsaXBQYXRoIGlkPSJjbGlwMCI+PHJlY3QgeD0iNjcwIiB5PSIzMSIgd2lkdGg9IjU4MSIgaGVpZ2h0PSI1MTMiPjwvcmVjdD48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcDEiPjxyZWN0IHg9IjY3MCIgeT0iMzEiIHdpZHRoPSI1ODEiIGhlaWdodD0iNTEzIj48L3JlY3Q+PC9jbGlwUGF0aD48Y2xpcFBhdGggaWQ9ImNsaXAyIj48cmVjdCB4PSI2NzAiIHk9IjMxIiB3aWR0aD0iNTgxIiBoZWlnaHQ9IjUxMyI+PC9yZWN0PjwvY2xpcFBhdGg+PC9kZWZzPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC02NjkgLTMwKSI+PGc+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwKSI+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAxKSI+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAyKSI+PHBhdGggZD0iTTQ1NC4zMzggMTM1LjYwNEM0MTMuMjIgMTM1LjYwNCAzNzkuNzkgMTAyLjE3NCAzNzkuNzkgNjEuMDU1OCAzNzkuNzkgNTEuNzA5IDM4MS41NjEgNDIuNzc2OCAzODQuNzI3IDM0LjUyMjkgMzQ2Ljk2MyAxMi41ODggMzAzLjEzMSAwIDI1Ni4zNTkgMCAxMTQuNzYyIDAgMCAxMTQuNzYyIDAgMjU2LjM1OSAwIDM5Ny45NTYgMTE0Ljc2MiA1MTIuNzE4IDI1Ni4zNTkgNTEyLjcxOCAzOTcuOTU2IDUxMi43MTggNTEyLjcxOCAzOTcuOTU2IDUxMi43MTggMjU2LjM1OSA1MTIuNzE4IDIxMC43OTMgNTAwLjc3MSAxNjguMDU0IDQ3OS45MjkgMTMwLjk2OCA0NzEuOTM5IDEzMy45MDggNDYzLjM0NiAxMzUuNjA0IDQ1NC4zMzggMTM1LjYwNFoiIGZpbGw9IiNGNjJCNDQiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbC1vcGFjaXR5PSIxIiB0cmFuc2Zvcm09Im1hdHJpeCgxLjAwMDE4IDAgMCAxIDY3MCAzMS4xNDEpIj48L3BhdGg+PHBhdGggZD0iTTE4My4zMTggMTU0LjQ4NiA5OS4xOTY4IDE1NC40ODYgOTkuMTk2OCAzNDQuMTc0IDEzNy42NzcgMzQ0LjE3NCAxMzcuNjc3IDI4Ni43MzYgMTgzLjMxOCAyODYuNzM2QzIyNy41NjUgMjg2LjczNiAyNTYuNjk4IDI2MC4zNTQgMjU2LjY5OCAyMjAuNzQzIDI1Ni42OTggMTgxLjEzMiAyMjcuNTY1IDE1NC40ODYgMTgzLjMxOCAxNTQuNDg2Wk0xODMuNTgyIDI1MC45NyAxMzcuNjc3IDI1MC45NyAxMzcuNjc3IDE5MC4yMTUgMTgzLjU4MiAxOTAuMjE1QzIwNi4xMiAxOTAuMjE1IDIxNy42OSAyMDIuMzEzIDIxNy42OSAyMjAuNzA1IDIxNy42OSAyMzkuMDk4IDIwNi4xNTggMjUwLjkzMiAxODMuNTgyIDI1MC45MzJaIiBmaWxsPSIjRkZGRkZGIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGwtb3BhY2l0eT0iMSIgdHJhbnNmb3JtPSJtYXRyaXgoMS4wMDAxOCAwIDAgMSA2NzAgMzEuMTQxKSI+PC9wYXRoPjxwYXRoIGQ9Ik0zNjUuNTgxIDE1NC40ODYgMzE4LjU4MyAxNTQuNDg2IDIzOC4zMDYgMzQ0LjE3NCAyNzkuMjc0IDM0NC4xNzQgMjk0LjEyMyAzMDcuMzUyIDM4OS41MTMgMzA3LjM1MiA0MDQuMzYzIDM0NC4xNzQgNDQ1LjMzMSAzNDQuMTc0IDM2NS42MTkgMTU0LjQ4NlpNMzA3Ljg4IDI3MS41ODUgMzQxLjk1IDE4OC4wMjkgMzc1Ljc1NyAyNzEuNTg1IDMwNy44OCAyNzEuNTg1WiIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsLW9wYWNpdHk9IjEiIHRyYW5zZm9ybT0ibWF0cml4KDEuMDAwMTggMCAwIDEgNjcwIDMxLjE0MSkiPjwvcGF0aD48cGF0aCBkPSJNNTQ2Ljk3NyAxNzEuOTc0QzUyOC43NzMgMTcxLjk3NCA1MTQgMTU3LjE2MiA1MTQgMTM4Ljk5NiA1MTQgMTIwLjgzIDUyOC44MTEgMTA2LjAxOSA1NDYuOTc3IDEwNi4wMTkgNTY1LjE0MyAxMDYuMDE5IDU3OS45NTUgMTIwLjgzIDU3OS45NTUgMTM4Ljk5NiA1NzkuOTU1IDE1Ny4xNjIgNTY1LjE0MyAxNzEuOTc0IDU0Ni45NzcgMTcxLjk3NCIgZmlsbD0iIzdDOEI5QSIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsLW9wYWNpdHk9IjEiIHRyYW5zZm9ybT0ibWF0cml4KDEuMDAwMTggMCAwIDEgNjcwIDMxLjE0MSkiPjwvcGF0aD48cGF0aCBkPSJNNTgwLjg5NyA2MS4wMTgxQzU4MC44OTcgNzEuNjQ2NCA1NzIuMjY2IDgwLjIzOTQgNTYxLjY3NiA4MC4yMzk0IDU1MS4wODUgODAuMjM5NCA1NDIuNDE3IDcxLjYwODcgNTQyLjQxNyA2MS4wMTgxIDU0Mi40MTcgNTAuNDI3NiA1NTEuMDQ4IDQxLjc5NjggNTYxLjY3NiA0MS43OTY4IDU3Mi4zMDQgNDEuNzk2OCA1ODAuODk3IDUwLjQyNzYgNTgwLjg5NyA2MS4wMTgxIiBmaWxsPSIjN0M4QjlBIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGwtb3BhY2l0eT0iMSIgdHJhbnNmb3JtPSJtYXRyaXgoMS4wMDAxOCAwIDAgMSA2NzAgMzEuMTQxKSI+PC9wYXRoPjxwYXRoIGQ9Ik00NTQuMzM4IDBDNDIwLjY4MiAwIDM5My4zMiAyNy4zNjIgMzkzLjMyIDYxLjAxODEgMzkzLjMyIDk0LjY3NDIgNDIwLjY4MiAxMjIuMDc0IDQ1NC4zMzggMTIyLjA3NCA0ODcuOTk0IDEyMi4wNzQgNTE1LjM1NiA5NC43MTE5IDUxNS4zNTYgNjEuMDE4MSA1MTUuMzU2IDI3LjMyNDQgNDg3Ljk5NCAwIDQ1NC4zMzggMCIgZmlsbD0iIzdDOEI5QSIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsLW9wYWNpdHk9IjEiIHRyYW5zZm9ybT0ibWF0cml4KDEuMDAwMTggMCAwIDEgNjcwIDMxLjE0MSkiPjwvcGF0aD48L2c+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==" alt="PA Consulting" style="height:30px;width:auto;display:block;align-self:center;">
+        </div>
+        <p style="font:400 14px/1.7 var(--font-companion);color:var(--pa-grey-02);max-width:320px;margin:0;">A practitioner-led forum for UK government leaders, convened by PA Consulting.</p>
+      </div>
+      <div>
+        <nav aria-label="Footer" style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
+          <a href="../index.html" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);text-decoration:none;padding:0;">Home</a><a href="../events.html" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);text-decoration:none;padding:0;">Events</a><a href="../emerging-practices.html" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);text-decoration:none;padding:0;">Emerging practices</a><a href="../case-studies.html" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);text-decoration:none;padding:0;">Case studies</a><a href="../community-voices.html" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);text-decoration:none;padding:0;">Community voices</a><a href="../about.html" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);text-decoration:none;padding:0;">About</a>
+        </nav>
+      </div>
+      <div>
+        <div style="font:400 13px/1.6 var(--font-primary);color:var(--pa-grey-02);">newco.community@paconsulting.com<br>10 Bressenden Place<br>London SW1E 5DN</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.08);margin-top:28px;padding-top:16px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+      <span style="font:400 12px/1 var(--font-primary);color:var(--pa-grey-02);">© 2027 PA Knowledge Limited. All rights reserved.</span>
+      <span style="font:400 12px/1 var(--font-primary);color:var(--pa-grey-02);">Events run under the Chatham House Rule.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

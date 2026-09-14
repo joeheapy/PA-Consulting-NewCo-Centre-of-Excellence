@@ -199,7 +199,7 @@
           <button onClick="{{goHub}}" style="font:400 16px/1 var(--font-companion);color:#C40021;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">All emerging practices →</button>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:32px;align-items:stretch;">
-          <div onClick="{{goHub}}" onKeyDown="{{keyHub}}" role="button" tabIndex="{{0}}" aria-label="Open emerging practices" style="background:var(--pa-dark-blue);padding:clamp(28px,4vw,44px) clamp(24px,4vw,44px) clamp(26px,3.6vw,40px);cursor:pointer;display:flex;flex-direction:column;">
+          <div onClick="{{practiceFeature.go}}" onKeyDown="{{practiceFeature.goKey}}" role="button" tabIndex="{{0}}" aria-label="Open emerging practices" style="background:var(--pa-dark-blue);padding:clamp(28px,4vw,44px) clamp(24px,4vw,44px) clamp(26px,3.6vw,40px);cursor:pointer;display:flex;flex-direction:column;">
             <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:22px;">{{practiceFeature.stage}}</div>
             <div style="font:550 clamp(22px,3.2vw,30px)/1.25 var(--font-companion);color:#FFFFFF;text-wrap:pretty;">{{practiceFeature.title}}</div>
             <p style="font:400 16px/1.6 var(--font-companion);color:var(--pa-grey-02);margin:18px 0 28px;flex:1;">{{practiceFeature.stand}}</p>
@@ -207,7 +207,7 @@
           </div>
           <div style="display:flex;flex-direction:column;gap:20px;">
             <sc-for list="{{homePractices}}" as="item" hint-placeholder-count="3">
-              <div onClick="{{goHub}}" onKeyDown="{{keyHub}}" role="button" tabIndex="{{0}}" style="background:#FFFFFF;border:1px solid var(--pa-grey-01);padding:22px 24px;cursor:pointer;flex:1;" style-hover="border-color:var(--pa-grey-02);">
+              <div onClick="{{item.go}}" onKeyDown="{{item.goKey}}" role="button" tabIndex="{{0}}" style="background:#FFFFFF;border:1px solid var(--pa-grey-01);padding:22px 24px;cursor:pointer;flex:1;" style-hover="border-color:var(--pa-grey-02);">
                 <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:10px;">{{item.stage}}</div>
                 <div style="font:550 18px/1.35 var(--font-companion);color:var(--pa-aqua-05);">{{item.title}}</div>
                 <div style="font:400 12px/1.5 var(--font-primary);color:var(--pa-grey-04);margin-top:10px;">{{item.meta}}</div>
@@ -229,7 +229,7 @@
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px;">
           <sc-for list="{{homeCases}}" as="item" hint-placeholder-count="3">
-            <div onClick="{{goInsights}}" onKeyDown="{{keyInsights}}" role="button" tabIndex="{{0}}" style="border:1px solid var(--pa-grey-01);padding:26px 28px;cursor:pointer;" style-hover="border-color:var(--pa-grey-02);">
+            <div onClick="{{item.go}}" onKeyDown="{{item.goKey}}" role="button" tabIndex="{{0}}" style="border:1px solid var(--pa-grey-01);padding:26px 28px;cursor:pointer;" style-hover="border-color:var(--pa-grey-02);">
               <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:12px;">{{item.tag}}</div>
               <div style="font:550 20px/1.3 var(--font-companion);color:var(--pa-aqua-05);margin-bottom:10px;">{{item.title}}</div>
               <div style="font:400 15px/1.55 var(--font-companion);color:var(--pa-grey-04);">{{item.short}}</div>
@@ -294,122 +294,6 @@
   </main>
 </sc-if>
 
-<sc-if value="{{isEvent}}" hint-placeholder-val="{{false}}">
-  <main id="main-content" role="main" data-screen-label="Event detail">
-    <section style="background:var(--pa-dark-blue);padding:56px 0 60px;">
-      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
-        <button onClick="{{goEvents}}" style="font:400 13px/1 var(--font-primary);letter-spacing:0.04em;color:var(--pa-grey-02);background:none;border:none;padding:0;cursor:pointer;margin-bottom:32px;">← All events</button>
-        <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:18px;">{{ev.kicker}}</div>
-        <h1 style="font:400 clamp(28px,4.6vw,42px)/1.15 var(--font-primary);color:#FFFFFF;margin:0;max-width:840px;text-wrap:pretty;">{{ev.title}}</h1>
-        <div style="display:flex;gap:36px;flex-wrap:wrap;margin-top:28px;">
-          <div style="font:400 13px/1.6 var(--font-primary);color:var(--pa-grey-02);">{{ev.date}}<br>{{ev.time}}</div>
-          <div style="font:400 13px/1.6 var(--font-primary);color:var(--pa-grey-02);">{{ev.loc}}<br>{{ev.format}}</div>
-        </div>
-      </div>
-    </section>
-    <section style="background:#FFFFFF;padding:clamp(40px,6vw,64px) 0 clamp(48px,7.5vw,88px);">
-      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:64px;align-items:start;">
-        <div>
-          <sc-for list="{{ev.overview}}" as="p" hint-placeholder-count="2">
-            <p style="font:400 17px/1.7 var(--font-companion);color:var(--pa-dark-blue);margin:0 0 18px;">{{p}}</p>
-          </sc-for>
-
-          <sc-if value="{{evHasThemes}}" hint-placeholder-val="{{false}}">
-            <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Key discussion themes</div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <sc-for list="{{ev.themes}}" as="t" hint-placeholder-count="4">
-                <div style="display:flex;gap:14px;align-items:baseline;">
-                  <span aria-hidden="true" style="width:8px;height:8px;background:var(--pa-aqua-04);flex:none;position:relative;top:-1px;"></span>
-                  <span style="font:400 16px/1.5 var(--font-companion);color:var(--pa-dark-blue);">{{t}}</span>
-                </div>
-              </sc-for>
-            </div>
-            <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Major insights</div>
-            <div style="display:flex;flex-direction:column;gap:16px;">
-              <sc-for list="{{ev.insights}}" as="t" hint-placeholder-count="3">
-                <div style="border-left:2px solid var(--pa-aqua-01);padding:2px 0 2px 18px;font:400 16px/1.6 var(--font-companion);color:var(--pa-grey-04);font-style:italic;">{{t}}</div>
-              </sc-for>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{evHasAgenda}}" hint-placeholder-val="{{false}}">
-            <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Agenda</div>
-            <div style="display:flex;flex-direction:column;">
-              <sc-for list="{{ev.agenda}}" as="a" hint-placeholder-count="5">
-                <div style="display:grid;grid-template-columns:90px 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--pa-grey-01);">
-                  <span style="font:400 13px/1.5 var(--font-primary);color:var(--pa-grey-04);">{{a.t}}</span>
-                  <span style="font:400 16px/1.5 var(--font-companion);color:var(--pa-dark-blue);">{{a.s}}</span>
-                </div>
-              </sc-for>
-            </div>
-          </sc-if>
-
-          <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Speakers</div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px;">
-            <sc-for list="{{ev.speakers}}" as="s" hint-placeholder-count="3">
-              <div style="border:1px solid var(--pa-grey-01);padding:18px 20px;">
-                <div style="font:450 16px/1.3 var(--font-primary);color:var(--pa-dark-blue);margin-bottom:6px;">{{s.name}}</div>
-                <div style="font:400 13px/1.5 var(--font-companion);color:var(--pa-grey-04);">{{s.role}}</div>
-              </div>
-            </sc-for>
-          </div>
-
-          <sc-if value="{{evHasDownloads}}" hint-placeholder-val="{{false}}">
-            <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Materials</div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <sc-for list="{{ev.downloads}}" as="d" hint-placeholder-count="2">
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;border:1px solid var(--pa-grey-01);padding:16px 20px;">
-                  <span style="font:400 15px/1.4 var(--font-companion);color:var(--pa-dark-blue);">{{d.label}}</span>
-                  <button onClick="{{d.get}}" style="font:450 14px/1 var(--font-primary);color:#EA0027;background:none;border:none;cursor:pointer;white-space:nowrap;">Download ↓</button>
-                </div>
-              </sc-for>
-            </div>
-          </sc-if>
-
-          <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Related reading</div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <sc-for list="{{ev.related}}" as="r" hint-placeholder-count="3">
-              <button onClick="{{goInsights}}" style="font:400 16px/1.5 var(--font-companion);color:#EA0027;background:none;border:none;padding:0;cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px;">{{r}}</button>
-            </sc-for>
-          </div>
-        </div>
-
-        <div>
-          <sc-if value="{{evIsUpcoming}}" hint-placeholder-val="{{false}}">
-            <div style="background:var(--pa-grey-01);padding:32px 32px 36px;position:sticky;top:96px;">
-              <sc-if value="{{regNotDone}}" hint-placeholder-val="{{true}}">
-                <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:8px;">Express interest</div>
-                <div style="font:550 20px/1.3 var(--font-companion);color:var(--pa-dark-blue);margin-bottom:20px;">Tell us you'd like to attend</div>
-                <div style="display:flex;flex-direction:column;gap:16px;">
-                  <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Input" label="Full name" value="{{regName}}" on-change="{{regOnName}}" hint-size="100%,68px"></x-import>
-                  <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Input" label="Work email" type="email" value="{{regEmail}}" on-change="{{regOnEmail}}" hint="We only accept government email addresses" hint-size="100%,88px"></x-import>
-                  <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Input" label="Department or organisation" value="{{regOrg}}" on-change="{{regOnOrg}}" hint-size="100%,68px"></x-import>
-                  <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Input" label="Role" value="{{regRole}}" on-change="{{regOnRole}}" hint-size="100%,68px"></x-import>
-                  
-                  <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Button" on-click="{{regSubmit}}" style="{{fullWidthBtn}}" hint-size="100%,40px">Express interest</x-import>
-                  <div style="font:400 12px/1.5 var(--font-primary);color:var(--pa-grey-04);">Events run under the Chatham House Rule. Places are limited and confirmed by email.</div>
-                </div>
-              </sc-if>
-              <sc-if value="{{regDone}}" hint-placeholder-val="{{false}}">
-                <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Alert" tone="success" title="Interest registered" hint-size="100%,100px">Thank you — we'll confirm your place by email within two working days, with joining details to follow.</x-import>
-              </sc-if>
-            </div>
-          </sc-if>
-          <sc-if value="{{evIsPast}}" hint-placeholder-val="{{false}}">
-            <div style="background:var(--pa-grey-01);padding:32px;">
-              <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:16px;">At a glance</div>
-              <div style="font:400 14px/2 var(--font-primary);color:var(--pa-dark-blue);white-space:pre-line;">{{ev.glance}}</div>
-              <div style="border-top:1px solid var(--pa-grey-02);margin:20px 0;"></div>
-              
-              <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Button" variant="secondary" size="sm" on-click="{{nextEvent.open}}" hint-size="150px,34px">See the next event</x-import>
-            </div>
-          </sc-if>
-        </div>
-      </div>
-    </section>
-  </main>
-</sc-if>
-
 <sc-if value="{{isHub}}" hint-placeholder-val="{{false}}">
   <main id="main-content" role="main" data-screen-label="Knowledge hub">
     <section style="background:var(--pa-grey-01);padding:clamp(44px,6.5vw,72px) 0 0;">
@@ -430,7 +314,7 @@
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;">
             <sc-for list="{{stage.items}}" as="item" hint-placeholder-count="4">
-              <div style="border:1px solid var(--pa-grey-01);padding:24px 26px;display:flex;flex-direction:column;" style-hover="border-color:var(--pa-grey-02);">
+              <div onClick="{{item.go}}" onKeyDown="{{item.goKey}}" role="button" tabIndex="{{0}}" style="border:1px solid var(--pa-grey-01);padding:24px 26px;cursor:pointer;display:flex;flex-direction:column;" style-hover="border-color:var(--pa-grey-02);">
                 <div style="font:550 18px/1.35 var(--font-companion);color:var(--pa-aqua-05);margin-bottom:10px;">{{item.title}}</div>
                 <div style="font:400 14px/1.6 var(--font-companion);color:var(--pa-grey-04);flex:1;">{{item.summary}}</div>
                 <div style="font:400 12px/1 var(--font-primary);color:var(--pa-grey-04);margin-top:16px;">{{item.read}}</div>
@@ -489,7 +373,7 @@
     <section style="background:#FFFFFF;padding:24px 0 88px;">
       <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
         <sc-if value="{{hasCaseFeature}}" hint-placeholder-val="{{true}}">
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:0;background:var(--pa-dark-blue);margin-bottom:16px;">
+          <div onClick="{{caseFeature.go}}" onKeyDown="{{caseFeature.goKey}}" role="button" tabIndex="{{0}}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:0;background:var(--pa-dark-blue);margin-bottom:16px;cursor:pointer;">
             <div style="padding:clamp(32px,4.5vw,52px);display:flex;flex-direction:column;">
               <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:24px;">Featured · {{caseFeature.theme}}</div>
               <div style="font:550 clamp(24px,3.4vw,34px)/1.25 var(--font-companion);color:#FFFFFF;margin-bottom:16px;text-wrap:pretty;">{{caseFeature.title}}</div>
@@ -502,7 +386,7 @@
           </div>
         </sc-if>
         <sc-for list="{{insightsList}}" as="item" hint-placeholder-count="5">
-          <div style="display:grid;grid-template-columns:1fr 200px;gap:40px;align-items:stretch;padding:32px 0;border-bottom:1px solid var(--pa-grey-01);">
+          <div onClick="{{item.go}}" onKeyDown="{{item.goKey}}" role="button" tabIndex="{{0}}" style="display:grid;grid-template-columns:1fr 200px;gap:40px;align-items:stretch;padding:32px 0;border-bottom:1px solid var(--pa-grey-01);cursor:pointer;">
             <div>
               <div style="font:550 clamp(20px,2.6vw,24px)/1.3 var(--font-companion);color:var(--pa-aqua-05);margin-bottom:10px;max-width:720px;text-wrap:pretty;">{{item.title}}</div>
               <div style="font:400 16px/1.6 var(--font-companion);color:var(--pa-grey-04);max-width:720px;">{{item.stand}}</div>
@@ -706,8 +590,7 @@ function submitNetlifyForm(formName, fields) {
 
 class Component extends DCLogic {
   state = {
-    page: 'home', eventId: null, hubTab: 0, filter: 'All',
-    regName: '', regEmail: '', regOrg: '', regRole: '', regAttend: 'In person', regDone: false,
+    page: 'home', hubTab: 0, filter: 'All',
     joinName: '', joinEmail: '', joinOrg: '', joinRole: 'Transformation Director', joinWhy: '', joinNews: true, joinDone: false
   };
 
@@ -716,15 +599,15 @@ class Component extends DCLogic {
     if (p && p !== 'home') this.setState({ page: p });
   }
 
-  go(page, eventId) {
-    this.setState({ page, eventId: eventId || null, regDone: false });
+  go(page) {
+    this.setState({ page });
     window.scrollTo(0, 0);
   }
 
   get DATA() {
     if (this._d) return this._d;
     const upcoming = [
-      { id: 'ev1', kicker: 'Upcoming event · Registration open', date: '17 September 2027', time: '16:00–19:00 BST', loc: 'PA Consulting, 10 Bressenden Place, London', format: 'In person only',
+      { id: 'ev1', slug: 'establishing-a-government-newco', kicker: 'Upcoming event · Registration open', date: '17 September 2027', time: '16:00–19:00 BST', loc: 'PA Consulting, 10 Bressenden Place, London', format: 'In person only',
         title: 'Establishing a government NewCo: when separation is the right answer',
         blurb: 'A working session on the diagnostic case for structural separation — and the traps departments fall into when the answer should have been no.',
         overview: [
@@ -744,7 +627,7 @@ class Component extends DCLogic {
           { t: '18:30', s: 'Drinks and open discussion' }
         ],
         related: ['NewCo Readiness Assessment', 'When NewCo is the right choice', 'Why NewCos succeed — and why they fail'] },
-      { id: 'ev2', kicker: 'Upcoming event · Registration open', date: '12 November 2027', time: '09:00–12:30 GMT', loc: 'PA Consulting, 10 Bressenden Place, London', format: 'In person only',
+      { id: 'ev2', slug: 'designing-governance-and-accountability', kicker: 'Upcoming event · Registration open', date: '12 November 2027', time: '09:00–12:30 GMT', loc: 'PA Consulting, 10 Bressenden Place, London', format: 'In person only',
         title: 'Designing governance and accountability for NewCos',
         blurb: 'How to give a NewCo genuine decision rights without losing the accountability Parliament expects.',
         overview: [
@@ -765,7 +648,7 @@ class Component extends DCLogic {
         related: ['NewCo Operating Model Canvas', 'Governance design', 'Governance lessons from transformation programmes'] }
     ];
     const past = [
-      { id: 'pe1', past: true, kicker: 'Past event · 14 May 2027', date: '14 May 2027', time: '16:00–19:00 BST', loc: 'PA Consulting, London', format: 'In person only', stats: '46 attendees · 15 departments',
+      { id: 'pe1', slug: 'building-a-digital-office', past: true, kicker: 'Past event · 14 May 2027', date: '14 May 2027', time: '16:00–19:00 BST', loc: 'PA Consulting, London', format: 'In person only', stats: '46 attendees · 15 departments',
         glance: '46 attendees\n15 departments\n',
         title: 'Building a Digital Office inside a NewCo',
         blurb: 'What a Digital Office is for, where it sits, and why so many become bottlenecks.',
@@ -791,7 +674,7 @@ class Component extends DCLogic {
         ],
         downloads: [ { label: 'Session summary (PDF, 12 pp)' }, { label: 'Digital Office patterns deck (PDF, 24 pp)' } ],
         related: ['Digital Office patterns', 'Digital office design', 'Building product organisations within government'] },
-      { id: 'pe2', past: true, kicker: 'Past event · 5 March 2027', date: '5 March 2027', time: '09:00–12:30 GMT', loc: 'PA Consulting, London', format: 'In person only', stats: '38 attendees · 12 departments',
+      { id: 'pe2', slug: 'operating-model-incubation', past: true, kicker: 'Past event · 5 March 2027', date: '5 March 2027', time: '09:00–12:30 GMT', loc: 'PA Consulting, London', format: 'In person only', stats: '38 attendees · 12 departments',
         glance: '38 attendees\n12 departments\n2 published insights\nIncubation Roadmap v2 released',
         title: 'Operating model incubation: from programme to business',
         blurb: 'The awkward adolescence between programme mobilisation and a functioning organisation.',
@@ -816,7 +699,7 @@ class Component extends DCLogic {
         ],
         downloads: [ { label: 'Session summary (PDF, 10 pp)' }, { label: 'Incubation Roadmap v2 (PDF, 16 pp)' } ],
         related: ['Incubation Roadmap', 'Operating model evolution', 'From programme to business in eighteen months'] },
-      { id: 'pe3', past: true, kicker: 'Past event · 22 January 2027 · Launch event', date: '22 January 2027', time: '16:00–19:30 GMT', loc: 'PA Consulting, London', format: 'In person only', stats: '52 attendees · 17 departments',
+      { id: 'pe3', slug: 'lessons-from-live-transformations', past: true, kicker: 'Past event · 22 January 2027 · Launch event', date: '22 January 2027', time: '16:00–19:30 GMT', loc: 'PA Consulting, London', format: 'In person only', stats: '52 attendees · 17 departments',
         glance: '52 attendees\n17 departments\nCommunity launched\n4 published insights',
         title: 'Lessons from live transformations',
         blurb: 'The community\u2019s launch event: candid accounts from three transformations in flight.',
@@ -845,31 +728,31 @@ class Component extends DCLogic {
     const stages = [
       { tab: 'Establishing', num: '01 / ESTABLISHING', title: 'Establishing a NewCo', intro: 'The decision to separate is the most consequential one. This stage covers the diagnostic case, the business case and the leadership needed before anything is built.',
         items: [
-          { title: 'When NewCo is the right choice', summary: 'The conditions under which structural separation outperforms in-place transformation — and the warning signs that it won\u2019t.', read: '9 min read' },
-          { title: 'Diagnostic criteria', summary: 'Seven tests for whether your delivery problem is structural — legacy estate, accountability, capability, funding, pace, culture and mandate.', read: '7 min read' },
-          { title: 'Business case development', summary: 'Making the case to HM Treasury and departmental boards: benefits framing, comparator options and the cost of not separating.', read: '11 min read' },
-          { title: 'Leadership models', summary: 'What the first leadership team needs to look like — and why the founding CEO is rarely the scaling CEO.', read: '8 min read' }
+          { slug: 'when-newco-is-the-right-choice', title: 'When NewCo is the right choice', summary: 'The conditions under which structural separation outperforms in-place transformation — and the warning signs that it won\u2019t.', read: '9 min read' },
+          { slug: 'diagnostic-criteria', title: 'Diagnostic criteria', summary: 'Seven tests for whether your delivery problem is structural — legacy estate, accountability, capability, funding, pace, culture and mandate.', read: '7 min read' },
+          { slug: 'business-case-development', title: 'Business case development', summary: 'Making the case to HM Treasury and departmental boards: benefits framing, comparator options and the cost of not separating.', read: '11 min read' },
+          { slug: 'leadership-models', title: 'Leadership models', summary: 'What the first leadership team needs to look like — and why the founding CEO is rarely the scaling CEO.', read: '8 min read' }
         ] },
       { tab: 'Incubating', num: '02 / INCUBATING', title: 'Incubating a NewCo', intro: 'The awkward adolescence: building governance, capability and culture while still delivering. Most NewCos that fail, fail here.',
         items: [
-          { title: 'Governance design', summary: 'Board composition, delegation frameworks and escalation routes that balance autonomy with the accountability Parliament expects.', read: '10 min read' },
-          { title: 'Digital office design', summary: 'Patterns for a Digital Office that serves delivery teams instead of gating them — drawn from four live transformations.', read: '9 min read' },
-          { title: 'Capability development', summary: 'When to stop hiring contractors and start building permanent capability — and how to recruit technical leaders into government structures.', read: '8 min read' },
-          { title: 'Culture and ways of working', summary: 'Giving the NewCo permission to be different without losing the trust of the parent department.', read: '7 min read' }
+          { slug: 'governance-design', title: 'Governance design', summary: 'Board composition, delegation frameworks and escalation routes that balance autonomy with the accountability Parliament expects.', read: '10 min read' },
+          { slug: 'digital-office-design', title: 'Digital office design', summary: 'Patterns for a Digital Office that serves delivery teams instead of gating them — drawn from four live transformations.', read: '9 min read' },
+          { slug: 'capability-development', title: 'Capability development', summary: 'When to stop hiring contractors and start building permanent capability — and how to recruit technical leaders into government structures.', read: '8 min read' },
+          { slug: 'culture-and-ways-of-working', title: 'Culture and ways of working', summary: 'Giving the NewCo permission to be different without losing the trust of the parent department.', read: '7 min read' }
         ] },
       { tab: 'Scaling', num: '03 / SCALING', title: 'Scaling a NewCo', intro: 'Growth exposes every shortcut taken during incubation. This stage covers evolving the operating model, funding and measurement as delivery expands.',
         items: [
-          { title: 'Operating model evolution', summary: 'Why the model that got you through incubation won\u2019t survive scale — and how to restructure without losing momentum.', read: '10 min read' },
-          { title: 'Funding models', summary: 'Moving from programme funding to sustainable business funding: what twelve departments told us about what works.', read: '9 min read' },
-          { title: 'Service expansion', summary: 'Sequencing which services move into the NewCo, and the absorption limits that determine pace.', read: '7 min read' },
-          { title: 'Measuring outcomes', summary: 'Shifting measurement from delivery milestones to service outcomes — and surviving the first honest baseline.', read: '6 min read' }
+          { slug: 'operating-model-evolution', title: 'Operating model evolution', summary: 'Why the model that got you through incubation won\u2019t survive scale — and how to restructure without losing momentum.', read: '10 min read' },
+          { slug: 'funding-models', title: 'Funding models', summary: 'Moving from programme funding to sustainable business funding: what twelve departments told us about what works.', read: '9 min read' },
+          { slug: 'service-expansion', title: 'Service expansion', summary: 'Sequencing which services move into the NewCo, and the absorption limits that determine pace.', read: '7 min read' },
+          { slug: 'measuring-outcomes', title: 'Measuring outcomes', summary: 'Shifting measurement from delivery milestones to service outcomes — and surviving the first honest baseline.', read: '6 min read' }
         ] },
       { tab: 'Reintegration', num: '04 / REINTEGRATION AND TRANSITION', title: 'Reintegration and transition', intro: 'Every NewCo must plan its own ending. This stage covers bringing capability and learning back into the wider organisation — without creating a transformation island.',
         items: [
-          { title: 'Capability transfer', summary: 'Moving people, practices and platforms back into the parent organisation while they still work.', read: '9 min read' },
-          { title: 'Organisational adoption', summary: 'Why the parent department must change to receive the NewCo — reintegration is a two-sided transformation.', read: '8 min read' },
-          { title: 'Operating model convergence', summary: 'Deciding what converges with departmental standards and what the department should adopt from the NewCo.', read: '7 min read' },
-          { title: 'Avoiding transformation islands', summary: 'The failure mode where a successful NewCo becomes permanently separate — and the lessons never travel.', read: '8 min read' }
+          { slug: 'capability-transfer', title: 'Capability transfer', summary: 'Moving people, practices and platforms back into the parent organisation while they still work.', read: '9 min read' },
+          { slug: 'organisational-adoption', title: 'Organisational adoption', summary: 'Why the parent department must change to receive the NewCo — reintegration is a two-sided transformation.', read: '8 min read' },
+          { slug: 'operating-model-convergence', title: 'Operating model convergence', summary: 'Deciding what converges with departmental standards and what the department should adopt from the NewCo.', read: '7 min read' },
+          { slug: 'avoiding-transformation-islands', title: 'Avoiding transformation islands', summary: 'The failure mode where a successful NewCo becomes permanently separate — and the lessons never travel.', read: '8 min read' }
         ] }
     ];
     const frameworks = [
@@ -885,13 +768,13 @@ class Component extends DCLogic {
         desc: 'Downloadable templates and canvases contributed and refined by the community: governance terms of reference, funding gateway templates, capability heatmaps and more.', cta: 'Download toolkits' }
     ];
     const insights = [
-      { theme: 'Operating models', title: 'Why NewCos succeed — and why they fail', stand: 'Separation buys you speed; it doesn\u2019t buy you judgement. The evidence from a decade of government NewCos on what actually determines the outcome.', author: 'Helen Carver', role: 'PA Consulting', date: '2 July 2027', read: '12 min read' },
-      { theme: 'Culture', title: 'The reintegration challenge: why NewCos must plan their own ending', stand: 'The most neglected phase of every NewCo is its last. Departments that plan reintegration from day one keep the capability; those that don\u2019t build transformation islands.', author: 'Rachel Donnelly', role: 'PA Consulting', date: '18 June 2027', read: '10 min read' },
-      { theme: 'Evidence', title: 'Building product organisations within government', stand: 'Product operating models keep colliding with programme governance. What it takes to run genuine product teams inside departmental accountability structures.', author: 'Aisha Rahman', role: 'PA Consulting', date: '4 June 2027', read: '9 min read' },
-      { theme: 'Digital Office', title: 'Digital Office patterns', stand: 'Four live transformations, four different Digital Offices. The patterns that served delivery — and the ones that quietly became the new bureaucracy.', author: 'Marcus Bell', role: 'Community contribution', date: '21 May 2027', read: '11 min read' },
-      { theme: 'Governance', title: 'Governance lessons from transformation programmes', stand: 'The autonomy–accountability trade-off is not solved by structure charts. Delegation frameworks, funding gateways and escalation routes that held up under pressure.', author: 'David Achebe', role: 'PA Consulting', date: '7 May 2027', read: '10 min read' },
-      { theme: 'Operating models', title: 'NewCo versus portfolio transformation', stand: 'Separation is not the only answer. An honest comparison of NewCo and portfolio-led transformation — and the conditions that favour each.', author: 'James Whitfield', role: 'PA Consulting', date: '23 April 2027', read: '8 min read' },
-      { theme: 'Governance', title: 'NewCo and GDS reform patterns', stand: 'What the evolution of central digital institutions teaches departments designing their own delivery organisations — convergence, divergence and the standards question.', author: 'Helen Carver', role: 'PA Consulting', date: '9 April 2027', read: '9 min read' }
+      { slug: 'why-newcos-succeed-and-why-they-fail', theme: 'Operating models', title: 'Why NewCos succeed — and why they fail', stand: 'Separation buys you speed; it doesn\u2019t buy you judgement. The evidence from a decade of government NewCos on what actually determines the outcome.', author: 'Helen Carver', role: 'PA Consulting', date: '2 July 2027', read: '12 min read' },
+      { slug: 'the-reintegration-challenge', theme: 'Culture', title: 'The reintegration challenge: why NewCos must plan their own ending', stand: 'The most neglected phase of every NewCo is its last. Departments that plan reintegration from day one keep the capability; those that don\u2019t build transformation islands.', author: 'Rachel Donnelly', role: 'PA Consulting', date: '18 June 2027', read: '10 min read' },
+      { slug: 'building-product-organisations', theme: 'Evidence', title: 'Building product organisations within government', stand: 'Product operating models keep colliding with programme governance. What it takes to run genuine product teams inside departmental accountability structures.', author: 'Aisha Rahman', role: 'PA Consulting', date: '4 June 2027', read: '9 min read' },
+      { slug: 'digital-office-patterns', theme: 'Digital Office', title: 'Digital Office patterns', stand: 'Four live transformations, four different Digital Offices. The patterns that served delivery — and the ones that quietly became the new bureaucracy.', author: 'Marcus Bell', role: 'Community contribution', date: '21 May 2027', read: '11 min read' },
+      { slug: 'governance-lessons-from-transformation-programmes', theme: 'Governance', title: 'Governance lessons from transformation programmes', stand: 'The autonomy–accountability trade-off is not solved by structure charts. Delegation frameworks, funding gateways and escalation routes that held up under pressure.', author: 'David Achebe', role: 'PA Consulting', date: '7 May 2027', read: '10 min read' },
+      { slug: 'newco-versus-portfolio-transformation', theme: 'Operating models', title: 'NewCo versus portfolio transformation', stand: 'Separation is not the only answer. An honest comparison of NewCo and portfolio-led transformation — and the conditions that favour each.', author: 'James Whitfield', role: 'PA Consulting', date: '23 April 2027', read: '8 min read' },
+      { slug: 'newco-and-gds-reform-patterns', theme: 'Governance', title: 'NewCo and GDS reform patterns', stand: 'What the evolution of central digital institutions teaches departments designing their own delivery organisations — convergence, divergence and the standards question.', author: 'Helen Carver', role: 'PA Consulting', date: '9 April 2027', read: '9 min read' }
     ];
     const voices = [
       { format: 'Practitioner interview', title: '\u201CThe hardest part was giving the NewCo permission to be different\u201D', attr: 'Interview with a former government NewCo Chief Executive', stand: 'On founding leadership, the fights worth having with the centre, and the one governance concession she regrets.' },
@@ -913,11 +796,12 @@ class Component extends DCLogic {
       ? () => { window.location.href = PAGE_FILES[p]; }
       : () => this.go(p);
     const key = (fn) => (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } };
+    const navTo = (href) => () => { window.location.href = href; };
     const pages = [
       ['Home', 'home'], ['Events', 'events'], ['Emerging practices', 'hub'], ['Case studies', 'insights'],
       ['Community voices', 'voices'], ['About', 'about']
     ];
-    const activePage = S.page === 'event' ? 'events' : S.page;
+    const activePage = S.page;
     const navItems = pages.map(([label, p]) => ({
       label, go: mkGo(p), href: PAGE_FILES[p],
       color: activePage === p ? '#FFFFFF' : 'var(--pa-grey-02)',
@@ -925,10 +809,10 @@ class Component extends DCLogic {
       underline: activePage === p ? '#EA0027' : 'transparent',
       current: activePage === p ? 'page' : undefined
     }));
-    const openEv = (id) => () => this.go('event', id);
-    const allEvents = D.upcoming.concat(D.past);
-    const ev = allEvents.find(e => e.id === S.eventId) || D.upcoming[0];
-    const withOpen = (e) => ({ ...e, open: openEv(e.id), openKey: key(openEv(e.id)), label: 'Event: ' + e.title });
+    const withOpen = (e) => {
+      const href = 'events/' + e.slug + '.html';
+      return { ...e, href, open: navTo(href), openKey: key(navTo(href)), label: 'Event: ' + e.title };
+    };
     const themes = ['All', 'Operating models', 'Governance', 'Digital Office', 'Evidence', 'Culture'];
     const chips = themes.map(t => ({
       label: t, on: () => this.setState({ filter: t }),
@@ -937,49 +821,45 @@ class Component extends DCLogic {
       border: S.filter === t ? 'var(--pa-dark-blue)' : 'var(--pa-grey-02)'
     }));
     const insightsList = D.insights.filter(i => S.filter === 'All' || i.theme === S.filter)
-      .map((i, n) => ({ ...i, slotId: 'case-' + D.insights.indexOf(i) }));
+      .map((i, n) => {
+        const href = 'case-studies/' + i.slug + '.html';
+        return { ...i, slotId: 'case-' + D.insights.indexOf(i), href, go: navTo(href), goKey: key(navTo(href)) };
+      });
     const set = (k) => (e) => this.setState({ [k]: e.target.value });
-    const stage = D.stages[S.hubTab];
     const dl = () => {};
+    const stageRaw = D.stages[S.hubTab];
+    const stage = {
+      ...stageRaw,
+      items: stageRaw.items.map(it => {
+        const href = 'emerging-practices/' + it.slug + '.html';
+        return { ...it, href, go: navTo(href), goKey: key(navTo(href)) };
+      })
+    };
     return {
-      keyInsights: key(mkGo('insights')), keyFrameworks: key(mkGo('frameworks')), keyHub: key(mkGo('hub')),
-      practiceFeature: { stage: '01 / Establishing', title: 'When NewCo is the right choice', stand: 'The conditions under which structural separation outperforms in-place transformation, the seven diagnostic tests, and the warning signs that the answer should be no.', meta: '14 July 2027' },
-      homePractices: D.stages.slice(1).map((s, i) => ({ stage: ['02 / Incubating', '03 / Scaling', '04 / Reintegration'][i], title: s.title, meta: ['26 June 2027', '11 June 2027', '22 May 2027'][i] })),
+      practiceFeature: { stage: '01 / Establishing', title: 'When NewCo is the right choice', stand: 'The conditions under which structural separation outperforms in-place transformation, the seven diagnostic tests, and the warning signs that the answer should be no.', meta: '14 July 2027',
+        go: navTo('emerging-practices/' + D.stages[0].items[0].slug + '.html'), goKey: key(navTo('emerging-practices/' + D.stages[0].items[0].slug + '.html')) },
+      homePractices: D.stages.slice(1).map((s, i) => {
+        const href = 'emerging-practices/' + s.items[0].slug + '.html';
+        return { stage: ['02 / Incubating', '03 / Scaling', '04 / Reintegration'][i], title: s.title, meta: ['26 June 2027', '11 June 2027', '22 May 2027'][i], go: navTo(href), goKey: key(navTo(href)) };
+      }),
       navItems, goHome: mkGo('home'), goEvents: mkGo('events'), goHub: mkGo('hub'), goFrameworks: mkGo('frameworks'),
       goInsights: mkGo('insights'), goVoices: mkGo('voices'), goAbout: mkGo('about'), goJoin: mkGo('join'),
-      isHome: S.page === 'home', isEvents: S.page === 'events', isEvent: S.page === 'event', isHub: S.page === 'hub',
+      isHome: S.page === 'home', isEvents: S.page === 'events', isHub: S.page === 'hub',
       isFrameworks: S.page === 'frameworks', isInsights: S.page === 'insights', isVoices: S.page === 'voices',
       isAbout: S.page === 'about', isJoin: S.page === 'join',
       showBanner: this.props.showEventBanner ?? true,
       nextEvent: withOpen(D.upcoming[0]),
-      upcoming: D.upcoming.slice(0, 1).map(withOpen),
+      upcoming: D.upcoming.map(withOpen),
       past: D.past.map(withOpen),
-      ev: { ...ev, downloads: (ev.downloads || []).map(d => ({ ...d, get: dl })) },
-      evIsUpcoming: !ev.past, evIsPast: !!ev.past,
-      evHasThemes: !!ev.themes, evHasAgenda: !!ev.agenda, evHasDownloads: !!(ev.downloads && ev.downloads.length),
-      regDone: S.regDone, regNotDone: !S.regDone,
-      regName: S.regName, regEmail: S.regEmail, regOrg: S.regOrg, regRole: S.regRole, regAttend: S.regAttend,
-      regOnName: set('regName'), regOnEmail: set('regEmail'), regOnOrg: set('regOrg'), regOnRole: set('regRole'),
-      regOnAttend: (e) => this.setState({ regAttend: e.target ? e.target.value : e }),
-      regSubmit: () => {
-        submitNetlifyForm('event-registration', {
-          name: S.regName, email: S.regEmail, organisation: S.regOrg, role: S.regRole, attendance: S.regAttend
-        }).catch(() => {});
-        this.setState({ regDone: true });
-      },
       roleOptions: ['Chief Digital Officer', 'Chief Operating Officer', 'Transformation Director', 'Programme Director', 'Portfolio Director', 'Digital Office leader', 'Senior Responsible Owner', 'Other'],
-      attendOptions: ['In person', 'Online'],
-      fullWidthBtn: { width: '100%', justifyContent: 'center' },
       hubTabs: D.stages.map(s => s.tab), hubTab: S.hubTab, setHubTab: (n) => this.setState({ hubTab: n }), stage,
       frameworks: D.frameworks.map(f => ({ ...f, get: dl })),
       homeFrameworks: D.frameworks.slice(0, 3).map(f => ({ ...f, short: f.desc.split(' — ')[0].split('. ')[0] + '.' })),
-      homeCases: [
-        { tag: 'Central government department', title: 'From programme to business in eighteen months', short: 'How one NewCo moved through mobilise, establish and validate — and the stage it nearly skipped.' },
-        { tag: 'Major delivery department', title: 'Rebuilding a Digital Office twice', short: 'Two restructures in sixteen months, and what finally made the function useful to delivery teams.' },
-        { tag: 'Arms-length body', title: 'Reintegration planned from day one', short: 'Capability transfer designed into the operating model before the first service went live.' }
-      ],
+      homeCases: [D.insights[0], D.insights[2], D.insights[4]].map(i => {
+        const href = 'case-studies/' + i.slug + '.html';
+        return { tag: i.theme, title: i.title, short: i.stand.split('. ')[0] + '.', go: navTo(href), goKey: key(navTo(href)) };
+      }),
       chips, insightsList: insightsList.slice(1), caseFeature: insightsList[0], hasCaseFeature: insightsList.length > 0,
-      featured: D.insights[1], homeInsights: [D.insights[0], D.insights[3], D.insights[4]],
       voiceFeature: D.voices[0], voices: D.voices.slice(1),
       cycle: [
         { n: '01', label: 'Event', arrow: true }, { n: '02', label: 'Discussion', arrow: true },
