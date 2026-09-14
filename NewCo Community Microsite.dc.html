@@ -48,12 +48,12 @@
 
 <header data-screen-label="Header" role="banner" style="position:sticky;top:0;z-index:50;background:var(--pa-dark-blue);border-bottom:1px solid rgba(255,255,255,0.08);">
   <div style="max-width:1240px;margin:0 auto;padding:8px clamp(20px,5vw,48px);min-height:52px;display:flex;align-items:center;gap:20px 28px;flex-wrap:wrap;">
-    <button onClick="{{goHome}}" style="display:flex;align-items:baseline;gap:14px;background:none;border:none;cursor:pointer;padding:0;">
+    <a href="index.html" style="display:flex;align-items:baseline;gap:14px;text-decoration:none;padding:0;">
       <img src="uploads/PA logo.svg" alt="PA Consulting" style="height:34px;width:auto;display:block;align-self:center;">
-    </button>
+    </a>
     <nav aria-label="Primary" style="display:flex;gap:12px 22px;margin-left:auto;flex-wrap:wrap;">
       <sc-for list="{{navItems}}" as="item" hint-placeholder-count="7">
-        <button onClick="{{item.go}}" aria-current="{{item.current}}" style="font:{{item.weight}} 15px/1 var(--font-primary);color:{{item.color}};background:none;border:none;border-bottom:2px solid {{item.underline}};cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">{{item.label}}</button>
+        <a href="{{item.href}}" aria-current="{{item.current}}" style="font:{{item.weight}} 15px/1 var(--font-primary);color:{{item.color}};text-decoration:none;border-bottom:2px solid {{item.underline}};cursor:pointer;padding:8px 1px 10px;transition:color 0.15s;">{{item.label}}</a>
       </sc-for>
     </nav>
   </div>
@@ -583,7 +583,7 @@
         
         <nav aria-label="Footer" style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
           <sc-for list="{{navItems}}" as="item" hint-placeholder-count="7">
-            <button onClick="{{item.go}}" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);background:none;border:none;padding:0;cursor:pointer;" style-hover="color:#FFFFFF;">{{item.label}}</button>
+            <a href="{{item.href}}" style="font:400 14px/1.4 var(--font-companion);color:var(--pa-grey-02);text-decoration:none;padding:0;cursor:pointer;" style-hover="color:#FFFFFF;">{{item.label}}</a>
           </sc-for>
         </nav>
       </div>
@@ -812,7 +812,13 @@ class Component extends DCLogic {
 
   renderVals() {
     const S = this.state, D = this.DATA;
-    const mkGo = (p) => () => this.go(p);
+    const PAGE_FILES = {
+      home: 'index.html', events: 'events.html', hub: 'emerging-practices.html',
+      insights: 'case-studies.html', voices: 'community-voices.html', about: 'about.html'
+    };
+    const mkGo = (p) => PAGE_FILES[p]
+      ? () => { window.location.href = PAGE_FILES[p]; }
+      : () => this.go(p);
     const key = (fn) => (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } };
     const pages = [
       ['Home', 'home'], ['Events', 'events'], ['Emerging practices', 'hub'], ['Case studies', 'insights'],
@@ -820,7 +826,7 @@ class Component extends DCLogic {
     ];
     const activePage = S.page === 'event' ? 'events' : S.page;
     const navItems = pages.map(([label, p]) => ({
-      label, go: mkGo(p),
+      label, go: mkGo(p), href: PAGE_FILES[p],
       color: activePage === p ? '#FFFFFF' : 'var(--pa-grey-02)',
       weight: activePage === p ? 450 : 400,
       underline: activePage === p ? '#EA0027' : 'transparent',

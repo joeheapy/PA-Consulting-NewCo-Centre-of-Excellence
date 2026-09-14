@@ -1,11 +1,20 @@
-import re, base64, sys
+import re, base64, sys, os
 
 ROOT = "."
 SRC = f"{ROOT}/NewCo Community Microsite.dc.html"
 DS = f"{ROOT}/_ds/pa-consulting-design-system-c8c638d2-e948-4822-ae72-4e0cf94e9fb4"
-OUT = f"{ROOT}/netlify-deploy/index.html"
+OUT_DIR = f"{ROOT}/netlify-deploy"
 
-html = open(SRC, encoding="utf-8").read()
+# page key (matches the app's internal S.page value) -> (output filename, <title>)
+PAGES = {
+    "home":     ("index.html",               "Home"),
+    "events":   ("events.html",              "Events"),
+    "hub":      ("emerging-practices.html",  "Emerging practices"),
+    "insights": ("case-studies.html",        "Case studies"),
+    "voices":   ("community-voices.html",    "Community voices"),
+    "about":    ("about.html",               "About"),
+}
+SITE_NAME = "NewCo Community"
 
 def read(path):
     return open(path, encoding="utf-8").read()
@@ -25,6 +34,8 @@ ds_bundle_js = read(f"{DS}/_ds_bundle.js")
 logo_svg = open(f"{ROOT}/uploads/PA logo.svg", "rb").read()
 logo_b64 = "data:image/svg+xml;base64," + base64.b64encode(logo_svg).decode("ascii")
 
+base_html = read(SRC)
+
 # IMPORTANT: this page's own template runtime (support.js) walks the DOM and scans
 # every text node for "{{...}}" mustache syntax. support.js's own source contains the
 # literal substring "{{" (it's the code that implements that syntax), and _ds_bundle.js
@@ -36,9 +47,9 @@ logo_b64 = "data:image/svg+xml;base64," + base64.b64encode(logo_svg).decode("asc
 # remains a single, fully self-contained artifact with zero network requests.
 
 # 1. support.js
-before = '<script src="./support.js"></script>'
-assert html.count(before) == 1, f"support.js ref count={html.count(before)}"
-html = html.replace(before, f'<script src="{js_data_uri(support_js)}"></script>')
+before_support = '<script src="./support.js"></script>'
+assert base_html.count(before_support) == 1, f"support.js ref count={base_html.count(before_support)}"
+base_html = base_html.replace(before_support, f'<script src="{js_data_uri(support_js)}"></script>')
 
 # 2. helmet CSS links -> inline <style> (fine: none of these token files contain "{{",
 #    verified separately, so inlining as literal text is safe). Google Fonts @import in
@@ -53,7 +64,7 @@ link_block = '''  <link rel="stylesheet" href="_ds/pa-consulting-design-system-c
   <link rel="stylesheet" href="_ds/pa-consulting-design-system-c8c638d2-e948-4822-ae72-4e0cf94e9fb4/styles.css">
   <script src="_ds/pa-consulting-design-system-c8c638d2-e948-4822-ae72-4e0cf94e9fb4/_ds_bundle.js"></script>
   <script src="./image-slot.js"></script>'''
-assert html.count(link_block) == 1, "helmet link block not found verbatim"
+assert base_html.count(link_block) == 1, "helmet link block not found verbatim"
 
 inlined = f'''  <style>
 {fonts_css}
@@ -69,13 +80,29 @@ inlined = f'''  <style>
   </style>
   <script src="{js_data_uri(ds_bundle_js)}"></script>
   <script src="{js_data_uri(image_slot_js)}"></script>'''
-html = html.replace(link_block, inlined)
+base_html = base_html.replace(link_block, inlined)
 
 # 3. PA logo -> base64 data URI (appears twice: header + footer)
 before_logo = '<img src="uploads/PA logo.svg" alt="PA Consulting"'
-count = html.count(before_logo)
+count = base_html.count(before_logo)
 assert count == 2, f"expected 2 logo refs, found {count}"
-html = html.replace(before_logo, f'<img src="{logo_b64}" alt="PA Consulting"')
+base_html = base_html.replace(before_logo, f'<img src="{logo_b64}" alt="PA Consulting"')
 
-open(OUT, "w", encoding="utf-8").write(html)
-print("wrote", OUT, len(html), "bytes")
+# 4. Multi-page split: one physical file per top-nav page, each booting straight to its
+#    own page via the existing `defaultPage` prop (no client-side-only routing anymore).
+default_page_marker = 'defaultPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;home&quot;'
+assert base_html.count(default_page_marker) == 1, "defaultPage prop marker not found"
+
+head_marker = '<meta name="viewport" content="width=device-width, initial-scale=1">'
+assert base_html.count(head_marker) == 1, "viewport meta not found"
+
+os.makedirs(OUT_DIR, exist_ok=True)
+for page_key, (filename, title) in PAGES.items():
+    html = base_html.replace(
+        default_page_marker,
+        default_page_marker.replace("&quot;home&quot;", f"&quot;{page_key}&quot;")
+    )
+    html = html.replace(head_marker, f'{head_marker}\n<title>{title} — {SITE_NAME}</title>')
+    out_path = f"{OUT_DIR}/{filename}"
+    open(out_path, "w", encoding="utf-8").write(html)
+    print("wrote", out_path, len(html), "bytes")
