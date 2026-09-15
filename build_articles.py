@@ -1,9 +1,10 @@
-import base64, os
+import os
 
 ROOT = "."
 DS = f"{ROOT}/_ds/pa-consulting-design-system-c8c638d2-e948-4822-ae72-4e0cf94e9fb4"
 OUT_DIR = f"{ROOT}/netlify-deploy"
 SITE_NAME = "NewCo Community"
+LOGO_HREF = "../uploads/pa-logo.png"
 
 def read(path):
     return open(path, encoding="utf-8").read()
@@ -12,9 +13,6 @@ fonts_css = read(f"{DS}/tokens/fonts.css")
 colors_css = read(f"{DS}/tokens/colors.css")
 typography_css = read(f"{DS}/tokens/typography.css")
 spacing_css = read(f"{DS}/tokens/spacing.css")
-
-logo_svg = open(f"{ROOT}/uploads/PA logo.svg", "rb").read()
-LOGO_B64 = "data:image/svg+xml;base64," + base64.b64encode(logo_svg).decode("ascii")
 
 NAV = [
     ("Home", "index.html", "home"),
@@ -71,7 +69,7 @@ def page_shell(title, active_key, body_html):
 <header role="banner" style="position:sticky;top:0;z-index:50;background:var(--pa-dark-blue);border-bottom:1px solid rgba(255,255,255,0.08);">
   <div style="max-width:1240px;margin:0 auto;padding:8px clamp(20px,5vw,48px);min-height:52px;display:flex;align-items:center;gap:20px 28px;flex-wrap:wrap;">
     <a href="../index.html" style="display:flex;align-items:baseline;gap:14px;text-decoration:none;padding:0;">
-      <img src="{LOGO_B64}" alt="PA Consulting" style="height:34px;width:auto;display:block;align-self:center;">
+      <img src="{LOGO_HREF}" alt="PA Consulting" style="height:34px;width:auto;display:block;align-self:center;">
     </a>
     <nav aria-label="Primary" style="display:flex;gap:12px 22px;margin-left:auto;flex-wrap:wrap;">
       {nav_html(active_key)}
@@ -86,7 +84,7 @@ def page_shell(title, active_key, body_html):
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:32px;">
       <div>
         <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;">
-          <img src="{LOGO_B64}" alt="PA Consulting" style="height:30px;width:auto;display:block;align-self:center;">
+          <img src="{LOGO_HREF}" alt="PA Consulting" style="height:30px;width:auto;display:block;align-self:center;">
         </div>
         <p style="font:400 14px/1.7 var(--font-companion);color:var(--pa-grey-02);max-width:320px;margin:0;">A practitioner-led forum for UK government leaders, convened by PA Consulting.</p>
       </div>

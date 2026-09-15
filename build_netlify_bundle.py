@@ -1,4 +1,4 @@
-import re, base64, sys, os
+import re, base64, sys, os, shutil
 
 ROOT = "."
 SRC = f"{ROOT}/NewCo Community Microsite.dc.html"
@@ -30,9 +30,6 @@ colors_css = read(f"{DS}/tokens/colors.css")
 typography_css = read(f"{DS}/tokens/typography.css")
 spacing_css = read(f"{DS}/tokens/spacing.css")
 ds_bundle_js = read(f"{DS}/_ds_bundle.js")
-
-logo_svg = open(f"{ROOT}/uploads/PA logo.svg", "rb").read()
-logo_b64 = "data:image/svg+xml;base64," + base64.b64encode(logo_svg).decode("ascii")
 
 base_html = read(SRC)
 
@@ -82,11 +79,11 @@ inlined = f'''  <style>
   <script src="{js_data_uri(image_slot_js)}"></script>'''
 base_html = base_html.replace(link_block, inlined)
 
-# 3. PA logo -> base64 data URI (appears twice: header + footer)
-before_logo = '<img src="uploads/PA logo.svg" alt="PA Consulting"'
-count = base_html.count(before_logo)
-assert count == 2, f"expected 2 logo refs, found {count}"
-base_html = base_html.replace(before_logo, f'<img src="{logo_b64}" alt="PA Consulting"')
+# 3. PA logo: the source already references the real file at "uploads/pa-logo.png"
+# (a plain relative path, no inlining) -- just copy that file into the deploy folder
+# so it actually resolves at the same relative location for the 6 root-level pages.
+assert base_html.count('<img src="uploads/pa-logo.png" alt="PA Consulting"') == 2, \
+    "expected 2 logo refs to uploads/pa-logo.png"
 
 # 4. Multi-page split: one physical file per top-nav page, each booting straight to its
 #    own page via the existing `defaultPage` prop (no client-side-only routing anymore).
@@ -96,7 +93,9 @@ assert base_html.count(default_page_marker) == 1, "defaultPage prop marker not f
 head_marker = '<meta name="viewport" content="width=device-width, initial-scale=1">'
 assert base_html.count(head_marker) == 1, "viewport meta not found"
 
-os.makedirs(OUT_DIR, exist_ok=True)
+os.makedirs(f"{OUT_DIR}/uploads", exist_ok=True)
+shutil.copy(f"{ROOT}/uploads/pa-logo.png", f"{OUT_DIR}/uploads/pa-logo.png")
+
 for page_key, (filename, title) in PAGES.items():
     html = base_html.replace(
         default_page_marker,
