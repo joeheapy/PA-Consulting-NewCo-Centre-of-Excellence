@@ -226,87 +226,52 @@ def load_insights():
 STAGES = load_stages()
 INSIGHTS = load_insights()
 
-UPCOMING = [
-    {"id": "ev1", "slug": "establishing-a-government-newco", "kicker": "Upcoming event · Registration open", "date": "17 September 2027", "time": "16:00–19:00 BST",
-     "loc": "PA Consulting, 10 Bressenden Place, London", "format": "In person only",
-     "title": "Establishing a government NewCo: when separation is the right answer",
-     "blurb": "A working session on the diagnostic case for structural separation — and the traps departments fall into when the answer should have been no.",
-     "overview": ["Structural separation is a powerful response to legacy technology, fragmented accountability and constrained capability — but it is not a universal solution. This session examines the diagnostic criteria that should drive the decision, drawing on live experience from departments that chose separation, and from those that chose not to.",
-                  "Participants will work through the NewCo Readiness Assessment in facilitated roundtables, applying it to their own context. The session closes with an open discussion on building the business case for separation with HM Treasury and departmental boards."],
-     "speakers": [{"name": "Sarah Okafor", "role": "Transformation Director, central government department"},
-                  {"name": "James Whitfield", "role": "Government transformation expert, PA Consulting"},
-                  {"name": "Priya Nair", "role": "Former Chief Operating Officer, government NewCo"}],
-     "agenda": [{"t": "16:00", "s": "Arrival and registration"}, {"t": "16:30", "s": "Keynote — the case for separation, and against it"},
-                {"t": "17:00", "s": "Panel — diagnostic criteria in practice"}, {"t": "17:45", "s": "Roundtables — applying the readiness assessment"},
-                {"t": "18:30", "s": "Drinks and open discussion"}]},
-    {"id": "ev2", "slug": "designing-governance-and-accountability", "kicker": "Upcoming event · Registration open", "date": "12 November 2027", "time": "09:00–12:30 GMT",
-     "loc": "PA Consulting, 10 Bressenden Place, London", "format": "In person only",
-     "title": "Designing governance and accountability for NewCos",
-     "blurb": "How to give a NewCo genuine decision rights without losing the accountability Parliament expects.",
-     "overview": ["The hardest design problem in any NewCo is governance: enough autonomy to move at pace, enough accountability to satisfy Parliament, the National Audit Office and the parent department. Get it wrong in either direction and the NewCo becomes either a runaway or a puppet.",
-                  "This roundtable brings together SROs, accounting officers and governance specialists to compare models in use across government — board composition, delegation frameworks, funding gateways and escalation routes — and to work through the governance layer of the NewCo Operating Model Canvas."],
-     "speakers": [{"name": "Eleanor Hughes", "role": "Senior Responsible Owner, major transformation programme"},
-                  {"name": "David Achebe", "role": "Governance and accountability expert, PA Consulting"}],
-     "agenda": [{"t": "09:00", "s": "Arrival and coffee"}, {"t": "09:30", "s": "Framing — the autonomy–accountability trade-off"},
-                {"t": "10:15", "s": "Roundtables — governance models in use today"}, {"t": "11:30", "s": "Working session — the Operating Model Canvas, governance layer"},
-                {"t": "12:15", "s": "Close and next steps"}]},
-]
+def parse_list_field(value):
+    return [v.strip() for v in value.split(";") if v.strip()]
 
-PAST = [
-    {"id": "pe1", "slug": "building-a-digital-office", "kicker": "Past event · 14 May 2027", "date": "14 May 2027", "time": "16:00–19:00 BST", "loc": "PA Consulting, London", "format": "In person only",
-     "stats": "46 attendees · 15 departments", "glance": "46 attendees\n15 departments",
-     "title": "Building a Digital Office inside a NewCo",
-     "blurb": "What a Digital Office is for, where it sits, and why so many become bottlenecks.",
-     "overview": ["A Digital Office should be the engine room of a NewCo — setting technical direction, owning standards and unblocking delivery. In practice, many become approval bottlenecks that recreate the bureaucracy the NewCo was built to escape. This session compared Digital Office patterns from four live transformations.",
-                  "The strongest consensus of the evening: a Digital Office succeeds when it behaves as a service to delivery teams, with its authority earned through usefulness rather than granted through mandate."],
-     "themes": ["Digital Office as a service, not a control function", "Standards that enable rather than gate — “paved roads, not toll booths”",
-                "Recruiting technical leadership into government pay structures", "The relationship between the Digital Office and the parent department’s CDO function"],
-     "insights": ["“Every approval step you add is a bet that your judgement is better than your delivery teams’. Make that bet rarely.” — panel contribution",
-                  "Three of four organisations represented had restructured their Digital Office within eighteen months of establishing it — plan for evolution, not permanence.",
-                  "Departments that co-located Digital Office staff with delivery teams reported materially faster architectural decisions."],
-     "speakers": [{"name": "Marcus Bell", "role": "Digital Office lead, major delivery department"},
-                  {"name": "Aisha Rahman", "role": "Digital office design expert, PA Consulting"},
-                  {"name": "Tom Askew", "role": "Enterprise architect, government NewCo"}],
-     "downloads": ["Session summary (PDF, 12 pp)", "Digital Office patterns deck (PDF, 24 pp)"]},
-    {"id": "pe2", "slug": "operating-model-incubation", "kicker": "Past event · 5 March 2027", "date": "5 March 2027", "time": "09:00–12:30 GMT", "loc": "PA Consulting, London", "format": "In person only",
-     "stats": "38 attendees · 12 departments", "glance": "38 attendees\n12 departments\n2 published insights\nIncubation Roadmap v2 released",
-     "title": "Operating model incubation: from programme to business",
-     "blurb": "The awkward adolescence between programme mobilisation and a functioning organisation.",
-     "overview": ["Most NewCos begin life as programmes — funded, governed and staffed like programmes. The transition to a functioning business, with its own operating model, is where many stall. This session worked through the five stages of the Incubation Roadmap: mobilise, establish, validate, scale, transition.",
-                  "Discussion centred on the “validate” stage — proving the operating model on a real service before scaling it — which most attendees identified as the stage their organisations had skipped, and later regretted skipping."],
-     "themes": ["Programme funding rhythms versus business funding needs", "Validating the operating model on a real service before scaling",
-                "When to stop hiring contractors and start building permanent capability", "Measuring outcomes rather than delivery milestones"],
-     "insights": ["Attendees consistently reported that incubation took twice as long as their business cases assumed — eighteen to twenty-four months, not nine to twelve.",
-                  "“The moment you scale an unvalidated operating model, you are scaling your problems.” — roundtable contribution",
-                  "Version 2 of the Incubation Roadmap, incorporating the session’s feedback, was published in April 2027."],
-     "speakers": [{"name": "Priya Nair", "role": "Former Chief Operating Officer, government NewCo"},
-                  {"name": "Rachel Donnelly", "role": "Operating model expert, PA Consulting"}],
-     "downloads": ["Session summary (PDF, 10 pp)", "Incubation Roadmap v2 (PDF, 16 pp)"]},
-    {"id": "pe3", "slug": "lessons-from-live-transformations", "kicker": "Past event · 22 January 2027 · Launch event", "date": "22 January 2027", "time": "16:00–19:30 GMT", "loc": "PA Consulting, London", "format": "In person only",
-     "stats": "52 attendees · 17 departments", "glance": "52 attendees\n17 departments\nCommunity launched\n4 published insights",
-     "title": "Lessons from live transformations",
-     "blurb": "The community’s launch event: candid accounts from three transformations in flight.",
-     "overview": ["The community’s launch event brought together fifty-two senior leaders from seventeen departments to hear candid, unattributable accounts from three transformations in flight — one thriving, one recovering, one recently wound down.",
-                  "The evening established the community’s founding premise: NewCo-style delivery models are spreading across government faster than the lessons about how to run them. The event set the programme for the year and shaped the structure of the knowledge hub."],
-     "themes": ["Why departments are turning to NewCo-style models now", "What the wound-down transformation would have done differently",
-                "The skills government struggles to buy — and how NewCos change that", "What this community should be, and should never become"],
-     "insights": ["“We didn’t fail because the model was wrong. We failed because we treated the model as the strategy.” — speaker contribution",
-                  "Attendees voted governance design and reintegration planning as the two topics the community should tackle first.",
-                  "Seventeen departments represented at launch; the community’s target is twenty-five by the end of 2027."],
-     "speakers": [{"name": "Three senior leaders", "role": "Speaking unattributably, under the Chatham House Rule"},
-                  {"name": "Helen Carver", "role": "Head of government transformation, PA Consulting"}],
-     "downloads": ["Launch summary (PDF, 8 pp)"]},
-]
+def parse_speakers_field(value):
+    speakers = []
+    for chunk in parse_list_field(value):
+        name, _, role = chunk.partition("|")
+        speakers.append({"name": name.strip(), "role": role.strip()})
+    return speakers
+
+def parse_agenda_field(value):
+    # "16:00 - 16:30 Arrival and registration" -> {"start", "end", "label"}
+    agenda = []
+    for chunk in parse_list_field(value):
+        start, _, rest = chunk.partition(" - ")
+        end, _, label = rest.partition(" ")
+        agenda.append({"start": start.strip(), "end": end.strip(), "label": label.strip()})
+    return agenda
+
+def load_events():
+    upcoming, past = [], []
+    for meta, body in load_markdown_dir(f"{CONTENT_DIR}/events"):
+        ev = {
+            "slug": meta["slug"], "kicker": meta["kicker"], "date": meta["date"],
+            "time": meta["time"], "loc": meta["loc"], "format": meta["format"],
+            "title": meta["title"], "blurb": meta["blurb"],
+            "overview_html": render_markdown(body),
+            "agenda": parse_agenda_field(meta["agenda"]),
+            "speakers": parse_speakers_field(meta["speakers"]),
+        }
+        if meta.get("themes"):
+            ev["themes"] = parse_list_field(meta["themes"])
+        if meta.get("insights"):
+            ev["insights"] = parse_list_field(meta["insights"])
+        if meta.get("downloads"):
+            ev["downloads"] = parse_list_field(meta["downloads"])
+        (upcoming if meta["kind"] == "upcoming" else past).append(ev)
+    return upcoming, past
+
+UPCOMING, PAST = load_events()
 
 # ---------------------------------------------------------------------------
 # RENDER: events (rich detail layout, matching the app's former isEvent view)
 # ---------------------------------------------------------------------------
 
 def render_event_page(ev, is_upcoming):
-    overview_html = "".join(
-        f'<p style="font:400 17px/1.7 var(--font-companion);color:var(--pa-dark-blue);margin:0 0 18px;">{p}</p>'
-        for p in ev["overview"]
-    )
     themes_html = ""
     if ev.get("themes"):
         themes_html = (
@@ -330,9 +295,9 @@ def render_event_page(ev, is_upcoming):
             '<div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Agenda</div>'
             '<div style="display:flex;flex-direction:column;">'
             + "".join(
-                f'<div style="display:grid;grid-template-columns:90px 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--pa-grey-01);">'
-                f'<span style="font:400 13px/1.5 var(--font-primary);color:var(--pa-grey-04);">{a["t"]}</span>'
-                f'<span style="font:400 16px/1.5 var(--font-companion);color:var(--pa-dark-blue);">{a["s"]}</span></div>'
+                f'<div style="display:grid;grid-template-columns:150px 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--pa-grey-01);">'
+                f'<span style="font:400 13px/1.5 var(--font-primary);color:var(--pa-grey-04);">{a["start"]} - {a["end"]}</span>'
+                f'<span style="font:400 16px/1.5 var(--font-companion);color:var(--pa-dark-blue);">{a["label"]}</span></div>'
                 for a in ev["agenda"]
             ) + "</div>"
         )
@@ -358,6 +323,14 @@ def render_event_page(ev, is_upcoming):
                 for d in ev["downloads"]
             ) + "</div>"
         )
+
+    main_content = f'''
+        {ev["overview_html"]}
+        {themes_html}
+        {agenda_html}
+        {speakers_html}
+        {downloads_html}
+    '''
 
     if is_upcoming:
         sidebar = f'''
@@ -387,14 +360,16 @@ def render_event_page(ev, is_upcoming):
               <div style="font:400 12px/1.5 var(--font-primary);color:var(--pa-grey-04);">Events run under the Chatham House Rule. Places are limited and confirmed by email.</div>
             </form>
           </div>'''
+        content_html = f'''
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:64px;align-items:start;">
+      <div>{main_content}</div>
+      <div>{sidebar}</div>
+    </div>'''
     else:
-        sidebar = f'''
-          <div style="background:var(--pa-grey-01);padding:32px;">
-            <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:16px;">At a glance</div>
-            <div style="font:400 14px/2 var(--font-primary);color:var(--pa-dark-blue);white-space:pre-line;">{ev["glance"]}</div>
-            <div style="border-top:1px solid var(--pa-grey-02);margin:20px 0;"></div>
-            <a href="establishing-a-government-newco.html" style="display:inline-block;font:450 14px/1 var(--font-primary);color:#EA0027;text-decoration:underline;text-underline-offset:3px;">See the next event →</a>
-          </div>'''
+        content_html = f'''
+    <div style="max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
+      {main_content}
+    </div>'''
 
     body = f'''
   <section style="background:var(--pa-dark-blue);padding:56px 0 60px;">
@@ -409,16 +384,7 @@ def render_event_page(ev, is_upcoming):
     </div>
   </section>
   <section style="background:#FFFFFF;padding:clamp(40px,6vw,64px) 0 clamp(48px,7.5vw,88px);">
-    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:64px;align-items:start;">
-      <div>
-        {overview_html}
-        {themes_html}
-        {agenda_html}
-        {speakers_html}
-        {downloads_html}
-      </div>
-      <div>{sidebar}</div>
-    </div>
+    {content_html}
   </section>
 '''
     return page_shell(ev["title"], "events", body)
