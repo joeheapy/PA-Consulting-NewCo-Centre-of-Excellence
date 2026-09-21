@@ -1,7 +1,7 @@
 ---
 slug: establishing-a-government-newco
-kind: upcoming
-kicker: Upcoming event · Registration open
+kind: next
+kicker: Next event · Registration open
 date: 17 September 2027
 time: 16:00–19:00 BST
 loc: PA Consulting, 10 Bressenden Place, London

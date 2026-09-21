@@ -161,20 +161,6 @@
       </div>
     </section>
 
-    <sc-if value="{{showBanner}}" hint-placeholder-val="{{true}}">
-      <section style="background:var(--pa-aqua-01);">
-        <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,5vw,48px);display:flex;align-items:center;justify-content:space-between;gap:36px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:300px;">
-            <div style="display:flex;gap:20px;flex-wrap:wrap;font:400 12px/1.6 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-05);margin-bottom:14px;">
-              <span>Next event</span><span>{{nextEvent.date}}</span><span>{{nextEvent.format}}</span>
-            </div>
-            <div style="font:550 clamp(22px,3vw,28px)/1.3 var(--font-companion);color:var(--pa-aqua-05);text-wrap:pretty;">{{nextEvent.title}}</div>
-          </div>
-          <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Button" size="lg" on-click="{{nextEvent.open}}" hint-size="170px,46px">Express interest</x-import>
-        </div>
-      </section>
-    </sc-if>
-
     <section style="background:#FFFFFF;padding:clamp(48px,7.5vw,88px) 0;">
       <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:64px;">
         <div>
@@ -191,28 +177,18 @@
 
     <section style="background:var(--pa-grey-01);padding:clamp(48px,7.5vw,88px) 0;">
       <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:24px;flex-wrap:wrap;margin-bottom:44px;">
-          <div>
-            <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:16px;">Emerging practices</div>
-            <h2 style="font:400 clamp(26px,4vw,36px)/1.2 var(--font-primary);color:var(--pa-dark-blue);margin:0;">Guidance for every stage</h2>
+        <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:16px;">Events</div>
+        <h2 style="font:400 clamp(26px,4vw,36px)/1.2 var(--font-primary);color:var(--pa-dark-blue);margin:0 0 44px;">What we covered, and what's next.</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:32px;align-items:stretch;">
+          <div onClick="{{pastEvent.open}}" onKeyDown="{{pastEvent.openKey}}" role="button" tabIndex="{{0}}" aria-label="Read the past event write-up" style="background:#FFFFFF;border:1px solid var(--pa-grey-01);padding:clamp(28px,4vw,44px) clamp(24px,4vw,44px) clamp(26px,3.6vw,40px);cursor:pointer;display:flex;flex-direction:column;" style-hover="border-color:var(--pa-grey-02);">
+            <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:22px;">Past event · {{pastEvent.date}}</div>
+            <div style="font:550 clamp(22px,3.2vw,30px)/1.25 var(--font-companion);color:var(--pa-aqua-05);text-wrap:pretty;flex:1;">{{pastEvent.title}}</div>
+            <div style="font:400 16px/1 var(--font-companion);color:#C40021;margin-top:28px;text-decoration:underline;text-underline-offset:3px;">Read the write-up →</div>
           </div>
-          <button onClick="{{goHub}}" style="font:400 16px/1 var(--font-companion);color:#C40021;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">All emerging practices →</button>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:32px;align-items:stretch;">
-          <div onClick="{{practiceFeature.go}}" onKeyDown="{{practiceFeature.goKey}}" role="button" tabIndex="{{0}}" aria-label="Open emerging practices" style="background:var(--pa-dark-blue);padding:clamp(28px,4vw,44px) clamp(24px,4vw,44px) clamp(26px,3.6vw,40px);cursor:pointer;display:flex;flex-direction:column;">
-            <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:22px;">{{practiceFeature.stage}}</div>
-            <div style="font:550 clamp(22px,3.2vw,30px)/1.25 var(--font-companion);color:#FFFFFF;text-wrap:pretty;">{{practiceFeature.title}}</div>
-            <p style="font:400 16px/1.6 var(--font-companion);color:var(--pa-grey-02);margin:18px 0 28px;flex:1;">{{practiceFeature.stand}}</p>
-            <div style="font:400 12px/1.5 var(--font-primary);letter-spacing:0.04em;color:var(--pa-grey-02);">{{practiceFeature.meta}}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:20px;">
-            <sc-for list="{{homePractices}}" as="item" hint-placeholder-count="3">
-              <div onClick="{{item.go}}" onKeyDown="{{item.goKey}}" role="button" tabIndex="{{0}}" style="background:#FFFFFF;border:1px solid var(--pa-grey-01);padding:22px 24px;cursor:pointer;flex:1;" style-hover="border-color:var(--pa-grey-02);">
-                <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:10px;">{{item.stage}}</div>
-                <div style="font:550 18px/1.35 var(--font-companion);color:var(--pa-aqua-05);">{{item.title}}</div>
-                <div style="font:400 12px/1.5 var(--font-primary);color:var(--pa-grey-04);margin-top:10px;">{{item.meta}}</div>
-              </div>
-            </sc-for>
+          <div onClick="{{nextEvent.open}}" onKeyDown="{{nextEvent.openKey}}" role="button" tabIndex="{{0}}" aria-label="View next event details" style="background:var(--pa-dark-blue);padding:clamp(28px,4vw,44px) clamp(24px,4vw,44px) clamp(26px,3.6vw,40px);cursor:pointer;display:flex;flex-direction:column;">
+            <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:22px;">Next event · {{nextEvent.date}}</div>
+            <div style="font:550 clamp(22px,3.2vw,30px)/1.25 var(--font-companion);color:#FFFFFF;text-wrap:pretty;flex:1;">{{nextEvent.title}}</div>
+            <div style="font:400 16px/1 var(--font-companion);color:#FFFFFF;margin-top:28px;text-decoration:underline;text-underline-offset:3px;">Express interest →</div>
           </div>
         </div>
       </div>
@@ -253,9 +229,9 @@
     </section>
     <section style="background:#FFFFFF;padding:clamp(40px,6vw,64px) 0;">
       <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
-        <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:28px;">Upcoming</div>
+        <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:28px;">Next event</div>
         <div style="display:flex;flex-direction:column;gap:20px;">
-          <sc-for list="{{upcoming}}" as="ev" hint-placeholder-count="2">
+          <sc-for list="{{next}}" as="ev" hint-placeholder-count="2">
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));background:var(--pa-grey-01);">
               <div style="padding:clamp(32px,4.5vw,52px);display:flex;flex-direction:column;">
                 <div style="display:flex;gap:24px;flex-wrap:wrap;font:400 12px/1.6 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-05);margin-bottom:24px;">
@@ -537,7 +513,7 @@
           <sc-if value="{{joinDone}}" hint-placeholder-val="{{false}}">
             <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Alert" tone="success" title="Request received" hint-size="100%,110px">Thank you — we review every request to keep the community practitioner-led. You'll hear from us within five working days.</x-import>
             <div style="margin-top:24px;">
-              <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Button" variant="secondary" on-click="{{goEvents}}" hint-size="200px,40px">Browse upcoming events</x-import>
+              <x-import component-from-global-scope="PAConsultingDesignSystem_c8c638.Button" variant="secondary" on-click="{{goEvents}}" hint-size="200px,40px">See the next event</x-import>
             </div>
           </sc-if>
         </div>
@@ -576,7 +552,7 @@
   </div>
 </footer>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;defaultPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;voices&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;events&quot;,&quot;hub&quot;,&quot;frameworks&quot;,&quot;insights&quot;,&quot;voices&quot;,&quot;about&quot;,&quot;join&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Navigation&quot;},&quot;showEventBanner&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Homepage&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;voices&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;events&quot;,&quot;hub&quot;,&quot;frameworks&quot;,&quot;insights&quot;,&quot;voices&quot;,&quot;about&quot;,&quot;join&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Navigation&quot;}}">
 function encodeForm(data) {
   return Object.keys(data).map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])).join('&');
 }
@@ -606,8 +582,8 @@ class Component extends DCLogic {
 
   get DATA() {
     if (this._d) return this._d;
-    const upcoming = [
-      { id: 'ev1', slug: 'establishing-a-government-newco', kicker: 'Upcoming event · Registration open', date: '17 September 2027', time: '16:00–19:00 BST', loc: 'PA Consulting, 10 Bressenden Place, London', format: 'In person only',
+    const next = [
+      { id: 'ev1', slug: 'establishing-a-government-newco', kicker: 'Next event · Registration open', date: '17 September 2027', time: '16:00–19:00 BST', loc: 'PA Consulting, 10 Bressenden Place, London', format: 'In person only',
         title: 'Establishing a government NewCo: when separation is the right answer',
         blurb: 'A working session on the diagnostic case for structural separation — and the traps departments fall into when the answer should have been no.',
         overview: [
@@ -654,57 +630,7 @@ class Component extends DCLogic {
           { name: 'Tom Askew', role: 'Enterprise architect, government NewCo' }
         ],
         downloads: [ { label: 'Session summary (PDF, 12 pp)' }, { label: 'Digital Office patterns deck (PDF, 24 pp)' } ],
-        related: ['Digital Office patterns', 'Digital office design', 'Building product organisations within government'] },
-      { id: 'pe2', slug: 'operating-model-incubation', past: true, kicker: 'Past event · 5 March 2027', date: '5 March 2027', time: '09:00–12:30 GMT', loc: 'PA Consulting, London', format: 'In person only', stats: '38 attendees · 12 departments',
-        glance: '38 attendees\n12 departments\n2 published insights\nIncubation Roadmap v2 released',
-        title: 'Operating model incubation: from programme to business',
-        blurb: 'The awkward adolescence between programme mobilisation and a functioning organisation.',
-        overview: [
-          'Most NewCos begin life as programmes — funded, governed and staffed like programmes. The transition to a functioning business, with its own operating model, is where many stall. This session worked through the five stages of the Incubation Roadmap: mobilise, establish, validate, scale, transition.',
-          'Discussion centred on the "validate" stage — proving the operating model on a real service before scaling it — which most attendees identified as the stage their organisations had skipped, and later regretted skipping.'
-        ],
-        themes: [
-          'Programme funding rhythms versus business funding needs',
-          'Validating the operating model on a real service before scaling',
-          'When to stop hiring contractors and start building permanent capability',
-          'Measuring outcomes rather than delivery milestones'
-        ],
-        insights: [
-          'Attendees consistently reported that incubation took twice as long as their business cases assumed — eighteen to twenty-four months, not nine to twelve.',
-          '"The moment you scale an unvalidated operating model, you are scaling your problems." — roundtable contribution',
-          'Version 2 of the Incubation Roadmap, incorporating the session\u2019s feedback, was published in April 2027.'
-        ],
-        speakers: [
-          { name: 'Priya Nair', role: 'Former Chief Operating Officer, government NewCo' },
-          { name: 'Rachel Donnelly', role: 'Operating model expert, PA Consulting' }
-        ],
-        downloads: [ { label: 'Session summary (PDF, 10 pp)' }, { label: 'Incubation Roadmap v2 (PDF, 16 pp)' } ],
-        related: ['Incubation Roadmap', 'Operating model evolution', 'From programme to business in eighteen months'] },
-      { id: 'pe3', slug: 'lessons-from-live-transformations', past: true, kicker: 'Past event · 22 January 2027 · Launch event', date: '22 January 2027', time: '16:00–19:30 GMT', loc: 'PA Consulting, London', format: 'In person only', stats: '52 attendees · 17 departments',
-        glance: '52 attendees\n17 departments\nCommunity launched\n4 published insights',
-        title: 'Lessons from live transformations',
-        blurb: 'The community\u2019s launch event: candid accounts from three transformations in flight.',
-        overview: [
-          'The community\u2019s launch event brought together fifty-two senior leaders from seventeen departments to hear candid, unattributable accounts from three transformations in flight — one thriving, one recovering, one recently wound down.',
-          'The evening established the community\u2019s founding premise: NewCo-style delivery models are spreading across government faster than the lessons about how to run them. The event set the programme for the year and shaped the structure of the knowledge hub.'
-        ],
-        themes: [
-          'Why departments are turning to NewCo-style models now',
-          'What the wound-down transformation would have done differently',
-          'The skills government struggles to buy — and how NewCos change that',
-          'What this community should be, and should never become'
-        ],
-        insights: [
-          '"We didn\u2019t fail because the model was wrong. We failed because we treated the model as the strategy." — speaker contribution',
-          'Attendees voted governance design and reintegration planning as the two topics the community should tackle first.',
-          'Seventeen departments represented at launch; the community\u2019s target is twenty-five by the end of 2027.'
-        ],
-        speakers: [
-          { name: 'Three senior leaders', role: 'Speaking unattributably, under the Chatham House Rule' },
-          { name: 'Helen Carver', role: 'Head of government transformation, PA Consulting' }
-        ],
-        downloads: [ { label: 'Launch summary (PDF, 8 pp)' } ],
-        related: ['Why NewCos succeed — and why they fail', 'When NewCo is the right choice'] }
+        related: ['Digital office design'] }
     ];
     const stages = [
       { tab: 'Establishing', num: '01 / ESTABLISHING', title: 'Establishing a NewCo', intro: 'The decision to separate is the most consequential one. This stage covers the diagnostic case, the business case and the leadership needed before anything is built.',
@@ -749,13 +675,7 @@ class Component extends DCLogic {
         desc: 'Downloadable templates and canvases contributed and refined by the community: governance terms of reference, funding gateway templates, capability heatmaps and more.', cta: 'Download toolkits' }
     ];
     const insights = [
-      { slug: 'why-newcos-succeed-and-why-they-fail', theme: 'Operating models', title: 'Why NewCos succeed — and why they fail', stand: 'Separation buys you speed; it doesn\u2019t buy you judgement. The evidence from a decade of government NewCos on what actually determines the outcome.', author: 'Helen Carver', role: 'PA Consulting', date: '2 July 2027', read: '12 min read' },
-      { slug: 'the-reintegration-challenge', theme: 'Culture', title: 'The reintegration challenge: why NewCos must plan their own ending', stand: 'The most neglected phase of every NewCo is its last. Departments that plan reintegration from day one keep the capability; those that don\u2019t build transformation islands.', author: 'Rachel Donnelly', role: 'PA Consulting', date: '18 June 2027', read: '10 min read' },
-      { slug: 'building-product-organisations', theme: 'Evidence', title: 'Building product organisations within government', stand: 'Product operating models keep colliding with programme governance. What it takes to run genuine product teams inside departmental accountability structures.', author: 'Aisha Rahman', role: 'PA Consulting', date: '4 June 2027', read: '9 min read' },
-      { slug: 'digital-office-patterns', theme: 'Digital Office', title: 'Digital Office patterns', stand: 'Four live transformations, four different Digital Offices. The patterns that served delivery — and the ones that quietly became the new bureaucracy.', author: 'Marcus Bell', role: 'Community contribution', date: '21 May 2027', read: '11 min read' },
-      { slug: 'governance-lessons-from-transformation-programmes', theme: 'Governance', title: 'Governance lessons from transformation programmes', stand: 'The autonomy–accountability trade-off is not solved by structure charts. Delegation frameworks, funding gateways and escalation routes that held up under pressure.', author: 'David Achebe', role: 'PA Consulting', date: '7 May 2027', read: '10 min read' },
-      { slug: 'newco-versus-portfolio-transformation', theme: 'Operating models', title: 'NewCo versus portfolio transformation', stand: 'Separation is not the only answer. An honest comparison of NewCo and portfolio-led transformation — and the conditions that favour each.', author: 'James Whitfield', role: 'PA Consulting', date: '23 April 2027', read: '8 min read' },
-      { slug: 'newco-and-gds-reform-patterns', theme: 'Governance', title: 'NewCo and GDS reform patterns', stand: 'What the evolution of central digital institutions teaches departments designing their own delivery organisations — convergence, divergence and the standards question.', author: 'Helen Carver', role: 'PA Consulting', date: '9 April 2027', read: '9 min read' }
+      { slug: 'why-newcos-succeed-and-why-they-fail', theme: 'Operating models', title: 'Why NewCos succeed — and why they fail', stand: 'Separation buys you speed; it doesn\u2019t buy you judgement. The evidence from a decade of government NewCos on what actually determines the outcome.', author: 'Helen Carver', role: 'PA Consulting', date: '2 July 2027', read: '12 min read' }
     ];
     const voices = [
       { format: 'Practitioner interview', title: '\u201CThe hardest part was giving the NewCo permission to be different\u201D', attr: 'Interview with a former government NewCo Chief Executive', stand: 'On founding leadership, the fights worth having with the centre, and the one governance concession she regrets.' },
@@ -763,7 +683,7 @@ class Component extends DCLogic {
       { format: 'Roundtable summary', title: 'What twelve departments told us about funding models', stand: 'An unattributed synthesis of the March roundtable: programme funding rhythms, Treasury conversations and the case for multi-year settlement.', attr: 'Compiled under the Chatham House Rule' },
       { format: 'Case study', title: 'From programme to business in eighteen months', stand: 'An anonymised account of one NewCo\u2019s incubation: what the roadmap said, what actually happened, and the validate stage they nearly skipped.', attr: 'Central government department, anonymised' }
     ];
-    this._d = { upcoming, past, stages, frameworks, insights, voices };
+    this._d = { next, past, stages, frameworks, insights, voices };
     return this._d;
   }
 
@@ -817,26 +737,20 @@ class Component extends DCLogic {
       })
     };
     return {
-      practiceFeature: { stage: '01 / Establishing', title: 'When NewCo is the right choice', stand: 'The conditions under which structural separation outperforms in-place transformation, the seven diagnostic tests, and the warning signs that the answer should be no.', meta: '14 July 2027',
-        go: navTo('emerging-practices/' + D.stages[0].items[0].slug + '.html'), goKey: key(navTo('emerging-practices/' + D.stages[0].items[0].slug + '.html')) },
-      homePractices: D.stages.slice(1).map((s, i) => {
-        const href = 'emerging-practices/' + s.items[0].slug + '.html';
-        return { stage: ['02 / Incubating', '03 / Scaling', '04 / Reintegration'][i], title: s.title, meta: ['26 June 2027', '11 June 2027', '22 May 2027'][i], go: navTo(href), goKey: key(navTo(href)) };
-      }),
       navItems, goHome: mkGo('home'), goEvents: mkGo('events'), goHub: mkGo('hub'), goFrameworks: mkGo('frameworks'),
       goInsights: mkGo('insights'), goVoices: mkGo('voices'), goAbout: mkGo('about'), goJoin: mkGo('join'),
       isHome: S.page === 'home', isEvents: S.page === 'events', isHub: S.page === 'hub',
       isFrameworks: S.page === 'frameworks', isInsights: S.page === 'insights', isVoices: S.page === 'voices',
       isAbout: S.page === 'about', isJoin: S.page === 'join',
-      showBanner: this.props.showEventBanner ?? true,
-      nextEvent: withOpen(D.upcoming[0]),
-      upcoming: D.upcoming.map(withOpen),
+      nextEvent: withOpen(D.next[0]),
+      pastEvent: withOpen(D.past[0]),
+      next: D.next.map(withOpen),
       past: D.past.map(withOpen),
       roleOptions: ['Chief Digital Officer', 'Chief Operating Officer', 'Transformation Director', 'Programme Director', 'Portfolio Director', 'Digital Office leader', 'Senior Responsible Owner', 'Other'],
       hubTabs: D.stages.map(s => s.tab), hubTab: S.hubTab, setHubTab: (n) => this.setState({ hubTab: n }), stage,
       frameworks: D.frameworks.map(f => ({ ...f, get: dl })),
       homeFrameworks: D.frameworks.slice(0, 3).map(f => ({ ...f, short: f.desc.split(' — ')[0].split('. ')[0] + '.' })),
-      homeCases: [D.insights[0], D.insights[2], D.insights[4]].map(i => {
+      homeCases: D.insights.map(i => {
         const href = 'case-studies/' + i.slug + '.html';
         return { tag: i.theme, title: i.title, short: i.stand.split('. ')[0] + '.', go: navTo(href), goKey: key(navTo(href)) };
       }),

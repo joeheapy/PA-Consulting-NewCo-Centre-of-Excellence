@@ -246,7 +246,7 @@ def parse_agenda_field(value):
     return agenda
 
 def load_events():
-    upcoming, past = [], []
+    next_events, past = [], []
     for meta, body in load_markdown_dir(f"{CONTENT_DIR}/events"):
         ev = {
             "slug": meta["slug"], "kicker": meta["kicker"], "date": meta["date"],
@@ -262,16 +262,16 @@ def load_events():
             ev["insights"] = parse_list_field(meta["insights"])
         if meta.get("downloads"):
             ev["downloads"] = parse_list_field(meta["downloads"])
-        (upcoming if meta["kind"] == "upcoming" else past).append(ev)
-    return upcoming, past
+        (next_events if meta["kind"] == "next" else past).append(ev)
+    return next_events, past
 
-UPCOMING, PAST = load_events()
+NEXT, PAST = load_events()
 
 # ---------------------------------------------------------------------------
 # RENDER: events (rich detail layout, matching the app's former isEvent view)
 # ---------------------------------------------------------------------------
 
-def render_event_page(ev, is_upcoming):
+def render_event_page(ev, is_next):
     themes_html = ""
     if ev.get("themes"):
         themes_html = (
@@ -332,7 +332,7 @@ def render_event_page(ev, is_upcoming):
         {downloads_html}
     '''
 
-    if is_upcoming:
+    if is_next:
         sidebar = f'''
           <div style="background:var(--pa-grey-01);padding:32px 32px 36px;position:sticky;top:96px;">
             <div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:8px;">Express interest</div>
@@ -398,12 +398,12 @@ def write(path, content):
     open(path, "w", encoding="utf-8").write(content)
     print("wrote", path, len(content), "bytes")
 
-for ev in UPCOMING:
-    html = render_event_page(ev, is_upcoming=True)
+for ev in NEXT:
+    html = render_event_page(ev, is_next=True)
     write(f"{OUT_DIR}/events/{ev['slug']}.html", html)
 
 for ev in PAST:
-    html = render_event_page(ev, is_upcoming=False)
+    html = render_event_page(ev, is_next=False)
     write(f"{OUT_DIR}/events/{ev['slug']}.html", html)
 
 for stage in STAGES:
@@ -423,5 +423,5 @@ for ins in INSIGHTS:
     )
     write(f"{OUT_DIR}/case-studies/{ins['slug']}.html", html)
 
-print("done:", len(UPCOMING) + len(PAST), "events,",
+print("done:", len(NEXT) + len(PAST), "events,",
       sum(len(s["items"]) for s in STAGES), "practices,", len(INSIGHTS), "case studies")
