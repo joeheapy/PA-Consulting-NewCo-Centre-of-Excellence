@@ -253,9 +253,11 @@ def load_events():
             "time": meta["time"], "loc": meta["loc"], "format": meta["format"],
             "title": meta["title"], "blurb": meta["blurb"],
             "overview_html": render_markdown(body),
-            "agenda": parse_agenda_field(meta["agenda"]),
-            "speakers": parse_speakers_field(meta["speakers"]),
         }
+        if meta.get("agenda"):
+            ev["agenda"] = parse_agenda_field(meta["agenda"])
+        if meta.get("speakers"):
+            ev["speakers"] = parse_speakers_field(meta["speakers"])
         if meta.get("themes"):
             ev["themes"] = parse_list_field(meta["themes"])
         if meta.get("insights"):
@@ -301,16 +303,18 @@ def render_event_page(ev, is_next):
                 for a in ev["agenda"]
             ) + "</div>"
         )
-    speakers_html = (
-        '<div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Speakers</div>'
-        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px;">'
-        + "".join(
-            f'<div style="border:1px solid var(--pa-grey-01);padding:18px 20px;">'
-            f'<div style="font:450 16px/1.3 var(--font-primary);color:var(--pa-dark-blue);margin-bottom:6px;">{s["name"]}</div>'
-            f'<div style="font:400 13px/1.5 var(--font-companion);color:var(--pa-grey-04);">{s["role"]}</div></div>'
-            for s in ev["speakers"]
-        ) + "</div>"
-    )
+    speakers_html = ""
+    if ev.get("speakers"):
+        speakers_html = (
+            '<div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Speakers</div>'
+            '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px;">'
+            + "".join(
+                f'<div style="border:1px solid var(--pa-grey-01);padding:18px 20px;">'
+                f'<div style="font:450 16px/1.3 var(--font-primary);color:var(--pa-dark-blue);margin-bottom:6px;">{s["name"]}</div>'
+                f'<div style="font:400 13px/1.5 var(--font-companion);color:var(--pa-grey-04);">{s["role"]}</div></div>'
+                for s in ev["speakers"]
+            ) + "</div>"
+        )
     downloads_html = ""
     if ev.get("downloads"):
         downloads_html = (
