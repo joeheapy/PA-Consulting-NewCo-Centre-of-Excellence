@@ -23,9 +23,6 @@ spacing_css = read(f"{DS}/tokens/spacing.css")
 NAV = [
     ("Home", "index.html", "home"),
     ("Events", "events.html", "events"),
-    ("Emerging practices", "emerging-practices.html", "hub"),
-    ("Case studies", "case-studies.html", "insights"),
-    ("Community voices", "community-voices.html", "voices"),
     ("About", "about.html", "about"),
 ]
 
@@ -127,13 +124,6 @@ def page_shell(title, active_key, body_html):
 </html>
 '''
 
-def eyebrow(text):
-    return f'<div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin-bottom:20px;">{text}</div>'
-
-def back_link(label, href):
-    return (f'<a href="{href}" style="display:inline-block;font:400 13px/1 var(--font-primary);'
-            f'letter-spacing:0.04em;color:var(--pa-grey-02);text-decoration:none;margin-bottom:32px;">← {label}</a>')
-
 def parse_frontmatter(text):
     """Split a '---\\nkey: value\\n...\\n---\\nbody' file into (dict, body_str)."""
     if not text.startswith("---"):
@@ -155,39 +145,8 @@ def render_markdown(text):
     return f'<div class="pa-article-body">{html}</div>'
 
 # ---------------------------------------------------------------------------
-# ARTICLE TEMPLATE: emerging-practices / case-studies (simple article layout)
-# ---------------------------------------------------------------------------
-
-def simple_article(section_label, section_href, title, meta_line, body_html):
-    return f'''
-  <section style="background:var(--pa-grey-01);padding:clamp(44px,6.5vw,72px) 0 clamp(36px,5vw,56px);">
-    <div style="max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
-      {back_link("All " + section_label.lower(), section_href)}
-      {eyebrow(section_label)}
-      <h1 style="font:400 clamp(28px,4.6vw,42px)/1.15 var(--font-primary);color:var(--pa-dark-blue);margin:0;text-wrap:pretty;">{title}</h1>
-      <div style="font:400 13px/1.6 var(--font-primary);color:var(--pa-grey-04);margin-top:22px;">{meta_line}</div>
-    </div>
-  </section>
-  <section style="background:#FFFFFF;padding:clamp(40px,6vw,64px) 0 clamp(48px,7.5vw,88px);">
-    <div style="max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
-      {body_html}
-      <div style="border-top:1px solid var(--pa-grey-01);margin-top:36px;padding-top:24px;">
-        {back_link("Back to " + section_label, section_href)}
-      </div>
-    </div>
-  </section>
-'''
-
-# ---------------------------------------------------------------------------
 # DATA
 # ---------------------------------------------------------------------------
-
-STAGE_ORDER = [
-    ("Establishing",   "01 / ESTABLISHING",                   "Establishing a NewCo"),
-    ("Incubating",     "02 / INCUBATING",                      "Incubating a NewCo"),
-    ("Scaling",        "03 / SCALING",                         "Scaling a NewCo"),
-    ("Reintegration",  "04 / REINTEGRATION AND TRANSITION",    "Reintegration and transition"),
-]
 
 def load_markdown_dir(path):
     """Return [(meta_dict, body_str), ...] for every .md file in path, sorted by filename."""
@@ -198,33 +157,6 @@ def load_markdown_dir(path):
         meta, body = parse_frontmatter(read(f"{path}/{fname}"))
         entries.append((meta, body))
     return entries
-
-def load_stages():
-    buckets = {tab: {"tab": tab, "num": num, "title": title, "items": []}
-               for tab, num, title in STAGE_ORDER}
-    raw = {tab: [] for tab, _, _ in STAGE_ORDER}
-    for meta, body in load_markdown_dir(f"{CONTENT_DIR}/emerging-practices"):
-        tab = meta["stage_tab"]
-        if tab not in buckets:
-            raise ValueError(f"unknown stage_tab {tab!r} in {meta.get('slug')}")
-        raw[tab].append((int(meta.get("order", 0)), meta, body))
-    for tab, _, _ in STAGE_ORDER:
-        for _, meta, body in sorted(raw[tab], key=lambda t: t[0]):
-            buckets[tab]["items"].append({
-                "slug": meta["slug"], "title": meta["title"], "read": meta["read"],
-                "body": render_markdown(body),
-            })
-    return [buckets[tab] for tab, _, _ in STAGE_ORDER]
-
-def load_insights():
-    return [
-        {"slug": m["slug"], "theme": m["theme"], "title": m["title"], "author": m["author"],
-         "role": m["role"], "date": m["date"], "read": m["read"], "body": render_markdown(body)}
-        for m, body in load_markdown_dir(f"{CONTENT_DIR}/case-studies")
-    ]
-
-STAGES = load_stages()
-INSIGHTS = load_insights()
 
 def parse_list_field(value):
     return [v.strip() for v in value.split(";") if v.strip()]
@@ -410,22 +342,4 @@ for ev in PAST:
     html = render_event_page(ev, is_next=False)
     write(f"{OUT_DIR}/events/{ev['slug']}.html", html)
 
-for stage in STAGES:
-    for item in stage["items"]:
-        meta = f'{stage["title"]} · {item["read"]}'
-        html = page_shell(
-            item["title"], "hub",
-            simple_article("Emerging practices", "../emerging-practices.html", item["title"], meta, item["body"])
-        )
-        write(f"{OUT_DIR}/emerging-practices/{item['slug']}.html", html)
-
-for ins in INSIGHTS:
-    meta = f'{ins["author"]} · {ins["role"]} · {ins["date"]} · {ins["read"]}'
-    html = page_shell(
-        ins["title"], "insights",
-        simple_article("Case studies", "../case-studies.html", ins["title"], meta, ins["body"])
-    )
-    write(f"{OUT_DIR}/case-studies/{ins['slug']}.html", html)
-
-print("done:", len(NEXT) + len(PAST), "events,",
-      sum(len(s["items"]) for s in STAGES), "practices,", len(INSIGHTS), "case studies")
+print("done:", len(NEXT) + len(PAST), "events")

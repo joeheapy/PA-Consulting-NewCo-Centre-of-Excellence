@@ -10,9 +10,6 @@ OUT_DIR = f"{ROOT}/netlify-deploy"
 PAGES = {
     "home":     ("index.html",               "Home"),
     "events":   ("events.html",              "Events"),
-    "hub":      ("emerging-practices.html",  "Emerging practices"),
-    "insights": ("case-studies.html",        "Case studies"),
-    "voices":   ("community-voices.html",    "Community voices"),
     "about":    ("about.html",               "About"),
 }
 SITE_NAME = "NewCo Community"
