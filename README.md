@@ -79,7 +79,20 @@ All fields are required — there are no optional fields for this content type.
 | `themes` | Optional | `;`-separated short phrases. Renders a "Key discussion themes" list — conventionally used for past events, but works for either `kind`. |
 | `insights` | Optional | `;`-separated pull-quote strings. Renders a "Major insights" list alongside `themes` — conventionally past-only. |
 | `downloads` | Optional | `;`-separated material labels, e.g. `Session summary (PDF, 12 pp)`. Renders a "Materials" section — conventionally past-only. Omit the field entirely (don't set it to a placeholder string like `None for this event.`) when there's nothing to list, since any non-empty value is rendered as a real download row. |
+| `image` | Optional | Filename of an image (jpg/png/webp) placed in `uploads/events/`, e.g. `newco-scale-hero.jpg`. Renders full-width, right under the overview text. |
+| `image_alt` | Optional | Alt text for `image`. Defaults to the event's `title` if omitted — set a real description for accessibility. |
+| `image_caption` | Optional | Caption text shown beneath `image`. Omit for no caption. |
+| `video` | Optional | Filename of an `.mp4` file placed in `uploads/events/`, e.g. `newco-scale-recap.mp4`. Renders as a native HTML5 player with controls. Self-hosted (no YouTube/Vimeo) — the file is committed to the repo and served as a static asset, so keep clips short/compressed. |
+| `video_poster` | Optional | Filename of a poster/thumbnail image (also in `uploads/events/`) shown before the video plays. Only used if `video` is set. |
+| `video_caption` | Optional | Caption text shown beneath `video`. Omit for no caption. |
 
 `overview` (the body text below the frontmatter) is required in practice — it's what
 renders as the event's overview paragraphs — but isn't a frontmatter key, so it can't be
 individually enforced beyond "leave it blank and the event page will have no overview".
+
+### Event media — `uploads/events/`
+
+Put any image/video files referenced by the `image`/`video`/`video_poster` fields above
+into this folder (create it if it doesn't exist yet). Files are named whatever you like —
+the whole folder is copied into the deployed site as-is, so an event's frontmatter picks
+out which files actually get used; unreferenced files are harmless but simply unused.

@@ -80,6 +80,10 @@ def page_shell(title, active_key, body_html):
   .pa-article-body pre{{background:var(--pa-grey-01);padding:16px 18px;border-radius:var(--radius-sm);overflow-x:auto;}}
   .pa-article-body pre code{{background:none;padding:0;}}
   .pa-article-body hr{{border:none;border-top:1px solid var(--pa-grey-01);margin:28px 0;}}
+  .pa-event-media{{display:flex;flex-direction:column;gap:24px;margin:32px 0;}}
+  .pa-event-media figure{{margin:0;}}
+  .pa-event-media img,.pa-event-media video{{width:100%;display:block;border-radius:var(--radius-sm);}}
+  .pa-event-media figcaption{{font:400 13px/1.5 var(--font-companion);color:var(--pa-grey-04);margin-top:8px;}}
 </style>
 </head>
 <body>
@@ -196,6 +200,12 @@ def load_events():
             ev["insights"] = parse_list_field(meta["insights"])
         if meta.get("downloads"):
             ev["downloads"] = parse_list_field(meta["downloads"])
+        ev["image"] = meta.get("image")
+        ev["image_alt"] = meta.get("image_alt", meta["title"])
+        ev["image_caption"] = meta.get("image_caption")
+        ev["video"] = meta.get("video")
+        ev["video_poster"] = meta.get("video_poster")
+        ev["video_caption"] = meta.get("video_caption")
         (next_events if meta["kind"] == "next" else past).append(ev)
     return next_events, past
 
@@ -206,6 +216,18 @@ NEXT, PAST = load_events()
 # ---------------------------------------------------------------------------
 
 def render_event_page(ev, is_next):
+    media_html = ""
+    if ev.get("image") or ev.get("video"):
+        image_html = ""
+        if ev.get("image"):
+            image_caption_html = f'<figcaption>{ev["image_caption"]}</figcaption>' if ev.get("image_caption") else ""
+            image_html = f'<figure><img src="../uploads/events/{ev["image"]}" alt="{ev["image_alt"]}">{image_caption_html}</figure>'
+        video_html = ""
+        if ev.get("video"):
+            poster_attr = f' poster="../uploads/events/{ev["video_poster"]}"' if ev.get("video_poster") else ""
+            video_caption_html = f'<figcaption>{ev["video_caption"]}</figcaption>' if ev.get("video_caption") else ""
+            video_html = f'<figure><video controls{poster_attr}><source src="../uploads/events/{ev["video"]}" type="video/mp4"></video>{video_caption_html}</figure>'
+        media_html = f'<div class="pa-event-media">{image_html}{video_html}</div>'
     themes_html = ""
     if ev.get("themes"):
         themes_html = (
@@ -262,6 +284,7 @@ def render_event_page(ev, is_next):
 
     main_content = f'''
         {ev["overview_html"]}
+        {media_html}
         {themes_html}
         {agenda_html}
         {speakers_html}

@@ -114,6 +114,12 @@ head_marker = head_matches[0]
 os.makedirs(f"{OUT_DIR}/uploads", exist_ok=True)
 shutil.copy(f"{ROOT}/uploads/pa-logo.png", f"{OUT_DIR}/uploads/pa-logo.png")
 
+# Event media (images/videos) referenced by filename from event frontmatter -- copy the
+# whole folder wholesale so any file dropped in it ships, without the build script
+# needing to know about individual filenames.
+if os.path.isdir(f"{ROOT}/uploads/events"):
+    shutil.copytree(f"{ROOT}/uploads/events", f"{OUT_DIR}/uploads/events", dirs_exist_ok=True)
+
 for page_key, (filename, title) in PAGES.items():
     html = base_html.replace(
         default_page_marker,
