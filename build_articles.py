@@ -313,9 +313,15 @@ def render_event_page(ev, is_next):
       <a href="../events.html" style="display:inline-block;font:400 13px/1 var(--font-primary);letter-spacing:0.04em;color:var(--pa-grey-02);text-decoration:none;margin-bottom:32px;">← All events</a>
       <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:18px;">{ev["kicker"]}</div>
       <h1 style="font:400 clamp(28px,4.6vw,42px)/1.15 var(--font-primary);color:#FFFFFF;margin:0;max-width:840px;text-wrap:pretty;">{ev["title"]}</h1>
-      <div style="display:flex;gap:36px;flex-wrap:wrap;margin-top:28px;">
-        <div style="font:400 13px/1.6 var(--font-primary);color:var(--pa-grey-02);">{ev["date"]}<br>{ev["time"]}</div>
-        <div style="font:400 13px/1.6 var(--font-primary);color:var(--pa-grey-02);">{ev["loc"]}<br>{ev["format"]}</div>
+      <div style="display:flex;gap:48px;flex-wrap:wrap;margin-top:32px;">
+        <div>
+          <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:8px;">When</div>
+          <div style="font:450 17px/1.5 var(--font-primary);color:#FFFFFF;">{ev["date"]}<br>{ev["time"]}</div>
+        </div>
+        <div>
+          <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:8px;">Where</div>
+          <div style="font:450 17px/1.5 var(--font-primary);color:#FFFFFF;">{ev["loc"]}<br>{ev["format"]}</div>
+        </div>
       </div>
     </div>
   </section>
