@@ -1,17 +1,21 @@
 ---
 slug: is-there-a-right-way-to-manage-and-scale-a-newco
 kind: next
-kicker: Next event · Registration open
-date: 17 September 2027
+kicker: Next event
+date: 14 October 2027
 time: 16:00–19:00 BST
-loc: PA Consulting, 10 Bressenden Place, London
+loc: PA Consulting, 10 Bressenden Place, London, SW1E 5DN
 format: In person only
-title: Is there a right way to manage and scale a NewCo
-blurb: A practical look at what changes as a NewCo grows — from founding team to functioning business — and which operating model, funding and governance choices actually hold up at scale.
-agenda: 16:00 - 16:30 Arrival and registration; 16:30 - 17:15 Panel — what actually changes between incubation and scale; 17:15 - 18:00 Roundtables — operating model, funding and governance choices that hold up; 18:00 - 18:45 Working session — applying the NewCo Operating Model Canvas to your own scaling stage; 18:45 - 19:00 Close and next steps
-speakers: Rachel Donnelly | Operating model expert, PA Consulting; Priya Nair | Former Chief Operating Officer, government NewCo
+title: Is there a right way to manage and scale a NewCo?
+blurb: What if the solution that's really needed just can't be built, or built fast enough, because of the way your organisation works today?
+agenda: 16:00 - 16:30 Arrival; 16:30 - 18:00 Roundtable; 18:00 - 19:30 Refreshments
+speakers: Ottoline Warner | Digital, AI, and innovation leader specialising in public sector transformation, PA Consulting; Tom Wynne-Morgan | Deputy Director, GDS CustomerFirst
 ---
 
-Every NewCo reaches a point where the habits that got it started stop being the habits that let it grow — informal coordination becomes invisible dependency, and the small leadership group that once moved fast becomes the queue everything waits behind. This session looks at what genuinely needs to change as a NewCo moves from incubation to scale, and what can be safely left alone.
+A NewCo creates the space to solve complex problems differently. Whether it's a standalone organisation, a ring-fenced operating model, or a new capability within an existing organisation, the goal is the same: to create the right conditions for change and delivery.
 
-Participants will work through the NewCo Operating Model Canvas against their own organisation's current stage, comparing notes on funding structures, governance boundaries and service sequencing with peers further along — or further behind — the same curve.
+While NewCos are not new to government, there remains no widely shared framework for when to use them, how to establish them, or what conditions are needed for long-term success. As interest in NewCos as a transformation model continues to grow, there is an opportunity to develop a more codified approach based on real-world experience.
+
+This roundtable will bring together invited experts and practitioners to share insights, challenge assumptions, and explore the building blocks of successful NewCos, from governance and funding to culture, capability, and organisational relationships.
+
+This is a collaborative discussion rather than a panel event, with limited places to encourage open conversation and meaningful exchange. We look forward to welcoming you to the discussion.
