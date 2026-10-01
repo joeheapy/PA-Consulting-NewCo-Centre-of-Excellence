@@ -13,6 +13,30 @@ themes: Defining the outcome before choosing the organisational structure; Creat
 insights: The case for a NewCo rests on the constraints it needs to change, not the appeal of creating something new.; Working services reveal more than complete plans — delivery provides the evidence needed to shape governance, investment and scale.; A NewCo creates lasting value when what it learns and builds can strengthen the wider organisation.
 ---
 
-Protected separation gives a NewCo room to move at pace — but pace without a connection back to the parent organisation risks building something that works brilliantly in isolation and teaches the wider system nothing. This session examined how leadership teams can create genuine momentum through clear decisions, proportionate controls and modern platforms, without drifting into the kind of independence that quietly becomes isolation.
+Across government, industry and technology, leaders face a common challenge; innovation becomes trapped inside structures designed for stability rather than progress.
 
-The strongest consensus of the evening: the case for a NewCo rests on the constraints it needs to change, not the appeal of building something new — and the earliest working service, however small, teaches a delivery organisation more about its own governance and investment needs than any business case ever could.
+At some point every organisation faces the same question: can we build the future inside our existing model, or do we need something different?
+
+This was the challenge explored by leaders during PA Consulting's NewCo Roundtable. The conversation revealed a powerful truth, the most successful NewCos are not created because organisations want to innovate. They are created because existing structures can no longer deliver the outcomes required. A NewCo becomes the mechanism through which organisations reclaim speed, creativity, experimentation and ambition.
+
+Seven themes decided what actually worked in practice — the patterns that separated the NewCos that endured from the ones that stalled.
+
+1. Pace is the trigger
+2. Start with the problem
+3. Design by doing
+4. Leadership matters more than governance
+5. Culture is infrastructure
+6. Brand creates identity
+7. Small wins build big change
+
+What to avoid. The roundtable surfaced the patterns that quietly kill a NewCo.
+
+1. Structure before purpose: Organisation charts are not strategy.
+2. Governance for governance's sake: Control should enable delivery, not prevent it.
+3. Innovation theatre: A NewCo must produce outcomes, not presentations.
+4. Endless design: Analysis is not progress.
+5. Choosing the wrong people: Capability matters. Mindset matters more.
+6. Losing connection to the parent: Independence matters. Isolation kills.
+7. Above all, don't wait for perfection: Momentum beats perfection, every time.
+
+PA is codifying the approach to building a successful NewCo. We'll share more here.
