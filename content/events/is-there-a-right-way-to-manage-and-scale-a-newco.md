@@ -12,6 +12,10 @@ agenda: 16:00 - 16:30 Arrival; 16:30 - 18:00 Roundtable; 18:00 - 19:30 Refreshme
 speakers: Ottoline Warner | Digital, AI, and innovation leader specialising in public sector transformation, PA Consulting; Tom Wynne-Morgan | Deputy Director, GDS CustomerFirst
 ---
 
+What if the solution that's really needed just can't be built, or built fast enough, because of the way your organisation works today?
+
+Join us for the second event in our invitation-only NewCo roundtable series, bringing together leaders and practitioners from across government to explore how NewCos can successfully drive transformation.
+
 A NewCo creates the space to solve complex problems differently. Whether it's a standalone organisation, a ring-fenced operating model, or a new capability within an existing organisation, the goal is the same: to create the right conditions for change and delivery.
 
 While NewCos are not new to government, there remains no widely shared framework for when to use them, how to establish them, or what conditions are needed for long-term success. As interest in NewCos as a transformation model continues to grow, there is an opportunity to develop a more codified approach based on real-world experience.

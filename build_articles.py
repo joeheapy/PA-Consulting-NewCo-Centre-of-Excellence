@@ -330,6 +330,18 @@ def render_event_page(ev, is_next):
       {main_content}
     </div>'''
 
+    photo_video_html = ""
+    if is_next:
+        photo_video_html = '''
+  <section style="background:var(--pa-grey-01);padding:clamp(36px,5vw,48px) 0;">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
+      <div class="pa-article-body">
+        <h2 style="margin:0 0 12px;">Photography and video</h2>
+        <p style="margin:0;">We&rsquo;ll be taking photos and filming at this event for marketing purposes. We may capture you in photos or video footage as you are participating. If you would prefer not to appear in photos or video footage, please opt out in the registration form. If you choose to opt out, we&rsquo;ll give you a different coloured lanyard and make sure you&rsquo;re not identifiable in any of our photos or videos.</p>
+      </div>
+    </div>
+  </section>'''
+
     body = f'''
   <section style="background:var(--pa-dark-blue);padding:56px 0 60px;">
     <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
@@ -351,6 +363,7 @@ def render_event_page(ev, is_next):
   <section style="background:#FFFFFF;padding:clamp(40px,6vw,64px) 0 clamp(48px,7.5vw,88px);">
     {content_html}
   </section>
+  {photo_video_html}
 '''
     return page_shell(ev["title"], "events", body)
 
