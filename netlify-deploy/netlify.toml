@@ -1,0 +1,10 @@
+[build]
+  functions = "netlify/functions"
+  edge_functions = "netlify/edge-functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# The edge function's route (path/excludedPath) is declared via its own
+# `export const config` in netlify/edge-functions/gate.ts instead of here,
+# to avoid two conflicting declarations of the same route.

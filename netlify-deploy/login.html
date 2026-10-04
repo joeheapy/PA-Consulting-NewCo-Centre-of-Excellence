@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in — NewCo Community</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400..700&family=Source+Serif+4:opsz,wght@8..60,400..600&display=swap');
+
+      :root {
+        --pa-dark-blue: #00172d;
+        --pa-white: #ffffff;
+        --pa-red-accessible: #ea0027;
+        --pa-grey-01: #e8ecf2;
+        --pa-grey-02: #a2b3c9;
+        --pa-grey-03: #64778a;
+        --pa-error: #cc1d63;
+        --font-primary: 'Hanken Grotesk', system-ui, sans-serif;
+        --font-companion: 'Source Serif 4', Georgia, serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--pa-dark-blue);
+        font-family: var(--font-companion);
+        color: var(--pa-dark-blue);
+        padding: 24px;
+      }
+
+      .card {
+        background: var(--pa-white);
+        border-radius: 4px;
+        max-width: 420px;
+        width: 100%;
+        padding: 40px 32px;
+        box-shadow: 0 8px 40px rgba(0, 23, 45, 0.18);
+      }
+
+      h1 {
+        font-family: var(--font-primary);
+        font-weight: 400;
+        font-size: 28px;
+        line-height: 1.2;
+        margin: 0 0 8px;
+        color: var(--pa-dark-blue);
+      }
+
+      p.lead {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--pa-grey-03);
+        margin: 0 0 28px;
+      }
+
+      label {
+        display: block;
+        font-family: var(--font-primary);
+        font-weight: 450;
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: var(--pa-dark-blue);
+      }
+
+      input[type='email'] {
+        width: 100%;
+        padding: 12px 14px;
+        font-family: var(--font-companion);
+        font-size: 16px;
+        border: 1px solid var(--pa-grey-02);
+        border-radius: 4px;
+        margin-bottom: 16px;
+      }
+
+      input[type='email']:focus {
+        outline: 2px solid var(--pa-red-accessible);
+        outline-offset: 1px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px 14px;
+        font-family: var(--font-primary);
+        font-weight: 450;
+        font-size: 16px;
+        color: var(--pa-white);
+        background: var(--pa-red-accessible);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+
+      button:hover:not(:disabled) {
+        background: var(--pa-dark-blue);
+      }
+
+      #login-error {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 4px;
+        background: #fbe7ed;
+        color: var(--pa-error);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      #login-error a {
+        color: var(--pa-error);
+        font-weight: 600;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>NewCo Community</h1>
+      <p class="lead">Enter your email address to access this site.</p>
+      <form id="login-form">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          autocomplete="email"
+        />
+        <button type="submit" id="submit-btn">Continue</button>
+      </form>
+      <div id="login-error" hidden>
+        That email isn't on our access list. Email
+        <a href="mailto:newco.community@paconsulting.com"
+          >newco.community@paconsulting.com</a
+        >
+        to request access.
+      </div>
+    </div>
+    <script>
+      ;(function () {
+        var form = document.getElementById('login-form')
+        var errorBox = document.getElementById('login-error')
+        var submitBtn = document.getElementById('submit-btn')
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+          errorBox.hidden = true
+          submitBtn.disabled = true
+          submitBtn.textContent = 'Checking…'
+
+          var email = document.getElementById('email').value.trim()
+
+          fetch('/.netlify/functions/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email }),
+          })
+            .then(function (res) {
+              return res.json()
+            })
+            .then(function (data) {
+              if (data.ok) {
+                var params = new URLSearchParams(location.search)
+                var returnTo = params.get('returnTo') || '/'
+                location.href = returnTo
+              } else {
+                errorBox.hidden = false
+                submitBtn.disabled = false
+                submitBtn.textContent = 'Continue'
+              }
+            })
+            .catch(function () {
+              errorBox.hidden = false
+              submitBtn.disabled = false
+              submitBtn.textContent = 'Continue'
+            })
+        })
+      })()
+    </script>
+  </body>
+</html>
