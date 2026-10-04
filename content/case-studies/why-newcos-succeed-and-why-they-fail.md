@@ -4,7 +4,7 @@ title: Why NewCos succeed — and why they fail
 theme: Operating models
 author: Helen Carver
 role: PA Consulting
-date: 2 July 2027
+date: 2 July 2026
 read: 12 min read
 ---
 

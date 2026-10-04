@@ -58,7 +58,7 @@ All fields are required — there are no optional fields for this content type.
 | `theme` | e.g. `Operating models`, `Governance`, `Culture`. |
 | `author` | Author name shown in the meta line. |
 | `role` | Author's role/organisation, e.g. `PA Consulting`. |
-| `date` | Free-text publish date, e.g. `2 July 2027`. |
+| `date` | Free-text publish date, e.g. `2 July 2026`. |
 | `read` | Free-text read-time, e.g. `12 min read`. |
 
 ### Events — `content/events/*.md`
@@ -67,8 +67,8 @@ All fields are required — there are no optional fields for this content type.
 |---|---|---|
 | `slug` | Required | Output filename: `events/<slug>.html`. |
 | `kind` | Required | `next` or `past`. Anything other than exactly `next` is treated as `past`. Keep exactly one file at `kind: next` at a time — that's the only event shown as "Next event" and the only one that gets the "Express interest" registration form. |
-| `kicker` | Required | Small label above the title, e.g. `Next event · Registration open` or `Past event · 14 May 2027`. |
-| `date` | Required | Free text, e.g. `17 September 2027` (can be `TBC`). |
+| `kicker` | Required | Small label above the title, e.g. `Next event · Registration open` or `Past event · 14 May 2026`. |
+| `date` | Required | Free text, e.g. `17 September 2026` (can be `TBC`). |
 | `time` | Required | Free text, e.g. `16:00–19:00 BST`. |
 | `loc` | Required | Venue. |
 | `format` | Required | e.g. `In person only`. |

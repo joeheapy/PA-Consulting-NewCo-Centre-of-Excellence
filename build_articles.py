@@ -119,7 +119,7 @@ def page_shell(title, active_key, body_html):
       </div>
     </div>
     <div style="border-top:1px solid rgba(255,255,255,0.08);margin-top:28px;padding-top:16px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;">
-      <span style="font:400 12px/1 var(--font-primary);color:var(--pa-grey-02);">© 2027 PA Knowledge Limited. All rights reserved.</span>
+      <span style="font:400 12px/1 var(--font-primary);color:var(--pa-grey-02);">© 2026 PA Knowledge Limited. All rights reserved.</span>
       <span style="font:400 12px/1 var(--font-primary);color:var(--pa-grey-02);">Events run under the Chatham House Rule.</span>
     </div>
   </div>
