@@ -19,7 +19,7 @@ export default async (request: Request, context: any) => {
 
   const url = new URL(request.url);
   const loginUrl = new URL("/login.html", url.origin);
-  loginUrl.searchParams.set("returnTo", url.pathname);
+  loginUrl.searchParams.set("returnTo", url.pathname + url.search);
   return Response.redirect(loginUrl.toString(), 302);
 };
 

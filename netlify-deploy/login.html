@@ -262,6 +262,18 @@
           emailInput.removeAttribute('aria-invalid')
         }
 
+        // Only ever redirect within this site. Resolving the URL (rather than
+        // checking its first characters) also catches tricks like "/\t/evil.com",
+        // which browsers normalise to "//evil.com".
+        function safeReturnTo() {
+          var r = new URLSearchParams(location.search).get('returnTo') || '/'
+          try {
+            var u = new URL(r, location.origin)
+            if (u.origin === location.origin) return u.pathname + u.search + u.hash
+          } catch (err) {}
+          return '/'
+        }
+
         function resetButton() {
           submitBtn.disabled = false
           submitBtn.textContent = 'Continue'
@@ -300,9 +312,7 @@
             })
             .then(function (data) {
               if (data.ok) {
-                var params = new URLSearchParams(location.search)
-                var returnTo = params.get('returnTo') || '/'
-                location.href = returnTo
+                location.href = safeReturnTo()
               } else {
                 showError('denied')
                 resetButton()
