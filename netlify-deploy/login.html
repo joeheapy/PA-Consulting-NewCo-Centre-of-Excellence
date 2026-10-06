@@ -57,9 +57,9 @@
 
       .logo {
         display: block;
-        height: 44px;
+        height: 28px;
         width: auto;
-        margin: 0 0 32px;
+        margin: 0 0 28px;
       }
 
       h1 {
@@ -211,7 +211,9 @@
         alt="NewCo Community"
       />
       <h1>NewCo Community</h1>
-      <p class="lead">Enter your email address to access this site.</p>
+      <p class="lead">
+        Enter your registered email address to access this site.
+      </p>
       <form id="login-form" novalidate>
         <label for="email">Email address</label>
         <input
@@ -269,7 +271,8 @@
           var r = new URLSearchParams(location.search).get('returnTo') || '/'
           try {
             var u = new URL(r, location.origin)
-            if (u.origin === location.origin) return u.pathname + u.search + u.hash
+            if (u.origin === location.origin)
+              return u.pathname + u.search + u.hash
           } catch (err) {}
           return '/'
         }
