@@ -88,11 +88,14 @@ inlined = f'''  <style>
   <script src="{js_data_uri(image_slot_js)}"></script>'''
 base_html = link_section_re.sub(lambda m: inlined, base_html, count=1)
 
-# 3. PA logo: the source already references the real file at "uploads/pa-logo.png"
-# (a plain relative path, no inlining) -- just copy that file into the deploy folder
-# so it actually resolves at the same relative location for the 6 root-level pages.
-logo_re = re.compile(r'<img[^>]*src="uploads/pa-logo\.png"[^>]*>')
-assert len(logo_re.findall(base_html)) == 2, "expected 2 logo refs to uploads/pa-logo.png"
+# 3. Logos: the source references real files by plain relative path (no inlining) --
+# the NewCo wordmark in the header and the PA logo in the footer. Just copy both files
+# into the deploy folder so they resolve at the same relative location for the
+# root-level pages.
+nav_logo_re = re.compile(r'<img[^>]*src="uploads/newco-logo-pink\.png"[^>]*>')
+assert len(nav_logo_re.findall(base_html)) == 1, "expected 1 header logo ref to uploads/newco-logo-pink.png"
+pa_logo_re = re.compile(r'<img[^>]*src="uploads/pa-logo\.png"[^>]*>')
+assert len(pa_logo_re.findall(base_html)) == 1, "expected 1 footer logo ref to uploads/pa-logo.png"
 
 # 4. Multi-page split: one physical file per top-nav page, each booting straight to its
 #    own page via the existing `defaultPage` prop (no client-side-only routing anymore).
@@ -113,6 +116,7 @@ head_marker = head_matches[0]
 
 os.makedirs(f"{OUT_DIR}/uploads", exist_ok=True)
 shutil.copy(f"{ROOT}/uploads/pa-logo.png", f"{OUT_DIR}/uploads/pa-logo.png")
+shutil.copy(f"{ROOT}/uploads/newco-logo-pink.png", f"{OUT_DIR}/uploads/newco-logo-pink.png")
 
 # Event media (images/videos) referenced by filename from event frontmatter -- copy the
 # whole folder wholesale so any file dropped in it ships, without the build script

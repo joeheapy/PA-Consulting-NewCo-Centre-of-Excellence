@@ -10,6 +10,7 @@ CONTENT_DIR = f"{ROOT}/content"
 OUT_DIR = f"{ROOT}/netlify-deploy"
 SITE_NAME = "NewCo Community"
 LOGO_HREF = "../uploads/pa-logo.png"
+NAV_LOGO_HREF = "../uploads/newco-logo-pink.png"
 MD_EXTENSIONS = ["extra", "sane_lists"]
 
 def read(path):
@@ -90,7 +91,7 @@ def page_shell(title, active_key, body_html):
 <header role="banner" style="position:sticky;top:0;z-index:50;background:var(--pa-dark-blue);border-bottom:1px solid rgba(255,255,255,0.08);">
   <div style="max-width:1240px;margin:0 auto;padding:8px clamp(20px,5vw,48px);min-height:52px;display:flex;align-items:center;gap:20px 28px;flex-wrap:wrap;">
     <a href="../index.html" style="display:flex;align-items:baseline;gap:14px;text-decoration:none;padding:0;">
-      <img src="{LOGO_HREF}" alt="PA Consulting" style="height:34px;width:auto;display:block;align-self:center;">
+      <img src="{NAV_LOGO_HREF}" alt="NewCo Community" style="height:34px;width:auto;display:block;align-self:center;">
     </a>
     <nav aria-label="Primary" style="display:flex;gap:12px 22px;margin-left:auto;flex-wrap:wrap;">
       {nav_html(active_key)}
