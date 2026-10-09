@@ -1,12 +1,12 @@
 ---
-slug: building-the-future-outside-the-gravity-of-the-present
+slug: so-you-think-you-want-a-newco
 kind: past
 kicker: Past event
-date: 30 June 2026
+date: 3 June 2026
 time: 16:00–19:00 BST
 loc: PA Consulting, London
 format: In person only
-title: Building the future outside the gravity of the present
+title: So you think you want a NewCo?
 blurb: How protected separation can help a NewCo move faster without losing accountability or connection to the wider organisation.
 speakers: Thomas Skalycz | Chief Technology Officer, HMRC; Mark Robinson | Group CIO, DFT Operator, who is building the new digital function for Great British Railway; Mayank Bhundia | A Partner at PA in Financial Services, with over 25 years experience in Transformation across HSBC, Lloyds Banking Group, Equiniti and Accenture; Paul Sandford | A business builder, from the UK's first online recruitment business to global security companies
 themes: Defining the outcome before choosing the organisational structure; Creating pace through clear decisions, proportionate controls and modern platforms; Leadership, culture and the practical work of removing blockers; Maintaining independence without becoming isolated from the parent organisation
