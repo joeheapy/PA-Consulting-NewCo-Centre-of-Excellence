@@ -9,7 +9,7 @@ format: In person only
 title: Is there a right way to manage and scale a NewCo?
 blurb: What if the solution that's really needed just can't be built, or built fast enough, because of the way your organisation works today?
 agenda: 16:00 - 16:30 Arrival; 16:30 - 18:00 Roundtable; 18:00 - 19:30 Refreshments
-speakers: Ottoline Warner | Digital, AI, and innovation leader specialising in public sector transformation, PA Consulting; Tom Wynne-Morgan | Deputy Director, GDS CustomerFirst
+speakers: Claire Dartington | Transformation Director, Government Commercial Agency; Tom Wynne-Morgan | Deputy Director, GDS Customer First Team; Phil Scorer | Deputy Director Organisational Transformation, HMRC’s Path Team
 ---
 
 What if the solution that's really needed just can't be built, or built fast enough, because of the way your organisation works today?
