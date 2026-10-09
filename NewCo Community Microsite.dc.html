@@ -813,17 +813,8 @@
               >
                 Past events
               </div>
-              <div
-                style="
-                  display: grid;
-                  grid-template-columns: repeat(
-                    auto-fit,
-                    minmax(min(100%, 300px), 1fr)
-                  );
-                  gap: 24px;
-                "
-              >
-                <sc-for list="{{past}}" as="ev" hint-placeholder-count="3">
+              <div style="display: flex; flex-direction: column; gap: 20px">
+                <sc-for list="{{past}}" as="ev" hint-placeholder-count="2">
                   <div
                     onClick="{{ev.open}}"
                     onKeyDown="{{ev.openKey}}"
@@ -831,43 +822,99 @@
                     tabindex="{{0}}"
                     aria-label="{{ev.label}}"
                     style="
+                      display: grid;
+                      grid-template-columns: repeat(
+                        auto-fit,
+                        minmax(min(100%, 320px), 1fr)
+                      );
                       background: #ffffff;
                       border: 1px solid var(--pa-grey-01);
-                      padding: 28px 30px;
                       cursor: pointer;
-                      display: flex;
-                      flex-direction: column;
                     "
                     style-hover="border-color:var(--pa-grey-02);"
                   >
                     <div
                       style="
-                        font: 400 12px/1 var(--font-primary);
-                        letter-spacing: 0.04em;
-                        color: var(--pa-grey-04);
-                        margin-bottom: 14px;
+                        padding: clamp(32px, 4.5vw, 52px);
+                        display: flex;
+                        flex-direction: column;
                       "
                     >
-                      {{ev.date}}
+                      <div
+                        style="
+                          display: flex;
+                          gap: 24px;
+                          flex-wrap: wrap;
+                          font: 400 12px/1.6 var(--font-primary);
+                          letter-spacing: 0.08em;
+                          text-transform: uppercase;
+                          color: var(--pa-grey-04);
+                          margin-bottom: 24px;
+                        "
+                      >
+                        <span>{{ev.date}}</span><span>{{ev.time}}</span
+                        ><span>{{ev.format}}</span>
+                      </div>
+                      <div
+                        style="
+                          font: 550 clamp(24px, 3.4vw, 34px) / 1.25
+                            var(--font-companion);
+                          color: var(--pa-aqua-05);
+                          margin-bottom: 16px;
+                          text-wrap: pretty;
+                        "
+                      >
+                        {{ev.title}}
+                      </div>
+                      <div
+                        style="
+                          font: 400 17px/1.65 var(--font-companion);
+                          color: var(--pa-grey-04);
+                          max-width: 560px;
+                          flex: 1;
+                        "
+                      >
+                        {{ev.blurb}}
+                      </div>
+                      <div
+                        style="
+                          display: flex;
+                          gap: 20px;
+                          align-items: center;
+                          flex-wrap: wrap;
+                          margin-top: 32px;
+                        "
+                      >
+                        <span
+                          style="
+                            font: 400 16px/1 var(--font-companion);
+                            color: #c40021;
+                            text-decoration: underline;
+                            text-underline-offset: 3px;
+                          "
+                          >Read the write-up →</span
+                        >
+                        <span
+                          style="
+                            font: 400 13px/1.4 var(--font-primary);
+                            color: var(--pa-grey-04);
+                          "
+                          >{{ev.loc}}</span
+                        >
+                      </div>
                     </div>
-                    <div
-                      style="
-                        font: 550 20px/1.3 var(--font-companion);
-                        color: var(--pa-aqua-05);
-                        margin-bottom: 10px;
-                        flex: 1;
-                      "
-                    >
-                      {{ev.title}}
-                    </div>
-                    <div
-                      style="
-                        font: 400 15px/1.55 var(--font-companion);
-                        color: var(--pa-grey-04);
-                        margin-bottom: 16px;
-                      "
-                    >
-                      {{ev.blurb}}
+                    <div style="position: relative; min-height: 300px">
+                      <image-slot
+                        id="{{ev.id}}-img"
+                        shape="rect"
+                        placeholder="Drop event image"
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          width: 100%;
+                          height: 100%;
+                        "
+                      ></image-slot>
                     </div>
                   </div>
                 </sc-for>
