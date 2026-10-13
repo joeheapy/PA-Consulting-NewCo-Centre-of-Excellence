@@ -128,6 +128,11 @@ the card:
 subject near the centre and nothing important at the edges, since 4:3 is trimmed
 top/bottom on the past card and slightly at the sides on mobile.
 
+The same `cardImage` also appears at the top of the Next/Past teaser cards on the
+homepage (`index.html`). There the slot has a fixed **3:2** shape (~575 × 383 px on
+desktop), so a 4:3 image loses a thin strip from the top and bottom. Only the first
+`next` and first `past` event are shown on the homepage.
+
 Card images are decorative (rendered with empty alt text); the card title names the
 event. To show an image on the event's own page as well, use the separate `image` /
 `image_alt` / `image_caption` frontmatter fields above.
