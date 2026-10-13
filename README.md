@@ -96,3 +96,38 @@ Put any image/video files referenced by the `image`/`video`/`video_poster` field
 into this folder (create it if it doesn't exist yet). Files are named whatever you like —
 the whole folder is copied into the deployed site as-is, so an event's frontmatter picks
 out which files actually get used; unreferenced files are harmless but simply unused.
+
+### Event card images — Events page cards
+
+The image on the right of each event card on `events.html` is **not** set from the
+event's Markdown file. It comes from the listing data hard-coded in
+`NewCo Community Microsite.dc.html` (the `next` / `past` arrays in `get DATA()`).
+
+To add or change a card image:
+
+1. Put the image file in `uploads/events/` (any filename; spaces are fine).
+2. In `NewCo Community Microsite.dc.html`, find the event's entry in `get DATA()` and set
+   `cardImage` to the bare filename, e.g.
+   `cardImage: 'NewCo round one_image.jpg',`
+   The `uploads/events/` path and URL-encoding are added automatically. Leave the
+   field out to show the empty "Drop event image" placeholder.
+3. Rebuild (see above). The file is copied into `netlify-deploy/uploads/events/` with
+   the rest of the folder.
+
+**Recommended size: 1200 × 900 px (4:3), landscape, JPEG or WebP, ~150–250 KB.**
+The image always fills the slot and is cropped to fit, and the slot's shape changes with
+the card:
+
+| Where | Slot size on screen |
+|---|---|
+| Next event card, desktop | ~592 × 450 px |
+| Past event card, desktop | ~592 × 340 px (shorter text column, so more top/bottom crop) |
+| Either card, mobile (stacked below the text) | ~350 × 300 px |
+
+1200 px wide covers the ~592 px desktop slot at 2× for high-density screens. Keep the
+subject near the centre and nothing important at the edges, since 4:3 is trimmed
+top/bottom on the past card and slightly at the sides on mobile.
+
+Card images are decorative (rendered with empty alt text); the card title names the
+event. To show an image on the event's own page as well, use the separate `image` /
+`image_alt` / `image_caption` frontmatter fields above.

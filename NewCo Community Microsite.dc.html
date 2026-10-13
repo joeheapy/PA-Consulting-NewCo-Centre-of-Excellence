@@ -779,6 +779,7 @@
                     <div style="position: relative; min-height: 300px">
                       <image-slot
                         id="{{ev.id}}-img"
+                        src="{{ev.cardImage}}"
                         shape="rect"
                         placeholder="Drop event image"
                         style="
@@ -906,6 +907,7 @@
                     <div style="position: relative; min-height: 300px">
                       <image-slot
                         id="{{ev.id}}-img"
+                        src="{{ev.cardImage}}"
                         shape="rect"
                         placeholder="Drop event image"
                         style="
@@ -2368,7 +2370,7 @@
               related: ['NewCo Operating Model Canvas', 'Operating model evolution', 'Funding models'] }
           ];
           const past = [
-            { id: 'pe1', slug: 'so-you-think-you-want-a-newco', past: true, kicker: 'Past event · 3 June 2026', date: '3 June 2026', time: '16:00–19:00 BST', loc: 'PA Consulting, London', format: 'In person only',
+            { id: 'pe1', slug: 'so-you-think-you-want-a-newco', past: true, cardImage: 'NewCo round one_image.jpg', kicker: 'Past event · 3 June 2026', date: '3 June 2026', time: '16:00–19:00 BST', loc: 'PA Consulting, London', format: 'In person only',
               title: 'So you think you want a NewCo?',
               blurb: 'How protected separation can help a NewCo move faster without losing accountability or connection to the wider organisation.',
               overview: [
@@ -2467,7 +2469,8 @@
           }));
           const withOpen = (e) => {
             const href = 'events/' + e.slug + '.html';
-            return { ...e, href, open: navTo(href), openKey: key(navTo(href)), label: 'Event: ' + e.title };
+            const cardImage = e.cardImage ? 'uploads/events/' + encodeURIComponent(e.cardImage) : '';
+            return { ...e, href, cardImage, open: navTo(href), openKey: key(navTo(href)), label: 'Event: ' + e.title };
           };
           const themes = ['All', 'Operating models', 'Governance', 'Digital Office', 'Evidence', 'Culture'];
           const chips = themes.map(t => ({
