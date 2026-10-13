@@ -6,3 +6,6 @@ __pycache__/
 node_modules/
 .netlify/
 .DS_Store
+
+# Full-size source images kept locally; web-sized copies live in uploads/events/
+uploads/originals/
