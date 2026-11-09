@@ -1,7 +1,7 @@
 ---
 slug: is-there-a-right-way-to-manage-and-scale-a-newco
-kind: next
-kicker: Next event
+kind: past
+kicker: Past event
 date: 14 October 2026
 time: 16:00–19:00 BST
 loc: PA Consulting, 10 Bressenden Place, London, SW1E 5DN

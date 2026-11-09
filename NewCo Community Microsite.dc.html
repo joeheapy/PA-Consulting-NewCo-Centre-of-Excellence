@@ -303,7 +303,7 @@
                   margin: 0 0 44px;
                 "
               >
-                What we covered, and what's next.
+                {{eventsHeading}}
               </h2>
               <div
                 style="
@@ -316,6 +316,7 @@
                   align-items: stretch;
                 "
               >
+                <sc-if value="{{hasNext}}" hint-placeholder-val="{{true}}">
                 <div
                   onClick="{{nextEvent.open}}"
                   onKeyDown="{{nextEvent.openKey}}"
@@ -387,12 +388,14 @@
                     </div>
                   </div>
                 </div>
+                </sc-if>
+                <sc-for list="{{homePast}}" as="pe" hint-placeholder-count="1">
                 <div
-                  onClick="{{pastEvent.open}}"
-                  onKeyDown="{{pastEvent.openKey}}"
+                  onClick="{{pe.open}}"
+                  onKeyDown="{{pe.openKey}}"
                   role="button"
                   tabindex="{{0}}"
-                  aria-label="Read the past event write-up"
+                  aria-label="{{pe.label}}"
                   style="
                     background: #ffffff;
                     border: 1px solid var(--pa-grey-01);
@@ -404,8 +407,8 @@
                 >
                   <div style="position: relative; aspect-ratio: 3 / 2">
                     <image-slot
-                      id="home-past-img"
-                      src="{{pastEvent.cardImage}}"
+                      id="{{pe.homeImgId}}"
+                      src="{{pe.cardImage}}"
                       shape="rect"
                       placeholder="Drop event image"
                       style="
@@ -434,7 +437,7 @@
                         margin-bottom: 22px;
                       "
                     >
-                      Past event · {{pastEvent.date}}
+                      Past event · {{pe.date}}
                     </div>
                     <div
                       style="
@@ -445,7 +448,7 @@
                         flex: 1;
                       "
                     >
-                      {{pastEvent.title}}
+                      {{pe.title}}
                     </div>
                     <div
                       style="
@@ -461,6 +464,7 @@
                   </div>
                 </div>
               </div>
+                </sc-for>
             </div>
           </section>
 
@@ -719,6 +723,7 @@
               </p>
             </div>
           </section>
+          <sc-if value="{{hasNext}}" hint-placeholder-val="{{true}}">
           <section
             style="background: #ffffff; padding: clamp(40px, 6vw, 64px) 0"
           >
@@ -839,6 +844,7 @@
               </div>
             </div>
           </section>
+          </sc-if>
           <section style="background: var(--pa-grey-01); padding: 56px 0 88px">
             <div
               style="
@@ -2390,8 +2396,9 @@
 
         get DATA() {
           if (this._d) return this._d;
-          const next = [
-            { id: 'ev1', slug: 'is-there-a-right-way-to-manage-and-scale-a-newco', cardImage: 'whiteboard-1200.jpg', kicker: 'Next event', date: '14 October 2026', time: '16:00–19:00 BST', loc: 'PA Consulting, 10 Bressenden Place, London, SW1E 5DN', format: 'In person only',
+          const next = [];
+          const past = [
+            { id: 'ev1', slug: 'is-there-a-right-way-to-manage-and-scale-a-newco', past: true, cardImage: 'whiteboard-1200.jpg', kicker: 'Past event · 14 October 2026', date: '14 October 2026', time: '16:00–19:00 BST', loc: 'PA Consulting, 10 Bressenden Place, London, SW1E 5DN', format: 'In person only',
               title: 'Is there a right way to manage and scale a NewCo?',
               blurb: 'What if the solution that\'s really needed just can\'t be built, or built fast enough, because of the way your organisation works today?',
               overview: [
@@ -2411,9 +2418,7 @@
                 { t: '18:00', s: 'Refreshments' },
                 { t: '19:30', s: 'Close' }
               ],
-              related: ['NewCo Operating Model Canvas', 'Operating model evolution', 'Funding models'] }
-          ];
-          const past = [
+              related: ['NewCo Operating Model Canvas', 'Operating model evolution', 'Funding models'] },
             { id: 'pe1', slug: 'so-you-think-you-want-a-newco', past: true, cardImage: 'NewCo round one_image.jpg', kicker: 'Past event · 3 June 2026', date: '3 June 2026', time: '16:00–19:00 BST', loc: 'PA Consulting, London', format: 'In person only',
               title: 'So you think you want a NewCo?',
               blurb: 'How protected separation can help a NewCo move faster without losing accountability or connection to the wider organisation.',
@@ -2544,8 +2549,11 @@
             isHome: S.page === 'home', isEvents: S.page === 'events', isHub: S.page === 'hub',
             isFrameworks: S.page === 'frameworks', isInsights: S.page === 'insights', isVoices: S.page === 'voices',
             isAbout: S.page === 'about', isJoin: S.page === 'join',
-            nextEvent: withOpen(D.next[0]),
-            pastEvent: withOpen(D.past[0]),
+            hasNext: D.next.length > 0,
+            nextEvent: D.next.length ? withOpen(D.next[0]) : {},
+            // Homepage shows the next event plus the latest write-up, or the two latest write-ups when nothing is scheduled.
+            homePast: D.past.slice(0, D.next.length ? 1 : 2).map(withOpen).map(e => ({ ...e, homeImgId: 'home-' + e.id + '-img' })),
+            eventsHeading: D.next.length ? 'What we covered, and what\'s next.' : 'What we covered.',
             next: D.next.map(withOpen),
             past: D.past.map(withOpen),
             roleOptions: ['Chief Digital Officer', 'Chief Operating Officer', 'Transformation Director', 'Programme Director', 'Portfolio Director', 'Digital Office leader', 'Senior Responsible Owner', 'Other'],
