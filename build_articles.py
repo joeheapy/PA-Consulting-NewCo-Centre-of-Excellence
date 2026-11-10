@@ -2,6 +2,7 @@
 #   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 # Then run this script with .venv/bin/python.
 import os
+import re
 import markdown as md
 
 ROOT = "."
@@ -85,6 +86,9 @@ def page_shell(title, active_key, body_html):
   .pa-event-media figure{{margin:0;}}
   .pa-event-media img,.pa-event-media video{{width:100%;display:block;border-radius:var(--radius-sm);}}
   .pa-event-media figcaption{{font:400 13px/1.5 var(--font-companion);color:var(--pa-grey-04);margin-top:8px;}}
+  .pa-article-body figure{{margin:28px 0;}}
+  .pa-article-body figure img,.pa-article-body figure video{{width:100%;display:block;border-radius:var(--radius-sm);}}
+  .pa-article-body figcaption{{font:400 13px/1.5 var(--font-companion);color:var(--pa-grey-04);margin-top:8px;}}
 </style>
 </head>
 <body>
@@ -149,6 +153,31 @@ def render_markdown(text):
     html = md.markdown(text, extensions=MD_EXTENSIONS)
     return f'<div class="pa-article-body">{html}</div>'
 
+VIDEO_EXTS = (".mp4", ".webm", ".mov")
+IMG_TAG = re.compile(r'<img alt="([^"]*)" src="([^"]*)"(?: title="([^"]*)")? />')
+SOLO_IMG = re.compile(r'<p>(<img alt="[^"]*" src="[^"]*"(?: title="[^"]*")? />)</p>')
+
+def media_src(src):
+    # A bare filename lives in uploads/events/; paths and URLs are left alone.
+    return src if ("/" in src or ":" in src) else f"../uploads/events/{src}"
+
+def render_media_figure(m):
+    alt, src, caption = m.group(1), media_src(m.group(2)), m.group(3)
+    caption_html = f"<figcaption>{caption}</figcaption>" if caption else ""
+    if src.lower().endswith(VIDEO_EXTS):
+        kind = "video/quicktime" if src.lower().endswith(".mov") else "video/" + src.rsplit(".", 1)[1].lower()
+        media = f'<video controls preload="metadata" playsinline aria-label="{alt}"><source src="{src}" type="{kind}"></video>'
+    else:
+        media = f'<img src="{src}" alt="{alt}" loading="lazy">'
+    return f"<figure>{media}{caption_html}</figure>"
+
+def render_rich_markdown(text):
+    """Markdown with inline media: ![alt](file.jpg "caption") on its own line becomes a figure;
+    .mp4/.webm/.mov files become video players. Bare filenames resolve to uploads/events/."""
+    html = render_markdown(text)
+    html = SOLO_IMG.sub(lambda m: render_media_figure(IMG_TAG.match(m.group(1))), html)
+    return IMG_TAG.sub(lambda m: f'<img alt="{m.group(1)}" src="{media_src(m.group(2))}"' + (f' title="{m.group(3)}"' if m.group(3) else "") + " />", html)
+
 # ---------------------------------------------------------------------------
 # DATA
 # ---------------------------------------------------------------------------
@@ -157,7 +186,7 @@ def load_markdown_dir(path):
     """Return [(meta_dict, body_str), ...] for every .md file in path, sorted by filename."""
     entries = []
     for fname in sorted(os.listdir(path)):
-        if not fname.endswith(".md"):
+        if not fname.endswith(".md") or fname.startswith("_"):
             continue
         meta, body = parse_frontmatter(read(f"{path}/{fname}"))
         entries.append((meta, body))
@@ -182,14 +211,25 @@ def parse_agenda_field(value):
         agenda.append({"start": start.strip(), "end": end.strip(), "label": label.strip()})
     return agenda
 
+EVENT_REQUIRED = ("slug", "kind", "title", "date")
+WRITEUP_DIVIDER = "<!-- write-up -->"
+
 def load_events():
     next_events, past = [], []
     for meta, body in load_markdown_dir(f"{CONTENT_DIR}/events"):
+        missing = [k for k in EVENT_REQUIRED if not meta.get(k)]
+        if missing:
+            raise ValueError(f"event '{meta.get('slug') or meta.get('title') or '?'}' is missing required field(s): {', '.join(missing)}")
+        if meta["kind"] not in ("next", "past"):
+            raise ValueError(f"event '{meta['slug']}': kind must be 'next' or 'past', got '{meta['kind']}'")
+        overview, _, writeup = body.partition(WRITEUP_DIVIDER)
         ev = {
-            "slug": meta["slug"], "kicker": meta["kicker"], "date": meta["date"],
-            "time": meta["time"], "loc": meta["loc"], "format": meta["format"],
-            "title": meta["title"], "blurb": meta["blurb"],
-            "overview_html": render_markdown(body),
+            "slug": meta["slug"], "date": meta["date"], "title": meta["title"],
+            "kicker": meta.get("kicker") or ("Next event" if meta["kind"] == "next" else "Past event"),
+            "time": meta.get("time"), "loc": meta.get("loc"), "format": meta.get("format"),
+            "blurb": meta.get("blurb"),
+            "overview_html": render_markdown(overview.strip("\n")) if overview.strip() else "",
+            "writeup_html": render_rich_markdown(writeup.strip("\n")) if writeup.strip() else "",
         }
         if meta.get("agenda"):
             ev["agenda"] = parse_agenda_field(meta["agenda"])
@@ -239,6 +279,9 @@ def render_event_page(ev, is_next):
                 f'<span style="font:400 16px/1.5 var(--font-companion);color:var(--pa-dark-blue);">{t}</span></div>'
                 for t in ev["themes"]
             ) + "</div>"
+        )
+    if ev.get("insights"):
+        themes_html += (
             '<div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:40px 0 18px;">Major insights</div>'
             '<div style="display:flex;flex-direction:column;gap:16px;">'
             + "".join(
@@ -283,6 +326,14 @@ def render_event_page(ev, is_next):
             ) + "</div>"
         )
 
+    writeup_html = ""
+    if ev.get("writeup_html"):
+        writeup_html = (
+            '<div style="border-top:1px solid var(--pa-grey-01);margin-top:48px;padding-top:40px;">'
+            '<div style="font:400 13px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-grey-04);margin:0 0 18px;">Write up</div>'
+            f'{ev["writeup_html"]}</div>'
+        )
+
     main_content = f'''
         {ev["overview_html"]}
         {media_html}
@@ -290,6 +341,7 @@ def render_event_page(ev, is_next):
         {agenda_html}
         {speakers_html}
         {downloads_html}
+        {writeup_html}
     '''
 
     if is_next:
@@ -343,6 +395,18 @@ def render_event_page(ev, is_next):
     </div>
   </section>'''
 
+    def hero_fact(label, *lines):
+        lines = [l for l in lines if l]
+        if not lines:
+            return ""
+        return (
+            '<div>'
+            f'<div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:8px;">{label}</div>'
+            f'<div style="font:450 17px/1.5 var(--font-primary);color:#FFFFFF;">{"<br>".join(lines)}</div>'
+            '</div>'
+        )
+    hero_facts = hero_fact("When", ev["date"], ev.get("time")) + hero_fact("Where", ev.get("loc"), ev.get("format"))
+
     body = f'''
   <section style="background:var(--pa-dark-blue);padding:56px 0 60px;">
     <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,48px);">
@@ -350,14 +414,7 @@ def render_event_page(ev, is_next):
       <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:18px;">{ev["kicker"]}</div>
       <h1 style="font:400 clamp(28px,4.6vw,42px)/1.15 var(--font-primary);color:#FFFFFF;margin:0;max-width:840px;text-wrap:pretty;">{ev["title"]}</h1>
       <div style="display:flex;gap:48px;flex-wrap:wrap;margin-top:32px;">
-        <div>
-          <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:8px;">When</div>
-          <div style="font:450 17px/1.5 var(--font-primary);color:#FFFFFF;">{ev["date"]}<br>{ev["time"]}</div>
-        </div>
-        <div>
-          <div style="font:400 12px/1 var(--font-primary);letter-spacing:0.08em;text-transform:uppercase;color:var(--pa-aqua-03);margin-bottom:8px;">Where</div>
-          <div style="font:450 17px/1.5 var(--font-primary);color:#FFFFFF;">{ev["loc"]}<br>{ev["format"]}</div>
-        </div>
+        {hero_facts}
       </div>
     </div>
   </section>

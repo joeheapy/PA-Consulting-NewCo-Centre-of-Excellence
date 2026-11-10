@@ -63,21 +63,26 @@ All fields are required — there are no optional fields for this content type.
 
 ### Events — `content/events/*.md`
 
+Next and past events share one template. Start a new event by copying
+`content/events/_template.md` to `content/events/<slug>.md`. It lists every field with
+notes, and files whose names start with `_` are never built. Only the four required fields
+must be set. Delete any optional line you don't need and its section disappears from the page.
+
 | Field | Required? | Notes |
 |---|---|---|
 | `slug` | Required | Output filename: `events/<slug>.html`. |
-| `kind` | Required | `next` or `past`. Anything other than exactly `next` is treated as `past`. Keep exactly one file at `kind: next` at a time — that's the only event shown as "Next event" and the only one that gets the "Express interest" registration form. |
-| `kicker` | Required | Small label above the title, e.g. `Next event · Registration open` or `Past event · 14 May 2026`. |
+| `kind` | Required | `next` or `past` (anything else fails the build). `next` adds the "Express interest" registration form and the photography notice; `past` uses the single-column write-up layout. When an event has happened, change it to `past`. |
+| `kicker` | Optional | Small label above the title. Defaults to `Next event` or `Past event` from `kind`. |
 | `date` | Required | Free text, e.g. `17 September 2026` (can be `TBC`). |
-| `time` | Required | Free text, e.g. `16:00–19:00 BST`. |
-| `loc` | Required | Venue. |
-| `format` | Required | e.g. `In person only`. |
+| `time` | Optional | Free text, e.g. `16:00–19:00 BST`. |
+| `loc` | Optional | Venue. |
+| `format` | Optional | e.g. `In person only`. |
 | `title` | Required | Event title. |
-| `blurb` | Required | One-line summary shown on the events listing. |
+| `blurb` | Optional | One-line summary. |
 | `agenda` | Optional | `;`-separated `HH:MM - HH:MM Label` entries. Renders an "Agenda" section; omit entirely if there's no confirmed agenda yet — don't use a placeholder like `TBC` as the value, since it will be parsed as a malformed entry. |
 | `speakers` | Optional | `;`-separated `Name \| Role` entries. Renders a "Speakers" section; omit if not yet confirmed. |
 | `themes` | Optional | `;`-separated short phrases. Renders a "Key discussion themes" list — conventionally used for past events, but works for either `kind`. |
-| `insights` | Optional | `;`-separated pull-quote strings. Renders a "Major insights" list alongside `themes` — conventionally past-only. |
+| `insights` | Optional | `;`-separated pull-quote strings. Renders a "Major insights" list — conventionally past-only. Independent of `themes`. |
 | `downloads` | Optional | `;`-separated material labels, e.g. `Session summary (PDF, 12 pp)`. Renders a "Materials" section — conventionally past-only. Omit the field entirely (don't set it to a placeholder string like `None for this event.`) when there's nothing to list, since any non-empty value is rendered as a real download row. |
 | `image` | Optional | Filename of an image (jpg/png/webp) placed in `uploads/events/`, e.g. `newco-scale-hero.jpg`. Renders full-width, right under the overview text. |
 | `image_alt` | Optional | Alt text for `image`. Defaults to the event's `title` if omitted — set a real description for accessibility. |
@@ -86,13 +91,39 @@ All fields are required — there are no optional fields for this content type.
 | `video_poster` | Optional | Filename of a poster/thumbnail image (also in `uploads/events/`) shown before the video plays. Only used if `video` is set. |
 | `video_caption` | Optional | Caption text shown beneath `video`. Omit for no caption. |
 
-`overview` (the body text below the frontmatter) is required in practice — it's what
-renders as the event's overview paragraphs — but isn't a frontmatter key, so it can't be
-individually enforced beyond "leave it blank and the event page will have no overview".
+`time`/`date` fill the hero's "When" block and `loc`/`format` the "Where" block; a block with
+no values is hidden.
+
+**Body: overview and write-up.** The markdown below the frontmatter is the event overview.
+To add a post-event article, put a line containing only `<!-- write-up -->` after the overview.
+Everything below it renders as the final section of the page, under a **Write up** label
+(it works for `next` events too, but is normally added once an event is `past`). With no
+divider there's no write-up section.
+
+The write-up is full markdown (`##` headings, lists, quotes, links) plus inline media, using
+image syntax with each item on its own line:
+
+```markdown
+![Delegates around the roundtable](roundtable.jpg "Optional caption")
+
+![Highlights from the discussion](highlights.mp4 "Optional caption")
+```
+
+- A bare filename is loaded from `uploads/events/`; a path or URL is used as written.
+- `.mp4`, `.webm` and `.mov` render as a video player with controls; anything else as an image.
+- The text in `[...]` is the alt text (images) or accessible label (video); the quoted title
+  becomes a caption. Write real alt text.
+- Images: 1600px wide JPEG/WebP, ~200–400 KB. Video: H.264 MP4, short clips, under ~20 MB
+  each — files are committed to git and served from Netlify.
+
+**Moving an event from next to past:** set `kind: past` (and drop any custom `kicker`), add the
+write-up, then move its entry from the `next` to the `past` array in the microsite `DATA`
+(see "Event card images" below). The homepage and events listings come from that data, not
+from the markdown.
 
 ### Event media — `uploads/events/`
 
-Put any image/video files referenced by the `image`/`video`/`video_poster` fields above
+Put any image/video files referenced by the write-up or the `image`/`video`/`video_poster` fields above
 into this folder (create it if it doesn't exist yet). Files are named whatever you like —
 the whole folder is copied into the deployed site as-is, so an event's frontmatter picks
 out which files actually get used; unreferenced files are harmless but simply unused.
