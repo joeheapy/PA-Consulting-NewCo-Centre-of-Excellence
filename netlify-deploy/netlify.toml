@@ -1,6 +1,17 @@
+# Netlify's base directory for this site is netlify-deploy/ (this folder). The build steps
+# up to the repo root because the build scripts and event renderer live there.
+#
+# Build: install dependencies, build the event pages + listings from the published events
+# in Supabase (scripts/build-events.mjs), then bundle index/events/about
+# (build_netlify_bundle.py). The CMS triggers this build through a build hook on publish.
 [build]
+  command = "cd .. && npm ci && npm ci --prefix netlify-deploy/netlify/functions && node scripts/build-events.mjs --source=supabase && python3 build_netlify_bundle.py"
+  publish = "."
   functions = "netlify/functions"
   edge_functions = "netlify/edge-functions"
+
+[build.environment]
+  NODE_VERSION = "22"
 
 [functions]
   node_bundler = "esbuild"

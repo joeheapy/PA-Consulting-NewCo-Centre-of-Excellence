@@ -1,6 +1,8 @@
-import re, base64, sys, os, shutil
+import re, base64, sys, os, shutil, json
 
-ROOT = "."
+ROOT = os.path.dirname(os.path.abspath(__file__))
+# Written by scripts/build-events.mjs from the published events in Supabase.
+EVENTS_LISTING = f"{ROOT}/build/events-listing.json"
 SRC = f"{ROOT}/NewCo Community Microsite.dc.html"
 DS_HREF = "_ds/pa-consulting-design-system-c8c638d2-e948-4822-ae72-4e0cf94e9fb4"
 DS = f"{ROOT}/{DS_HREF}"
@@ -30,6 +32,46 @@ spacing_css = read(f"{DS}/tokens/spacing.css")
 ds_bundle_js = read(f"{DS}/_ds_bundle.js")
 
 base_html = read(SRC)
+
+# 0. Event listings: replace the `next` / `past` arrays in get DATA() with the published
+#    events from Supabase (build/events-listing.json), so the homepage and Events page
+#    cards always match the event pages. The arrays in the source file are ignored.
+#    Strings are escaped so content can't end the <script> early (< >) or be picked up by
+#    support.js's "{{...}}" template scanner ({ }), which also reads script text.
+def js_literal(value):
+    if isinstance(value, str):
+        return (json.dumps(value, ensure_ascii=False)
+                .replace("<", "\\u003c").replace(">", "\\u003e")
+                .replace("{", "\\u007b").replace("}", "\\u007d"))
+    if isinstance(value, bool) or value is None or isinstance(value, (int, float)):
+        return json.dumps(value)
+    if isinstance(value, list):
+        return "[" + ", ".join(js_literal(v) for v in value) + "]"
+    if isinstance(value, dict):
+        return "{ " + ", ".join(f"{k}: {js_literal(v)}" for k, v in value.items() if v is not None) + " }"
+    raise TypeError(f"unsupported value in events listing: {value!r}")
+
+if not os.path.exists(EVENTS_LISTING):
+    sys.exit(f"missing {EVENTS_LISTING}: run `node scripts/build-events.mjs` first (it reads Supabase)")
+listing = json.load(open(EVENTS_LISTING, encoding="utf-8"))
+for key in ("next", "past"):
+    for entry in listing[key]:
+        assert re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", entry["id"]), f"bad event id {entry['id']!r}"
+
+data_at = base_html.find("get DATA()")
+next_at = base_html.find("const next = [", data_at)
+stages_at = base_html.find("const stages = [", next_at)
+assert data_at != -1 and next_at != -1 and stages_at != -1, "events DATA arrays not found in the microsite source"
+assert base_html.count("const next = [") == 1 and base_html.count("const stages = [") == 1, "events DATA markers not unique"
+indent = re.search(r"[ \t]*$", base_html[:next_at]).group(0)
+events_js = (
+    f"const next = {js_literal(listing['next'])};\n"
+    f"{indent}const past = {js_literal(listing['past'])};\n"
+    f"{indent}"
+)
+assert "{{" not in events_js and "}}" not in events_js, "events listing would collide with template syntax"
+base_html = base_html[:next_at] + events_js + base_html[stages_at:]
+print(f"events listing: {len(listing['next'])} next, {len(listing['past'])} past")
 
 # NOTE: the source .dc.html is sometimes reformatted by external tooling (the Design
 # Canvas editor / a save-time formatter) -- attributes get split one-per-line, tags
