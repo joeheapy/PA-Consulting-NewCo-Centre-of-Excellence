@@ -64,7 +64,9 @@
             <label><input type="radio" name="kind" value="next" checked> Upcoming</label>
             <label><input type="radio" name="kind" value="past"> Past (has a write-up)</label>
           </div>
+          <p class="hint" style="margin-top:4px">Upcoming events show a registration form. Past events show the write-up, themes and insights instead.</p>
         </fieldset>
+        <div id="kind-warnings" class="notice notice--warn" role="status" hidden></div>
         <div class="field">
           <label for="f-kicker">Label above the title</label>
           <p class="hint" id="kicker-hint">Leave blank to use the default.</p>
@@ -185,6 +187,7 @@
     <section class="section" aria-labelledby="h-writeup">
       <h2 id="h-writeup">Write-up</h2>
       <p class="hint">For past events: what happened. Insert photos and videos where they belong in the story.</p>
+      <p class="notice notice--warn small" data-when-upcoming hidden>Not shown on the site while the event is upcoming. It appears when you change the event type to Past.</p>
       <div class="section__body">
         <div data-md="writeup_md" data-label="Write-up"></div>
       </div>
@@ -192,11 +195,13 @@
 
     <section class="section" aria-labelledby="h-themes">
       <h2 id="h-themes">Key discussion themes</h2>
+      <p class="notice notice--warn small" data-when-upcoming hidden>Not shown on the site while the event is upcoming. It appears when you change the event type to Past.</p>
       <div class="section__body"><div data-rows="themes"></div></div>
     </section>
 
     <section class="section" aria-labelledby="h-insights">
       <h2 id="h-insights">Major insights</h2>
+      <p class="notice notice--warn small" data-when-upcoming hidden>Not shown on the site while the event is upcoming. It appears when you change the event type to Past.</p>
       <div class="section__body"><div data-rows="insights"></div></div>
     </section>
 

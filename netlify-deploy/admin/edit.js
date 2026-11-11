@@ -82,10 +82,37 @@ function fill(ev) {
 const isDirty = () => JSON.stringify(collect()) !== snapshot;
 const markSaved = () => { snapshot = JSON.stringify(collect()); };
 
+/** Today's date where the editor is (YYYY-MM-DD). */
+function today() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
+/** Warnings when the event type doesn't match the date or the label above the title. */
+export function kindWarnings({ kind, event_date: date, kicker }, now = today()) {
+  const w = [];
+  if (kind === 'next' && date && date < now) {
+    w.push(`The date (${formatDate(date)}) has passed, but the event is marked as upcoming, so the site still shows it as the next event with a registration form. If it has happened, change the event type to Past and add a write-up.`);
+  } else if (kind === 'past' && date && date > now) {
+    w.push(`The event is marked as past, but its date (${formatDate(date)}) is in the future, so it will be listed first among past events. If it hasn’t happened yet, change the event type to Upcoming.`);
+  }
+  if (kicker && kind === 'past' && /\b(next|upcoming|coming soon|register)\b/i.test(kicker)) {
+    w.push(`The label above the title says “${kicker}”. Clear it to use “Past event”, or change it.`);
+  } else if (kicker && kind === 'next' && /\b(past|previous|recap|write-?up)\b/i.test(kicker)) {
+    w.push(`The label above the title says “${kicker}”. Clear it to use “Next event”, or change it.`);
+  }
+  return w;
+}
+
 function updateHints() {
   const kind = form.elements.kind.value;
   form.elements.kicker.placeholder = kind === 'past' ? 'Past event' : 'Next event';
   form.elements.date_label.placeholder = formatDate(form.elements.event_date.value) || 'e.g. TBC';
+  const warnings = kindWarnings({ kind, event_date: form.elements.event_date.value, kicker: form.elements.kicker.value.trim() });
+  const box = $('#kind-warnings');
+  box.replaceChildren(...warnings.map((t) => el('p', {}, t)));
+  box.hidden = !warnings.length;
+  for (const n of $$('[data-when-upcoming]')) n.hidden = kind !== 'next';
 }
 
 function updateStatus() {
@@ -601,7 +628,7 @@ form.addEventListener('submit', (e) => { e.preventDefault(); save(); });
 form.addEventListener('input', (e) => {
   if (e.target.name === 'title' && !slugTouched) form.elements.slug.value = slugify(e.target.value);
   if (e.target.name === 'slug') slugTouched = true;
-  if (e.target.name === 'kind' || e.target.name === 'event_date') updateHints();
+  if (['kind', 'event_date', 'kicker'].includes(e.target.name)) updateHints();
   onChange(e);
 });
 form.elements.slug.addEventListener('change', () => {
