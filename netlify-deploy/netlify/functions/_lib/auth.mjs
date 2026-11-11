@@ -1,4 +1,4 @@
-// Admin check shared by every CMS function (netlify/functions/cms-*.js).
+// Admin check shared by every CMS function (netlify/functions/cms-*.mjs).
 //
 // The edge gate (gate.ts) does not run on /.netlify/functions/*, so each CMS function must
 // protect itself. withAdmin() does that, in this order:
@@ -11,13 +11,13 @@
 // This folder is not a function itself: Netlify only treats files at the top level of
 // netlify/functions (or a folder with a same-named/index file) as functions.
 
-const { createClient } = require("@supabase/supabase-js");
-const { jwtVerify } = require("jose");
+import { createClient } from "@supabase/supabase-js";
+import { jwtVerify } from "jose";
 
 const COOKIE_RE = /(?:^|;\s*)nc_session=([^;]+)/;
 const SAFE_METHODS = new Set(["GET", "HEAD"]);
 
-function json(statusCode, body, headers = {}) {
+export function json(statusCode, body, headers = {}) {
   return {
     statusCode,
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...headers },
@@ -25,13 +25,24 @@ function json(statusCode, body, headers = {}) {
   };
 }
 
-function header(event, name) {
+export function header(event, name) {
   const h = event.headers || {};
-  return h[name] ?? h[name.toLowerCase()] ?? Object.entries(h).find(([k]) => k.toLowerCase() === name)?.[1];
+  const key = Object.keys(h).find((k) => k.toLowerCase() === name.toLowerCase());
+  return key ? h[key] : undefined;
 }
 
-/** True when the request comes from a page on this site (the browser always sends Origin on fetch POST/PUT/DELETE). */
-function sameOrigin(event) {
+/** The parsed JSON body, or undefined if it isn't valid JSON. */
+export function readJson(event) {
+  try {
+    const raw = event.isBase64Encoded ? Buffer.from(event.body || "", "base64").toString("utf8") : event.body;
+    return JSON.parse(raw || "null") ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** True when the request comes from a page on this site (browsers always send Origin on fetch POST/PUT/DELETE). */
+export function sameOrigin(event) {
   const origin = header(event, "origin");
   const host = header(event, "x-forwarded-host") || header(event, "host");
   if (!origin || !host) return false;
@@ -44,7 +55,7 @@ function sameOrigin(event) {
 }
 
 /** The signed-in email from the session cookie, or null if there is no valid session. */
-async function sessionEmail(event) {
+export async function sessionEmail(event) {
   const token = (header(event, "cookie") || "").match(COOKIE_RE)?.[1];
   if (!token || !process.env.SESSION_SECRET) return null;
   try {
@@ -56,7 +67,7 @@ async function sessionEmail(event) {
   }
 }
 
-function adminClient() {
+export function adminClient() {
   return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
@@ -64,10 +75,10 @@ function adminClient() {
 
 /**
  * Wraps a CMS function handler so it only runs for a signed-in admin:
- *   exports.handler = withAdmin(async (event, { email, supabase }) => json(200, {...}))
- * The handler gets the admin's email and a service-role Supabase client.
+ *   export const handler = withAdmin(async (event, { email, supabase }) => json(200, {...}))
+ * `methods` lists the HTTP methods the function accepts (others get 405 after the auth checks).
  */
-function withAdmin(handler) {
+export function withAdmin(methods, handler) {
   return async (event, context) => {
     if (!SAFE_METHODS.has(event.httpMethod) && !sameOrigin(event)) {
       return json(403, { error: "bad_origin" });
@@ -86,6 +97,7 @@ function withAdmin(handler) {
       return json(500, { error: "server_error" });
     }
     if (data?.admin !== true) return json(403, { error: "forbidden" });
+    if (!methods.includes(event.httpMethod)) return json(405, { error: "method_not_allowed" }, { Allow: methods.join(", ") });
 
     try {
       return await handler(event, { email, supabase, context });
@@ -95,5 +107,3 @@ function withAdmin(handler) {
     }
   };
 }
-
-module.exports = { withAdmin, json, sessionEmail, sameOrigin };
