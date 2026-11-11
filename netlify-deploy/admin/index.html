@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Events CMS — NewCo Community</title>
+<!-- Placeholder until the CMS UI ships. The edge gate only serves /admin/ to admins. -->
+</head>
+<body style="font-family:system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 16px">
+<h1 style="font-size:1.5rem">Events CMS</h1>
+<p id="who">Checking access…</p>
+<script>
+fetch('/.netlify/functions/cms-session', { credentials: 'same-origin' })
+  .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status) })
+  .then(function (s) { document.getElementById('who').textContent = 'Signed in as ' + s.email + '. The editor is coming soon.' })
+  .catch(function (st) { document.getElementById('who').textContent = 'No admin access (' + st + ').' })
+</script>
+</body>
+</html>

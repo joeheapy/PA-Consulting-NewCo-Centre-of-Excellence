@@ -36,7 +36,7 @@ exports.handler = async (event) => {
 
   const { data } = await supabase
     .from("allowed_emails")
-    .select("email")
+    .select("email, admin")
     .eq("email", email)
     .maybeSingle();
 
@@ -49,7 +49,9 @@ exports.handler = async (event) => {
   }
 
   const secret = new TextEncoder().encode(process.env.SESSION_SECRET);
-  const jwt = await new SignJWT({ email })
+  // `admin` only decides whether the edge gate serves the /admin/ pages. The CMS functions
+  // re-check allowed_emails.admin on every request (netlify/functions/_lib/auth.js).
+  const jwt = await new SignJWT({ email, admin: data.admin === true })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
