@@ -2,18 +2,42 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Events CMS — NewCo Community</title>
-<!-- Placeholder until the CMS UI ships. The edge gate only serves /admin/ to admins. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Events — NewCo Community CMS</title>
+<link rel="stylesheet" href="/admin/tokens.css">
+<link rel="stylesheet" href="/admin/cms.css">
+<script type="module" src="/admin/list.js"></script>
 </head>
-<body style="font-family:system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 16px">
-<h1 style="font-size:1.5rem">Events CMS</h1>
-<p id="who">Checking access…</p>
-<script>
-fetch('/.netlify/functions/cms-session', { credentials: 'same-origin' })
-  .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status) })
-  .then(function (s) { document.getElementById('who').textContent = 'Signed in as ' + s.email + '. The editor is coming soon.' })
-  .catch(function (st) { document.getElementById('who').textContent = 'No admin access (' + st + ').' })
-</script>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="cms-header">
+  <div class="cms-header__inner">
+    <a class="cms-header__brand" href="/admin/"><img src="/uploads/newco-logo-pink.png" alt="NewCo Community"><span>Events CMS</span></a>
+    <nav aria-label="CMS">
+      <a href="/admin/" aria-current="page">Events</a>
+      <a href="/admin/media.html">Media library</a>
+      <a href="/">View site</a>
+    </nav>
+    <div class="cms-header__who" id="cms-who"></div>
+  </div>
+</header>
+<main id="main" class="cms-main">
+  <div class="page-head">
+    <div>
+      <h1>Events</h1>
+      <p class="lede">Create and edit events. Changes go live when you publish them.</p>
+    </div>
+    <a class="btn btn-primary" href="/admin/edit.html">New event</a>
+  </div>
+  <div id="flash"></div>
+  <div class="filters" role="group" aria-label="Show events">
+    <button type="button" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" data-filter="draft" aria-pressed="false">Drafts</button>
+    <button type="button" data-filter="published" aria-pressed="false">Published</button>
+    <button type="button" data-filter="changed" aria-pressed="false">Unpublished changes</button>
+  </div>
+  <div id="events" aria-live="polite" aria-busy="true"><p class="muted">Loading events…</p></div>
+</main>
 </body>
 </html>

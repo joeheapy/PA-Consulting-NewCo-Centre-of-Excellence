@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Media library — NewCo Community CMS</title>
+<link rel="stylesheet" href="/admin/tokens.css">
+<link rel="stylesheet" href="/admin/cms.css">
+<script type="module" src="/admin/media.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="cms-header">
+  <div class="cms-header__inner">
+    <a class="cms-header__brand" href="/admin/"><img src="/uploads/newco-logo-pink.png" alt="NewCo Community"><span>Events CMS</span></a>
+    <nav aria-label="CMS">
+      <a href="/admin/">Events</a>
+      <a href="/admin/media.html" aria-current="page">Media library</a>
+      <a href="/">View site</a>
+    </nav>
+    <div class="cms-header__who" id="cms-who"></div>
+  </div>
+</header>
+<main id="main" class="cms-main">
+  <div class="page-head">
+    <div>
+      <h1>Media library</h1>
+      <p class="lede">Images, videos and PDFs for events. Files used by an event can’t be deleted.</p>
+    </div>
+    <div id="upload"></div>
+  </div>
+  <div id="progress"></div>
+  <div class="media-tools" style="margin-bottom:16px">
+    <input type="search" id="search" placeholder="Search by file name" aria-label="Search files">
+  </div>
+  <p class="muted small" id="media-status" aria-live="polite">Loading files…</p>
+  <ul class="media-grid" id="media"></ul>
+</main>
+</body>
+</html>

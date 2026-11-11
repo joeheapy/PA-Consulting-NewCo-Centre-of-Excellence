@@ -84,7 +84,7 @@ export const handler = withAdmin(["GET", "POST", "PUT", "DELETE"], async (event,
     }
     if (!data) {
       const current = await getEvent(supabase, row.id);
-      return json(409, { error: "conflict", message: `Someone else (${current?.updated_by || "another admin"}) changed this event after you opened it.`, event: current && withStatus(current) });
+      return json(409, { error: "conflict", message: `It was saved${current?.updated_by ? ` by ${current.updated_by}` : ""}${current?.updated_at ? ` at ${new Date(current.updated_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" })}` : ""}, possibly in another tab.`, event: current && withStatus(current) });
     }
     return json(200, { event: withStatus(data) });
   }

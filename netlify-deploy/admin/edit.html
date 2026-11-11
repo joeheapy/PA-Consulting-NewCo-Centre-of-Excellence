@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Edit event — NewCo Community CMS</title>
+<link rel="stylesheet" href="/admin/tokens.css">
+<link rel="stylesheet" href="/admin/cms.css">
+<script type="module" src="/admin/edit.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="cms-header">
+  <div class="cms-header__inner">
+    <a class="cms-header__brand" href="/admin/"><img src="/uploads/newco-logo-pink.png" alt="NewCo Community"><span>Events CMS</span></a>
+    <nav aria-label="CMS">
+      <a href="/admin/" aria-current="page">Events</a>
+      <a href="/admin/media.html">Media library</a>
+      <a href="/">View site</a>
+    </nav>
+    <div class="cms-header__who" id="cms-who"></div>
+  </div>
+</header>
+
+<main id="main" class="cms-main">
+  <p style="margin:0 0 12px"><a href="/admin/">← All events</a></p>
+  <div class="page-head" style="margin-bottom:8px">
+    <h1 id="page-title">New event</h1>
+  </div>
+
+  <div class="editor-bar" role="region" aria-label="Save and publish">
+    <div class="editor-bar__status">
+      <span id="status-badge"></span>
+      <span id="status-text" aria-live="polite"></span>
+    </div>
+    <div class="editor-bar__actions">
+      <button type="button" class="btn" id="btn-preview">Preview</button>
+      <button type="button" class="btn" id="btn-save">Save draft</button>
+      <button type="button" class="btn btn-primary" id="btn-publish">Publish</button>
+    </div>
+  </div>
+
+  <div id="messages" style="margin-top:20px"></div>
+  <p id="loading" class="muted">Loading…</p>
+
+  <form id="editor" class="editor" novalidate hidden style="margin-top:20px">
+
+    <section class="section" aria-labelledby="h-basics">
+      <h2 id="h-basics">Basics</h2>
+      <div class="section__body">
+        <div class="field">
+          <label for="f-title">Title<span class="req">required</span></label>
+          <input type="text" id="f-title" name="title" data-field="title" maxlength="200" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="f-slug">Web address</label>
+          <p class="hint" id="slug-hint">Made from the title. Lowercase letters, numbers and hyphens. It can’t change after the event is published.</p>
+          <div class="prefix"><span>/events/</span><input type="text" id="f-slug" name="slug" data-field="slug" maxlength="120" autocomplete="off" spellcheck="false" aria-describedby="slug-hint"></div>
+        </div>
+        <fieldset class="field" data-field="kind">
+          <legend>Event type</legend>
+          <div class="choices">
+            <label><input type="radio" name="kind" value="next" checked> Upcoming</label>
+            <label><input type="radio" name="kind" value="past"> Past (has a write-up)</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="f-kicker">Label above the title</label>
+          <p class="hint" id="kicker-hint">Leave blank to use the default.</p>
+          <input type="text" id="f-kicker" name="kicker" data-field="kicker" maxlength="120" aria-describedby="kicker-hint">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-when">
+      <h2 id="h-when">When and where</h2>
+      <div class="section__body">
+        <div class="grid-2">
+          <div class="field">
+            <label for="f-date">Date<span class="req">required to publish</span></label>
+            <p class="hint" id="date-hint">Used to sort events.</p>
+            <input type="date" id="f-date" name="event_date" data-field="event_date" aria-describedby="date-hint">
+          </div>
+          <div class="field">
+            <label for="f-date-label">Show the date as</label>
+            <p class="hint" id="date-label-hint">Optional, e.g. “TBC” or “Spring 2027”. Otherwise the date is shown.</p>
+            <input type="text" id="f-date-label" name="date_label" data-field="date_label" maxlength="80" aria-describedby="date-label-hint">
+          </div>
+          <div class="field">
+            <label for="f-time">Time</label>
+            <p class="hint" id="time-hint">e.g. 16:00–19:00 BST</p>
+            <input type="text" id="f-time" name="time_text" data-field="time_text" maxlength="120" aria-describedby="time-hint">
+          </div>
+          <div class="field">
+            <label for="f-format">Format</label>
+            <p class="hint" id="format-hint">Choose one or type your own.</p>
+            <input type="text" id="f-format" name="format" data-field="format" maxlength="120" list="formats" aria-describedby="format-hint">
+            <datalist id="formats">
+              <option value="In person only"></option>
+              <option value="Online only"></option>
+              <option value="In person and online"></option>
+            </datalist>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-location">Location</label>
+          <input type="text" id="f-location" name="location" data-field="location" maxlength="200">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-card">
+      <h2 id="h-card">Event card</h2>
+      <p class="hint">How the event appears on the homepage and the Events page.</p>
+      <div class="section__body">
+        <div class="field">
+          <label for="f-blurb">Summary</label>
+          <p class="hint" id="blurb-hint">One or two sentences.</p>
+          <textarea id="f-blurb" name="blurb" data-field="blurb" maxlength="1000" rows="3" aria-describedby="blurb-hint"></textarea>
+        </div>
+        <div class="field">
+          <span class="label" id="l-card-image">Card image</span>
+          <div data-media="card_image" data-kind="image" data-labelledby="l-card-image"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-overview">
+      <h2 id="h-overview">Overview</h2>
+      <p class="hint">The main text on the event page. Use the toolbar for headings, lists, links and images, then Preview to check it.</p>
+      <div class="section__body">
+        <div data-md="overview_md" data-label="Overview"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-agenda">
+      <h2 id="h-agenda">Agenda</h2>
+      <div class="section__body"><div data-rows="agenda"></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="h-speakers">
+      <h2 id="h-speakers">Speakers</h2>
+      <div class="section__body"><div data-rows="speakers"></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="h-media">
+      <h2 id="h-media">Image and video</h2>
+      <p class="hint">Shown near the top of the event page.</p>
+      <div class="section__body">
+        <div class="field">
+          <span class="label" id="l-image">Main image</span>
+          <div data-media="image" data-kind="image" data-labelledby="l-image"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="f-image-alt">Image description</label>
+            <p class="hint" id="image-alt-hint">What the image shows, for people who can’t see it. Required if there’s an image.</p>
+            <input type="text" id="f-image-alt" name="image_alt" data-field="image_alt" maxlength="300" aria-describedby="image-alt-hint">
+          </div>
+          <div class="field">
+            <label for="f-image-caption">Image caption</label>
+            <p class="hint" id="image-caption-hint">Optional. Shown under the image.</p>
+            <input type="text" id="f-image-caption" name="image_caption" data-field="image_caption" maxlength="500" aria-describedby="image-caption-hint">
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-video">Video</span>
+          <div data-media="video" data-kind="video" data-labelledby="l-video"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <span class="label" id="l-poster">Video cover image</span>
+            <div data-media="video_poster" data-kind="image" data-labelledby="l-poster"></div>
+          </div>
+          <div class="field">
+            <label for="f-video-caption">Video caption</label>
+            <input type="text" id="f-video-caption" name="video_caption" data-field="video_caption" maxlength="500">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-writeup">
+      <h2 id="h-writeup">Write-up</h2>
+      <p class="hint">For past events: what happened. Insert photos and videos where they belong in the story.</p>
+      <div class="section__body">
+        <div data-md="writeup_md" data-label="Write-up"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-themes">
+      <h2 id="h-themes">Key discussion themes</h2>
+      <div class="section__body"><div data-rows="themes"></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="h-insights">
+      <h2 id="h-insights">Major insights</h2>
+      <div class="section__body"><div data-rows="insights"></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="h-downloads">
+      <h2 id="h-downloads">Materials</h2>
+      <p class="hint">Slides, reports and other downloads. Attach a PDF, or leave the file empty to list it without a link.</p>
+      <div class="section__body"><div data-rows="downloads"></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="h-advanced">
+      <h2 id="h-advanced">Listing order</h2>
+      <div class="section__body">
+        <div class="field" style="max-width:280px">
+          <label for="f-sort">Order</label>
+          <p class="hint" id="sort-hint">Leave at 0 to order by date. Lower numbers come first.</p>
+          <input type="number" id="f-sort" name="sort_order" data-field="sort_order" step="1" min="-1000" max="1000" aria-describedby="sort-hint">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-danger" id="danger-zone" hidden>
+      <h2 id="h-danger">Take down or delete</h2>
+      <div class="section__body">
+        <div class="media-row">
+          <button type="button" class="btn" id="btn-unpublish" hidden>Unpublish</button>
+          <button type="button" class="btn btn-danger" id="btn-delete">Delete event</button>
+        </div>
+        <p class="hint" id="danger-hint">Unpublishing removes the page from the site but keeps it here as a draft. Deleting removes it everywhere and can’t be undone.</p>
+      </div>
+    </section>
+  </form>
+</main>
+</body>
+</html>

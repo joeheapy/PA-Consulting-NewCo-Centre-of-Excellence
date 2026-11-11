@@ -57,11 +57,20 @@ exports.handler = async (event) => {
     .setExpirationTime("7d")
     .sign(secret);
 
+  // nc_admin is only a display hint, readable by page scripts (cms-link.js) so admins see a
+  // link to the CMS. It grants nothing: the gate and the CMS functions check the session.
+  const adminHint = data.admin === true
+    ? "nc_admin=1; Secure; SameSite=Lax; Path=/; Max-Age=604800"
+    : "nc_admin=; Secure; SameSite=Lax; Path=/; Max-Age=0";
+
   return {
     statusCode: 200,
-    headers: {
-      "Content-Type": "application/json",
-      "Set-Cookie": `nc_session=${jwt}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=604800`,
+    headers: { "Content-Type": "application/json" },
+    multiValueHeaders: {
+      "Set-Cookie": [
+        `nc_session=${jwt}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=604800`,
+        adminHint,
+      ],
     },
     body: JSON.stringify({ ok: true }),
   };

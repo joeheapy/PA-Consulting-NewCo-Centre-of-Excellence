@@ -166,6 +166,12 @@ shutil.copy(f"{ROOT}/uploads/newco-logo-pink.png", f"{OUT_DIR}/uploads/newco-log
 if os.path.isdir(f"{ROOT}/uploads/events"):
     shutil.copytree(f"{ROOT}/uploads/events", f"{OUT_DIR}/uploads/events", dirs_exist_ok=True)
 
+# 5. Admin link: cms-link.js shows admins a link to the Events CMS (it reads the nc_admin
+#    hint cookie set at login). Referenced by src, so the template scanner never sees its text.
+body_close_matches = re.findall(r"</body>", base_html)
+assert len(body_close_matches) == 1, "expected exactly one </body>"
+base_html = base_html.replace("</body>", '<script src="/cms-link.js" defer></script>\n</body>', 1)
+
 for page_key, (filename, title) in PAGES.items():
     html = base_html.replace(
         default_page_marker,

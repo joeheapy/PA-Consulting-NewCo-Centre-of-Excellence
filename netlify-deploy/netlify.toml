@@ -25,3 +25,14 @@
   from = "/events/building-the-future-outside-the-gravity-of-the-present.html"
   to = "/events/so-you-think-you-want-a-newco.html"
   status = 301
+
+# The Events CMS. Only admins get these pages (gate.ts); this policy limits what they can load:
+# their own scripts, Supabase Storage (thumbnails, previews, direct uploads) and the fonts.
+# The preview iframe (srcdoc) inherits it.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; img-src 'self' data: blob: https://*.supabase.co; media-src 'self' blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'"
+    X-Robots-Tag = "noindex"
+    Referrer-Policy = "same-origin"
+    Cache-Control = "no-cache"

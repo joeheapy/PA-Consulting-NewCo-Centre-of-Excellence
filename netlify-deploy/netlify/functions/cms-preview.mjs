@@ -2,8 +2,8 @@
 // site build (lib/event-render.mjs). Never cached, never indexed, never live.
 //
 //   GET  /.netlify/functions/cms-preview?id=<uuid>  -> HTML of the saved working copy
-//   POST /.netlify/functions/cms-preview  { event } -> HTML of unsaved edits (for the editor's
-//                                                    preview pane; same rules as saving)
+//   POST /.netlify/functions/cms-preview  { event, status? } -> HTML of the editor's current
+//        content (may be unsaved; same rules as saving). `status` only sets the banner text.
 //
 // Media come from the private bucket through signed URLs that expire after 10 minutes.
 // The page gets a strict Content-Security-Policy (also as a <meta>, which still applies when
@@ -44,10 +44,12 @@ export const handler = withAdmin(["GET", "POST"], async (event, { supabase }) =>
     ev = contentOf(row);
     status = eventStatus(row);
   } else {
-    const { event: clean, errors } = sanitizeEvent(readJson(event)?.event);
+    const body = readJson(event);
+    const { event: clean, errors } = sanitizeEvent(body?.event);
     if (errors.length) return json(400, { error: "invalid", errors });
     ev = clean;
-    status = "unsaved";
+    // The editor says which state it's showing (only used for the banner text).
+    status = Object.hasOwn(STATUS_TEXT, body.status) ? body.status : "unsaved";
   }
 
   const names = referencedMedia(ev);
@@ -63,8 +65,8 @@ export const handler = withAdmin(["GET", "POST"], async (event, { supabase }) =>
 
   const policy = csp();
   const bannerHtml =
-    `<div role="status" style="position:sticky;top:0;z-index:10;margin:0 -9999px 32px;padding:12px 9999px;` +
-    `background:var(--pa-yellow,#ffd100);color:#1a1a1a;font:600 14px/1.4 var(--font-primary,system-ui)">` +
+    `<div role="status" style="padding:12px clamp(20px,5vw,48px);background:var(--pa-apricot-02);` +
+    `color:var(--pa-dark-blue);font:600 14px/1.4 var(--font-primary)">` +
     `Preview · ${esc(STATUS_TEXT[status])}` +
     (missing.length ? `<br><span style="font-weight:400">Missing media files: ${missing.map(esc).join(", ")}</span>` : "") +
     `</div>`;
@@ -75,6 +77,7 @@ export const handler = withAdmin(["GET", "POST"], async (event, { supabase }) =>
       root: "/",
       mediaUrl,
       bannerHtml,
+      adminLink: false,
       headExtra: `\n<meta http-equiv="Content-Security-Policy" content="${esc(policy)}">\n<meta name="robots" content="noindex">`,
     }
   );
