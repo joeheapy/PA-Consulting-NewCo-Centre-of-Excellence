@@ -1,7 +1,7 @@
 // Integration test for the CMS functions, run against the real Supabase project by calling each
 // handler directly (no Netlify needed):
 //
-//   node scripts/build-events.mjs --source=md --out=<tmp dir>   # writes build/token-css.mjs
+//   node scripts/build-events.mjs --out=<tmp dir>   # writes build/token-css.mjs (needs the same env vars)
 //   SUPABASE_URL=… SUPABASE_SERVICE_ROLE_KEY=… SESSION_SECRET=… node test/cms-functions.integration.mjs
 //
 // NETLIFY_BUILD_HOOK_URL must NOT be set, so no site build is triggered. Everything it creates

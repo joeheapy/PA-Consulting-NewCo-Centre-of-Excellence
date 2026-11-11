@@ -1,169 +1,188 @@
-# PA-Consulting-NewCo-Centre-of-Excellence
+# NewCo Community site
 
-## Building the site
+The members-only site at https://newcocommunity.co.uk. It's a static site on Netlify. Members sign in with an approved email address, and admins manage events in the **Events CMS** at `/admin/`. Event content lives in Supabase.
 
-One-time setup:
+- [Editing events](#editing-events-the-events-cms) — for admins
+- [How it works](#how-it-works)
+- [Managing members and admins](#managing-members-and-admins)
+- [Configuration](#configuration)
+- [Working on the code](#working-on-the-code)
 
-```
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-```
+---
 
-Rebuild after any content change:
+## Editing events (the Events CMS)
 
-```
-.venv/bin/python build_netlify_bundle.py && .venv/bin/python build_articles.py
-```
+### Getting in
 
-## Content schema
+Go to **https://newcocommunity.co.uk/admin/**, or use the **Events CMS** button at the bottom right of any page. You need an account with admin rights (see [Managing members and admins](#managing-members-and-admins)). If you were made an admin recently, sign out and back in once.
 
-All site content lives as Markdown files with YAML-ish frontmatter under `content/`,
-in three folders: `emerging-practices/`, `case-studies/`, and `events/`. Each file is
-parsed by `build_articles.py` — required fields are read directly and will raise a
-`KeyError` if missing; optional fields are read with `.get(...)` and simply produce no
-output (no section rendered, or a default value) when absent.
+### Drafts, previews and publishing
 
-Everything after the closing `---` is the article/event body, written as ordinary
-Markdown (headings, `**bold**`, `_italic_`, `[links](url)`, lists, blockquotes, code —
-rendered via Python-Markdown with the `extra` and `sane_lists` extensions).
+- **New event** creates a draft. Drafts are never on the site.
+- **Save draft** (or Ctrl/Cmd+S) saves your work. For an event that's already published, this is **Save changes**, and the live page doesn't change until you publish them.
+- **Preview** shows the page exactly as it will look, including changes you haven't saved.
+- **Publish** (or **Publish changes**) puts the saved version live. The site rebuilds and the change appears in **about 2 minutes**. Publishing is refused, with a list of what to fix, if required information is missing. That includes a title, a date (or "Show the date as", e.g. TBC), image descriptions, agenda start times and labels, and speaker names.
+- **Unpublish** takes the event off the site but keeps it as a draft. **Delete event** removes it everywhere; you type the title to confirm. Neither can be undone from the site, but an unpublished event can be published again.
+- The status next to the buttons says where you are: **Draft**, **Published**, **Unpublished changes** (saved but not live) or **Unsaved changes**.
+- If someone else saves the same event while you have it open, your save is stopped. You can load their version or save yours over it.
 
-Some fields below are lists. Because frontmatter here is flat `key: value` lines (no
-nested YAML), list-shaped fields are a single line using delimiters instead:
-- `;` separates list items (e.g. multiple agenda entries, speakers, themes, quotes,
-  downloads).
-- `|` separates the two parts of a speaker entry: `Name | Role`.
-- Agenda entries are `HH:MM - HH:MM Label` (a literal space-hyphen-space between the
-  two times).
+### The web address
 
-### Emerging practices — `content/emerging-practices/*.md`
+The web address (`/events/<address>.html`) is made from the title. It can be changed until the event is first published, then it's fixed so links keep working, even if you unpublish it later.
 
-| Field | Required? | Notes |
+### Upcoming and past events
+
+The **Event type** decides how the event appears:
+
+| | Upcoming | Past |
 |---|---|---|
-| `slug` | Required | Used as the output filename: `emerging-practices/<slug>.html`. |
-| `title` | Required | Article heading. |
-| `read` | Required | Free-text read-time shown in the meta line, e.g. `9 min read`. |
-| `stage_tab` | Required | Must be exactly one of `Establishing`, `Incubating`, `Scaling`, `Reintegration` (the canonical order lives in `STAGE_ORDER` in `build_articles.py`). An unrecognised value fails the build. |
-| `order` | Optional | Integer controlling sort order *within* the stage. Defaults to `0` if omitted — always set it to control ordering deliberately. |
-| `stage_num` | Informational only | e.g. `01 / ESTABLISHING`. Not read by the build (the real numbering comes from `STAGE_ORDER`) — kept only so the file is self-describing. Keep it in sync with `stage_tab` by convention. |
-| `stage_title` | Informational only | e.g. `Establishing a NewCo`. Same as `stage_num` — not read by the build, just documentation for humans editing the file. |
+| Event page | "Express interest" registration form and the photography notice | Write-up, key discussion themes and major insights |
+| Homepage | The soonest upcoming event is the large "Next event" card | The latest past event (two if nothing is upcoming) |
+| Events page | "Next event" list, soonest first | "Past events" list, newest first |
+| Label above the title, if left blank | "Next event" | "Past event" |
 
-### Case studies — `content/case-studies/*.md`
+Agenda, speakers, materials, image and video show for both.
 
-All fields are required — there are no optional fields for this content type.
+**After an event has happened**, change it to **Past**, add the write-up, themes and insights, and publish. Nothing changes automatically when the date passes. Until you switch it, the site keeps showing it as the next event with a registration form. The events list shows a **Date passed** flag and a reminder at the top for any upcoming event whose date has gone.
 
-| Field | Notes |
-|---|---|
-| `slug` | Output filename: `case-studies/<slug>.html`. |
-| `title` | Article heading. |
-| `theme` | e.g. `Operating models`, `Governance`, `Culture`. |
-| `author` | Author name shown in the meta line. |
-| `role` | Author's role/organisation, e.g. `PA Consulting`. |
-| `date` | Free-text publish date, e.g. `2 July 2026`. |
-| `read` | Free-text read-time, e.g. `12 min read`. |
+Switching a past event back to upcoming hides its write-up, themes and insights on the site. They stay saved and come back if you switch it to past again. The editor warns you when the event type and the date don't agree.
 
-### Events — `content/events/*.md`
+Registration form submissions arrive in Netlify (Project → Forms → `event-registration`). Each one includes an `event` field saying which event it was for.
 
-Next and past events share one template. Start a new event by copying
-`content/events/_template.md` to `content/events/<slug>.md`. It lists every field with
-notes, and files whose names start with `_` are never built. Only the four required fields
-must be set. Delete any optional line you don't need and its section disappears from the page.
+### Text
 
-| Field | Required? | Notes |
-|---|---|---|
-| `slug` | Required | Output filename: `events/<slug>.html`. |
-| `kind` | Required | `next` or `past` (anything else fails the build). `next` adds the "Express interest" registration form and the photography notice; `past` uses the single-column write-up layout. When an event has happened, change it to `past`. |
-| `kicker` | Optional | Small label above the title. Defaults to `Next event` or `Past event` from `kind`. |
-| `date` | Required | Free text, e.g. `17 September 2026` (can be `TBC`). |
-| `time` | Optional | Free text, e.g. `16:00–19:00 BST`. |
-| `loc` | Optional | Venue. |
-| `format` | Optional | e.g. `In person only`. |
-| `title` | Required | Event title. |
-| `blurb` | Optional | One-line summary. |
-| `agenda` | Optional | `;`-separated `HH:MM - HH:MM Label` entries. Renders an "Agenda" section; omit entirely if there's no confirmed agenda yet — don't use a placeholder like `TBC` as the value, since it will be parsed as a malformed entry. |
-| `speakers` | Optional | `;`-separated `Name \| Role` entries. Renders a "Speakers" section; omit if not yet confirmed. |
-| `themes` | Optional | `;`-separated short phrases. Renders a "Key discussion themes" list — conventionally used for past events, but works for either `kind`. |
-| `insights` | Optional | `;`-separated pull-quote strings. Renders a "Major insights" list — conventionally past-only. Independent of `themes`. |
-| `downloads` | Optional | `;`-separated material labels, e.g. `Session summary (PDF, 12 pp)`. Renders a "Materials" section — conventionally past-only. Omit the field entirely (don't set it to a placeholder string like `None for this event.`) when there's nothing to list, since any non-empty value is rendered as a real download row. |
-| `image` | Optional | Filename of an image (jpg/png/webp) placed in `uploads/events/`, e.g. `newco-scale-hero.jpg`. Renders full-width, right under the overview text. |
-| `image_alt` | Optional | Alt text for `image`. Defaults to the event's `title` if omitted — set a real description for accessibility. |
-| `image_caption` | Optional | Caption text shown beneath `image`. Omit for no caption. |
-| `video` | Optional | Filename of an `.mp4` file placed in `uploads/events/`, e.g. `newco-scale-recap.mp4`. Renders as a native HTML5 player with controls. Self-hosted (no YouTube/Vimeo) — the file is committed to the repo and served as a static asset, so keep clips short/compressed. |
-| `video_poster` | Optional | Filename of a poster/thumbnail image (also in `uploads/events/`) shown before the video plays. Only used if `video` is set. |
-| `video_caption` | Optional | Caption text shown beneath `video`. Omit for no caption. |
+The **Overview** and **Write-up** use Markdown, with a toolbar for bold, italic, headings, lists, quotes, links and **Insert image or video**. Raw HTML is shown as text, not run. Use **Preview** to check the result.
 
-`time`/`date` fill the hero's "When" block and `loc`/`format` the "Where" block; a block with
-no values is hidden.
+### Images, videos and files
 
-**Body: overview and write-up.** The markdown below the frontmatter is the event overview.
-To add a post-event article, put a line containing only `<!-- write-up -->` after the overview.
-Everything below it renders as the final section of the page, under a **Write up** label
-(it works for `next` events too, but is normally added once an event is `past`). With no
-divider there's no write-up section.
+- **Media library** (`/admin/media.html`) holds all event images, videos and PDFs. You can also upload from any **Choose** / **Replace** button in the editor.
+- Accepted: JPG, PNG, WebP, MP4, WebM, MOV and PDF, up to 50 MB each.
+- **Photos are prepared automatically** when you upload them. Anything larger than 2,400 pixels on its longest side is made smaller, it's turned the right way up, and hidden photo data such as location is removed. Files that aren't real images are refused. Videos and PDFs are uploaded as they are, so keep videos short and compressed.
+- **Card image** (homepage and Events page cards) is cropped to a 3:2 landscape shape, as the thumbnail shows. Use a landscape image at least 1,200 pixels wide.
+- **Main image** appears full width near the top of the event page. Landscape, at least 1,200 pixels wide, works best. Describe the image for people who can't see it.
+- The editor shows each image's size and warns if it's too small, too tall, or the wrong shape for a card. These are suggestions and don't block publishing.
+- **Replacing an image**: choose a different file. The live page keeps the old one until you publish. An upload never overwrites an existing file; a file with the same name is saved as `name-2.jpg`.
+- A file used by any event, draft or live, can't be deleted. Tick **Only files not used by any event** in the media library to tidy up after replacing images.
 
-The write-up is full markdown (`##` headings, lists, quotes, links) plus inline media, using
-image syntax with each item on its own line:
+### What isn't in the CMS
 
-```markdown
-![Delegates around the roundtable](roundtable.jpg "Optional caption")
+The rest of the site's text (homepage, About, Events page intro) and the homepage videos are in the code. See [How it works](#how-it-works).
 
-![Highlights from the discussion](highlights.mp4 "Optional caption")
+---
+
+## How it works
+
+```
+Member's browser ── nc_session cookie ──► Netlify edge gate (gate.ts) ──► static pages
+                                                │ /admin/* needs the admin claim
+Admin's browser ──► /admin/ (CMS pages) ──► /.netlify/functions/cms-*  ──► Supabase (service role)
+                                             each call: same-site check,      events table
+                                             session check, admin re-read     event-media bucket (private)
+                                             from the database
+           Publish ──► Netlify build hook ──► Netlify build ──► new deploy (about 2 minutes)
 ```
 
-- A bare filename is loaded from `uploads/events/`; a path or URL is used as written.
-- `.mp4`, `.webm` and `.mov` render as a video player with controls; anything else as an image.
-- The text in `[...]` is the alt text (images) or accessible label (video); the quoted title
-  becomes a caption. Write real alt text.
-- Images: 1600px wide JPEG/WebP, ~200–400 KB. Video: H.264 MP4, short clips, under ~20 MB
-  each — files are committed to git and served from Netlify.
+**Sign-in.** `netlify/functions/login.js` checks the email against `allowed_emails` in Supabase and sets a signed `nc_session` cookie (HS256, 7 days, HttpOnly). It also sets an `nc_admin=1` display hint for admins, which only shows the CMS button and grants nothing. `netlify/edge-functions/gate.ts` runs on every page. It sends anyone without a valid session to the login page, returns 403 for `/admin/*` unless the session says admin, and never serves `netlify.toml` or function source.
 
-**Moving an event from next to past:** set `kind: past` (and drop any custom `kicker`), add the
-write-up, then move its entry from the `next` to the `past` array in the microsite `DATA`
-(see "Event card images" below). The homepage and events listings come from that data, not
-from the markdown.
+**CMS.** The pages in `netlify-deploy/admin/` are plain HTML, CSS and JavaScript with no framework. They call these functions:
 
-### Event media — `uploads/events/`
-
-Put any image/video files referenced by the write-up or the `image`/`video`/`video_poster` fields above
-into this folder (create it if it doesn't exist yet). Files are named whatever you like —
-the whole folder is copied into the deployed site as-is, so an event's frontmatter picks
-out which files actually get used; unreferenced files are harmless but simply unused.
-
-### Event card images — Events page cards
-
-The image on the right of each event card on `events.html` is **not** set from the
-event's Markdown file. It comes from the listing data hard-coded in
-`NewCo Community Microsite.dc.html` (the `next` / `past` arrays in `get DATA()`).
-
-To add or change a card image:
-
-1. Put the image file in `uploads/events/` (any filename; spaces are fine).
-2. In `NewCo Community Microsite.dc.html`, find the event's entry in `get DATA()` and set
-   `cardImage` to the bare filename, e.g.
-   `cardImage: 'NewCo round one_image.jpg',`
-   The `uploads/events/` path and URL-encoding are added automatically. Leave the
-   field out to show the empty "Drop event image" placeholder.
-3. Rebuild (see above). The file is copied into `netlify-deploy/uploads/events/` with
-   the rest of the folder.
-
-**Recommended size: 1200 × 900 px (4:3), landscape, JPEG or WebP, ~150–250 KB.**
-The image always fills the slot and is cropped to fit, and the slot's shape changes with
-the card:
-
-| Where | Slot size on screen |
+| Function | Does |
 |---|---|
-| Next event card, desktop | ~592 × 450 px |
-| Past event card, desktop | ~592 × 340 px (shorter text column, so more top/bottom crop) |
-| Either card, mobile (stacked below the text) | ~350 × 300 px |
+| `cms-session` | Who's signed in (admins only) |
+| `cms-events` | List, open, create, save, delete events. Saves are refused if someone else saved first. |
+| `cms-publish` | Publish, unpublish, rebuild. Publish checks required fields and that every media file exists. |
+| `cms-media` | List files, issue one-time upload links (browsers upload straight to Storage), delete unused files |
+| `cms-preview` | Render a draft with the live renderer. No scripts, and forms don't submit. |
 
-1200 px wide covers the ~592 px desktop slot at 2× for high-density screens. Keep the
-subject near the centre and nothing important at the edges, since 4:3 is trimmed
-top/bottom on the past card and slightly at the sides on mobile.
+Every function goes through `netlify/functions/_lib/auth.mjs`. It refuses writes from other sites, checks the session, and **re-reads `allowed_emails.admin` on every request**, so removing an admin takes effect immediately. Field rules are in `lib/event-validate.mjs`.
 
-The same `cardImage` also appears at the top of the Next/Past teaser cards on the
-homepage (`index.html`). There the slot has a fixed **3:2** shape (~575 × 383 px on
-desktop), so a 4:3 image loses a thin strip from the top and bottom. Only the first
-`next` and first `past` event are shown on the homepage.
+**Data.** The Supabase `events` table holds each event's working copy in its columns and the live version in `published`, a frozen copy made on publish. The site build reads only `published`. Row-level security is on with no policies, and the public keys have no access; only the service role used by Netlify can read or write. Media is in the private `event-media` bucket. Schema: `supabase/migrations/`.
 
-Card images are decorative (rendered with empty alt text); the card title names the
-event. To show an image on the event's own page as well, use the separate `image` /
-`image_alt` / `image_caption` frontmatter fields above.
+**Build.** On each deploy, Netlify runs `netlify-deploy/netlify.toml`'s build command from the repo root:
+
+1. `npm ci`
+2. `node scripts/build-events.mjs` renders `netlify-deploy/events/<slug>.html` for each published event with `lib/event-render.mjs` (the same renderer as the preview), downloads the media those events use into `netlify-deploy/uploads/events/`, and writes `build/events-listing.json`.
+3. `python3 build_netlify_bundle.py` builds `index.html`, `events.html` and `about.html` from `NewCo Community Microsite.dc.html`. It adds the event listings, inlines the design-system CSS and scripts, and copies the logos and the homepage videos (`uploads/events/sally-q*.mp4`).
+
+Everything those steps write is a build output and isn't in git (see `.gitignore`). Pushing to `main` deploys; so does publishing in the CMS, through the build hook. If a build fails, Netlify keeps serving the previous deploy.
+
+**Other content.** `content/emerging-practices/` and `content/case-studies/` hold article drafts that aren't currently built or published.
+
+---
+
+## Managing members and admins
+
+In the Supabase dashboard → SQL Editor. Use lowercase email addresses.
+
+```sql
+-- Let someone sign in
+insert into public.allowed_emails (email) values ('name@example.com');
+
+-- Make them an admin (they sign out and back in to see the CMS)
+update public.allowed_emails set admin = true where email = 'name@example.com';
+
+-- Remove admin rights (immediate for the CMS; the CMS button disappears at their next sign-in)
+update public.allowed_emails set admin = false where email = 'name@example.com';
+
+-- Remove access (signed-in sessions last up to 7 days on ordinary pages)
+delete from public.allowed_emails where email = 'name@example.com';
+```
+
+---
+
+## Configuration
+
+**Netlify** (project `newco-community`): linked to this GitHub repo, branch `main`, **base directory `netlify-deploy`**. The build command and folders come from `netlify-deploy/netlify.toml`. Environment variables, all marked secret:
+
+| Variable | Used for |
+|---|---|
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Login, CMS functions, site build. Never sent to browsers. |
+| `SESSION_SECRET` | Signing and checking the `nc_session` cookie (login, gate, CMS) |
+| `NETLIFY_BUILD_HOOK_URL` | The "CMS publish" build hook that publishing calls |
+
+**Supabase**: run `supabase/migrations/0001_events.sql` and `0002_event_media_bucket.sql` once in the SQL Editor. Both are safe to re-run. `supabase/verify_step2.sql` checks the result.
+
+---
+
+## Working on the code
+
+Needs Node 22 (`nvm use`) and Python 3 (standard library only).
+
+```sh
+npm ci
+
+# Supabase values for local use. The production values are secret, so read the dev context.
+cd netlify-deploy
+export SUPABASE_URL=$(netlify env:get SUPABASE_URL --context dev)
+export SUPABASE_SERVICE_ROLE_KEY=$(netlify env:get SUPABASE_SERVICE_ROLE_KEY --context dev)
+export SESSION_SECRET=$(netlify env:get SESSION_SECRET --context dev)
+cd ..
+
+# Build the site into netlify-deploy/
+node scripts/build-events.mjs && python3 build_netlify_bundle.py
+
+# Run it locally (functions included). --offline uses only the variables above; it doesn't run
+# the edge gate, so pages aren't login-protected locally, but the CMS functions still check access.
+cd netlify-deploy && netlify dev --offline --dir . --functions netlify/functions --framework '#static' --port 8888
+```
+
+There is **one Supabase database**, so local runs read and write real data. With `NETLIFY_BUILD_HOOK_URL` unset, publishing locally doesn't rebuild the live site. A published event still goes live at the next real build, though, so use test events named `cms-test-…` and delete them afterwards.
+
+**Tests**
+
+```sh
+npm test                                     # validation rules (no network)
+node test/cms-functions.integration.mjs      # every CMS function against Supabase; creates and removes cms-test-* data
+node scripts/check-step2.mjs                 # confirms the public keys can't read/write events or Storage (needs SUPABASE_ANON_KEY too)
+```
+
+The integration test needs `build/token-css.mjs`, so run `node scripts/build-events.mjs` first. It refuses to run if `NETLIFY_BUILD_HOOK_URL` is set.
+
+**Trying a change before it goes live**: build as above, then deploy a draft and test its URL:
+
+```sh
+cd netlify-deploy
+netlify deploy --no-build --dir "$PWD" --functions "$PWD/netlify/functions" --alias my-test
+```
+
+Draft deploys use the production database and build hook, so don't publish events from one.
