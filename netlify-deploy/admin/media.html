@@ -27,12 +27,14 @@
     <div>
       <h1>Media library</h1>
       <p class="lede">Images, videos and PDFs for events. Files used by an event can’t be deleted.</p>
+      <p class="hint" style="margin-top:8px">Large photos are resized to at most 2,400 pixels on their longest side when you upload them, and hidden photo data such as location is removed.</p>
     </div>
     <div id="upload"></div>
   </div>
   <div id="progress"></div>
   <div class="media-tools" style="margin-bottom:16px">
     <input type="search" id="search" placeholder="Search by file name" aria-label="Search files">
+    <label class="small" style="display:inline-flex;align-items:center;gap:8px;min-height:44px"><input type="checkbox" id="unused" style="width:20px;height:20px;accent-color:var(--pa-dark-blue)"> Only files not used by any event</label>
   </div>
   <p class="muted small" id="media-status" aria-live="polite">Loading files…</p>
   <ul class="media-grid" id="media"></ul>

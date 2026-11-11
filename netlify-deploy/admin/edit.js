@@ -1,7 +1,7 @@
 // Event editor (/admin/edit.html, ?id=<uuid> or ?slug=<slug>; no parameter = new event).
 import {
-  api, el, badge, formatDate, formatWhen, slugify, initHeader, toast, confirmDialog, openDialog,
-  listMedia, pickMedia, thumb, loginUrl,
+  api, el, badge, formatDate, formatWhen, formatSize, slugify, initHeader, toast, confirmDialog, openDialog,
+  listMedia, pickMedia, thumb, loginUrl, imageAdvice, whenImageLoads, typeOf,
 } from './cms.js';
 
 const $ = (s, root = document) => root.querySelector(s);
@@ -247,12 +247,25 @@ function renderMedia(field, focus) {
     type: 'button', class: 'btn btn-sm btn-quiet', 'aria-describedby': box.dataset.labelledby,
     onclick: () => { media[field] = null; renderMedia(field, true); onChange(); },
   }, 'Remove');
+  const thumbBox = thumb(file || (name ? { name } : null), 'media-field__thumb');
+  const details = el('p', { class: 'hint', 'aria-live': 'polite' });
+  const advice = el('ul', { class: 'media-advice' });
   box.replaceChildren(el('div', { class: 'media-field', role: 'group', 'aria-labelledby': box.dataset.labelledby, dataset: { field } },
-    thumb(file || (name ? { name } : null), 'media-field__thumb'),
+    thumbBox,
     el('div', { class: 'media-field__name' },
       name || el('span', { class: 'muted' }, 'None chosen'),
+      details,
       missing && el('p', { class: 'field-error' }, 'This file isn’t in the media library any more. Choose another.')),
-    el('div', { class: 'media-field__actions' }, choose, remove)));
+    el('div', { class: 'media-field__actions' }, choose, remove)),
+    advice);
+  // Size and shape advice once the image has loaded (it's the full image, so these are its real pixels).
+  if (name && typeOf(name) === 'image') {
+    whenImageLoads(thumbBox, (w, h) => {
+      details.textContent = `${w} × ${h} pixels${file && file.size ? ` · ${formatSize(file.size)}` : ''}`;
+      const tips = imageAdvice(w, h, field === 'card_image' ? 'card' : 'hero');
+      advice.replaceChildren(...tips.map((t) => el('li', {}, t)));
+    });
+  }
   if (focus) document.getElementById(`m-${field}`).focus();
 }
 

@@ -197,13 +197,95 @@ export async function deleteMedia(name) {
   mediaCache = null;
 }
 
+// ---------------------------------------------------------------------------
+// Preparing images for the web
+// ---------------------------------------------------------------------------
+
+/** Longest side, in pixels, of an image after upload. 2× the widest place an image is shown (about 1200px). */
+export const MAX_EDGE = 2400;
+const REENCODE_ABOVE = 1.5 * 1024 * 1024; // re-encode anything larger, even if it's small in pixels
+const JPEG_QUALITY = 0.85;
+const MAX_IMAGE_SOURCE = 200 * 1024 * 1024; // larger than this isn't a photo we can safely decode in a browser
+
+/** True if a JPEG carries EXIF metadata (camera details, often GPS location). */
+async function hasExif(file) {
+  const b = new Uint8Array(await file.slice(0, 128 * 1024).arrayBuffer());
+  if (b[0] !== 0xff || b[1] !== 0xd8) return false;
+  for (let i = 2; i + 9 < b.length && b[i] === 0xff;) {
+    const marker = b[i + 1];
+    if (marker === 0xda) break; // image data starts: no more metadata
+    if (marker === 0xe1 && b[i + 4] === 0x45 && b[i + 5] === 0x78 && b[i + 6] === 0x69 && b[i + 7] === 0x66) return true; // "Exif"
+    i += 2 + ((b[i + 2] << 8) | b[i + 3]);
+  }
+  return false;
+}
+
+function hasTransparency(ctx, w, h) {
+  const data = ctx.getImageData(0, 0, w, h).data;
+  for (let i = 3; i < data.length; i += 4) if (data[i] < 255) return true;
+  return false;
+}
+
+async function decode(file) {
+  try { return await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  catch { return createImageBitmap(file); } // browsers without the option still apply EXIF rotation by default
+}
+
 /**
- * Uploads a file straight to Supabase Storage through a one-time signed URL. Returns the name
- * it was stored under (made unique, e.g. "photo-2.jpg"). onProgress gets 0..1.
+ * Gets an image ready for the site before it's uploaded:
+ *  - checks it really is an image (a renamed or damaged file is refused),
+ *  - shrinks it so its longest side is at most MAX_EDGE pixels,
+ *  - turns it the right way up (phone photos often store rotation as metadata),
+ *  - removes hidden metadata such as GPS location, by re-encoding,
+ *  - saves opaque PNGs as JPEG (much smaller for photos); PNGs with transparency stay PNG.
+ * Small, clean images are uploaded untouched. Videos and PDFs pass through unchanged.
+ * Returns { file, width, height, note } — note describes any change, for the person uploading.
  */
-export async function uploadFile(file, onProgress) {
-  if (file.size > MAX_BYTES) throw new Error(`“${file.name}” is ${formatSize(file.size)}. Files must be 50 MB or smaller.`);
-  if (typeOf(file.name) === 'other') throw new Error(`“${file.name}” can't be uploaded. Use JPG, PNG, WebP, MP4, WebM, MOV or PDF files.`);
+export async function prepareImage(file) {
+  if (typeOf(file.name) !== 'image') return { file };
+  if (file.size > MAX_IMAGE_SOURCE) throw new Error(`“${file.name}” is ${formatSize(file.size)}, too large to process. Export a smaller copy and upload that.`);
+  let bmp;
+  try { bmp = await decode(file); }
+  catch { throw new Error(`“${file.name}” isn’t an image this browser can read. It may be damaged or not really a ${extOf(file.name).toUpperCase()} file. Try saving it again as JPG or PNG.`); }
+  const { width, height } = bmp;
+  const scale = Math.min(1, MAX_EDGE / Math.max(width, height));
+  const exif = await hasExif(file);
+  if (scale === 1 && !exif && file.size <= REENCODE_ABOVE) { bmp.close(); return { file, width, height }; }
+
+  const w = Math.max(1, Math.round(width * scale)), h = Math.max(1, Math.round(height * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(bmp, 0, 0, w, h);
+  bmp.close();
+  const keepPng = extOf(file.name) !== 'jpg' && extOf(file.name) !== 'jpeg' && hasTransparency(ctx, w, h);
+  const type = keepPng ? 'image/png' : 'image/jpeg';
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, type, JPEG_QUALITY));
+  canvas.width = canvas.height = 0; // free the memory now
+  if (!blob) throw new Error(`“${file.name}” couldn’t be prepared for upload. Try a JPG or PNG copy.`);
+  // Re-encoding a modest, metadata-free image can make it bigger: keep the original then.
+  if (scale === 1 && !exif && blob.size >= file.size) return { file, width, height };
+
+  const name = file.name.replace(/\.[^.]+$/, '') + (keepPng ? '.png' : '.jpg');
+  const changes = [];
+  if (scale < 1) changes.push(`resized from ${width} × ${height} to ${w} × ${h} pixels`);
+  if (exif) changes.push('hidden photo data (such as location) removed');
+  if (!keepPng && !/\.jpe?g$/i.test(file.name)) changes.push('saved as JPG');
+  const note = `${changes.join(', ')}; ${formatSize(file.size)} → ${formatSize(blob.size)}`;
+  return { file: new File([blob], name, { type, lastModified: Date.now() }), width: w, height: h, note: note[0].toUpperCase() + note.slice(1) };
+}
+
+/**
+ * Uploads a file straight to Supabase Storage through a one-time signed URL, after preparing
+ * images (prepareImage). Returns { name, note }: the name it was stored under (made unique,
+ * e.g. "photo-2.jpg") and what was changed, if anything. onProgress gets 0..1.
+ */
+export async function uploadFile(original, onProgress) {
+  if (typeOf(original.name) === 'other') throw new Error(`“${original.name}” can't be uploaded. Use JPG, PNG, WebP, MP4, WebM, MOV or PDF files.`);
+  if (typeOf(original.name) !== 'image' && original.size > MAX_BYTES) throw new Error(`“${original.name}” is ${formatSize(original.size)}. Files must be 50 MB or smaller.`);
+  const { file, note } = await prepareImage(original);
+  if (file.size > MAX_BYTES) throw new Error(`“${original.name}” is still ${formatSize(file.size)} after preparing it. Files must be 50 MB or smaller.`);
   const ticket = await api('cms-media', { method: 'POST', body: { name: file.name, size: file.size } });
   await new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -215,7 +297,31 @@ export async function uploadFile(file, onProgress) {
     xhr.send(file);
   });
   mediaCache = null;
-  return ticket.name;
+  return { name: ticket.name, note };
+}
+
+/**
+ * Advice about an image's size and shape for where it's used. `use`: 'hero' (main image or
+ * video cover), 'card' (3:2 listing card) or 'inline' (in the text). Returns a list of strings.
+ */
+export function imageAdvice(width, height, use) {
+  const tips = [];
+  const minWidth = use === 'card' ? 1000 : 1200;
+  if (width < minWidth) tips.push(`It’s only ${width} pixels wide, so it may look blurry on large screens. Use one at least ${minWidth} pixels wide.`);
+  if (use === 'card' && Math.abs(width / height - 1.5) > 0.25) {
+    tips.push('Cards show images cropped to a 3:2 landscape shape (like the thumbnail), so parts of this image will be cut off.');
+  } else if (use !== 'card' && height > width * 1.25) {
+    tips.push('It’s a tall image, so it will take up a lot of the page. Landscape images work best.');
+  }
+  return tips;
+}
+
+/** Calls fn(width, height) once an <img> inside `box` has loaded. */
+export function whenImageLoads(box, fn) {
+  const img = box.querySelector('img');
+  if (!img) return;
+  const done = () => { if (img.naturalWidth) fn(img.naturalWidth, img.naturalHeight); };
+  if (img.complete) done(); else img.addEventListener('load', done, { once: true });
 }
 
 /** A thumbnail for a file: the image itself, or a label for videos and PDFs. */
@@ -244,16 +350,18 @@ export function uploadButton({ kind = 'any', label = 'Upload a file', multiple =
   return el('span', {}, input, lbl);
 }
 
-/** Shows upload progress for a list of files, uploading them one by one. Returns stored names. */
+/** Shows upload progress for a list of files, uploading them one by one, and what was changed. Returns stored names. */
 export async function uploadWithProgress(files, container) {
   const names = [];
   for (const file of files) {
     const bar = el('progress', { max: 1, value: 0 });
-    const row = el('div', { class: 'upload-progress' }, el('span', { class: 'small' }, `Uploading ${file.name}…`), bar);
+    const row = el('div', { class: 'upload-progress' }, el('span', { class: 'small' }, `Preparing and uploading ${file.name}…`), bar);
     container.append(row);
     try {
-      names.push(await uploadFile(file, (p) => { bar.value = p; }));
-      row.remove();
+      const { name, note } = await uploadFile(file, (p) => { bar.value = p; });
+      names.push(name);
+      if (note) row.replaceWith(el('div', { class: 'notice notice--ok small', role: 'status' }, el('p', {}, `${name}: ${note}.`)));
+      else row.remove();
     } catch (e) {
       row.replaceWith(el('div', { class: 'notice notice--error', role: 'alert' }, el('p', {}, e.message)));
     }
@@ -310,8 +418,13 @@ export function pickMedia({ kind = 'image', title = 'Choose a file', current = n
           input, thumb(f, 'media-card__thumb'),
           el('span', { class: 'media-card__info' },
             el('span', { class: 'media-card__name' }, f.name),
-            el('span', { class: 'muted' }, formatSize(f.size)))));
+            el('span', { class: 'muted', dataset: { size: f.name } }, formatSize(f.size)))));
       }));
+      // Pixel sizes, once the thumbnails have loaded.
+      for (const card of grid.querySelectorAll('.media-card')) {
+        const sizeEl = card.querySelector('[data-size]');
+        whenImageLoads(card, (w, h) => { sizeEl.textContent = `${w} × ${h} px · ${sizeEl.textContent.split(' · ').pop()}`; });
+      }
       status.textContent = shown.length ? '' : files.length ? 'No files match.' : 'No files yet. Upload one to get started.';
       use.disabled = !selected || !shown.some((f) => f.name === selected);
       const checked = grid.querySelector('input:checked');

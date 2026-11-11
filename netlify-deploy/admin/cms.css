@@ -191,6 +191,9 @@ input[readonly] { background: var(--pa-grey-01); color: var(--pa-grey-04); }
 .media-field__thumb img { width: 100%; height: 100%; object-fit: cover; }
 .media-field__name { flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; font-size: 15px; }
 .media-field__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.media-advice { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.media-advice:empty { display: none; }
+.media-advice li { padding: 8px 12px; border-left: 4px solid var(--pa-apricot-04); background: var(--pa-apricot-01); border-radius: var(--radius-sm); font-size: 14px; }
 .media-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .media-row .media-row__name { font-size: 14px; overflow-wrap: anywhere; }
 
